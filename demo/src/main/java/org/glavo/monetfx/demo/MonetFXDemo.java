@@ -22,12 +22,10 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -204,19 +202,15 @@ public final class MonetFXDemo extends Application {
                     String fileName = file.getName();
                     if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
                         Image image = new Image(file.toURI().toString());
-                        root.setBackground(new Background(new BackgroundImage(image, null, null, null, new BackgroundSize(1080, 560, false, false, true, true))));
+                        root.setBackground(new Background(new BackgroundImage(image, null, null, null, null)));
                         scheme.set(ColorScheme.fromImage(image));
                     }
                 }
             }
         });
-        root.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.D) {
-
-            }
-        });
 
         Scene scene = new Scene(root, 1080, 560);
+        primaryStage.setTitle("MonetFX Demo");
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
