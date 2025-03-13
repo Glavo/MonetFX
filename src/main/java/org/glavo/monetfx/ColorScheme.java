@@ -34,6 +34,7 @@ import org.glavo.monetfx.internal.score.Score;
 import org.glavo.monetfx.internal.utils.ColorUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +51,8 @@ import java.util.Map;
 /// corresponding tokens. Each property in the [ColorScheme] class
 /// represents one color role as defined in the spec above.
 ///
-/// The main accent color groups in the scheme are [#primary], [#secondary],
-/// and [#tertiary].
+/// The main accent color groups in the scheme are [ColorRole#PRIMARY], [ColorRole#SECONDARY],
+/// and [ColorRole#TERTIARY].
 ///
 /// * Primary colors are used for key components across the UI, such as the FAB,
 ///   prominent buttons, and active states.
@@ -66,7 +67,7 @@ import java.util.Map;
 ///   broader color expression in products.
 ///
 /// Each accent color group (primary, secondary and tertiary) includes '-Fixed'
-/// '-Dim' color roles, such as [#primaryFixed] and [#primaryFixedDim]. Fixed roles
+/// '-Dim' color roles, such as [ColorRole#PRIMARY_FIXED] and [ColorRole#PRIMARY_FIXED_DIM]. Fixed roles
 /// are appropriate to use in places where Container roles are normally used,
 /// but they stay the same color between light and dark themes. The '-Dim' roles
 /// provide a stronger, more emphasized color with the same fixed behavior.
@@ -78,18 +79,18 @@ import java.util.Map;
 ///
 /// Material 3 also introduces tone-based surfaces and surface containers.
 /// They replace the old opacity-based model which applied a tinted overlay on
-/// top of surfaces based on their elevation. These colors include: [#surfaceBright],
-/// [#surfaceDim], [#surfaceContainerLowest], [#surfaceContainerLow], [#surfaceContainer],
-/// [#surfaceContainerHigh], and [#surfaceContainerHighest].
+/// top of surfaces based on their elevation. These colors include: [ColorRole#SURFACE_BRIGHT],
+/// [ColorRole#SURFACE_DIM], [ColorRole#SURFACE_CONTAINER_LOWEST], [ColorRole#SURFACE_CONTAINER_LOW], [ColorRole#SURFACE_CONTAINER],
+/// [ColorRole#SURFACE_CONTAINER_HIGH], and [ColorRole#SURFACE_CONTAINER_HIGHEST].
 ///
 /// Many of the colors have matching 'on' colors, which are used for drawing
 /// content on top of the matching color. For example, if something is using
-/// [#primary] for a background color, [#onPrimary] would be used to paint text
+/// [ColorRole#PRIMARY] for a background color, [ColorRole#ON_PRIMARY] would be used to paint text
 /// and icons on top of it. For this reason, the 'on' colors should have a
 /// contrast ratio with their matching colors of at least 4.5:1 in order to
-/// be readable. On '-FixedVariant' roles, such as [#onPrimaryFixedVariant],
+/// be readable. On '-FixedVariant' roles, such as [ColorRole#ON_PRIMARY_FIXED_VARIANT],
 /// also have the same color between light and dark themes, but compared
-/// with on '-Fixed' roles, such as [#onPrimaryFixed], they provide a
+/// with on '-Fixed' roles, such as [ColorRole#ON_PRIMARY_FIXED], they provide a
 /// lower-emphasis option for text and icons.
 public final class ColorScheme {
 
@@ -190,7 +191,7 @@ public final class ColorScheme {
     /// to [DynamicSchemeVariant#FIDELITY], whose palettes match the seed color.
     ///
     /// The `contrastLevel` parameter indicates the contrast level between color
-    /// pairs, such as [#primary] and [#onPrimary]. 0.0 is the default (normal);
+    /// pairs, such as [ColorRole#PRIMARY] and [ColorRole#ON_PRIMARY]. 0.0 is the default (normal);
     /// -1.0 is the lowest; 1.0 is the highest. From Material Design guideline, the
     /// medium and high contrast correspond to 0.5 and 1.0 respectively.
     public static ColorScheme fromSeed(@NotNull Color seedColor) {
@@ -222,7 +223,7 @@ public final class ColorScheme {
     /// to [DynamicSchemeVariant#FIDELITY], whose palettes match the seed color.
     ///
     /// The `contrastLevel` parameter indicates the contrast level between color
-    /// pairs, such as [#primary] and [#onPrimary]. 0.0 is the default (normal);
+    /// pairs, such as [ColorRole#PRIMARY] and [ColorRole#ON_PRIMARY]. 0.0 is the default (normal);
     /// -1.0 is the lowest; 1.0 is the highest. From Material Design guideline, the
     /// medium and high contrast correspond to 0.5 and 1.0 respectively.
     public static ColorScheme fromSeed(@NotNull Color seedColor,
@@ -239,329 +240,228 @@ public final class ColorScheme {
         return new ColorScheme(scheme);
     }
 
-    private final Brightness brightness;
-    private final double contrastLevel;
-
-    private final Color primary;
-    private final Color onPrimary;
-    private final Color primaryContainer;
-    private final Color onPrimaryContainer;
-    private final Color primaryFixed;
-    private final Color primaryFixedDim;
-    private final Color onPrimaryFixed;
-    private final Color onPrimaryFixedVariant;
-
-    private final Color secondary;
-    private final Color onSecondary;
-    private final Color secondaryContainer;
-    private final Color onSecondaryContainer;
-    private final Color secondaryFixed;
-    private final Color secondaryFixedDim;
-    private final Color onSecondaryFixed;
-    private final Color onSecondaryFixedVariant;
-
-    private final Color tertiary;
-    private final Color onTertiary;
-    private final Color tertiaryContainer;
-    private final Color onTertiaryContainer;
-    private final Color tertiaryFixed;
-    private final Color tertiaryFixedDim;
-    private final Color onTertiaryFixed;
-    private final Color onTertiaryFixedVariant;
-
-    private final Color error;
-    private final Color onError;
-    private final Color errorContainer;
-    private final Color onErrorContainer;
-
-    private final Color surface;
-    private final Color onSurface;
-    private final Color surfaceDim;
-    private final Color surfaceBright;
-    private final Color surfaceContainerLowest;
-    private final Color surfaceContainerLow;
-    private final Color surfaceContainer;
-    private final Color surfaceContainerHigh;
-    private final Color surfaceContainerHighest;
-    private final Color surfaceVariant;
-    private final Color onSurfaceVariant;
-
-    private final Color background;
-    private final Color onBackground;
-
-    private final Color outline;
-    private final Color outlineVariant;
-
-    private final Color shadow;
-    private final Color scrim;
-    private final Color inverseSurface;
-    private final Color inverseOnSurface;
-    private final Color inversePrimary;
-    private final Color surfaceTint;
+    private final DynamicScheme scheme;
+    private final EnumMap<ColorRole, Color> colorMap = new EnumMap<>(ColorRole.class);
 
     private ColorScheme(DynamicScheme scheme) {
-        this.brightness = scheme.isDark ? Brightness.DARK : Brightness.LIGHT;
-        this.contrastLevel = scheme.contrastLevel;
-
-        this.primary = ColorUtils.fxFromArgb(scheme.getPrimary());
-        this.onPrimary = ColorUtils.fxFromArgb(scheme.getOnPrimary());
-        this.primaryContainer = ColorUtils.fxFromArgb(scheme.getPrimaryContainer());
-        this.onPrimaryContainer = ColorUtils.fxFromArgb(scheme.getOnPrimaryContainer());
-        this.primaryFixed = ColorUtils.fxFromArgb(scheme.getPrimaryFixed());
-        this.primaryFixedDim = ColorUtils.fxFromArgb(scheme.getPrimaryFixedDim());
-        this.onPrimaryFixed = ColorUtils.fxFromArgb(scheme.getOnPrimaryFixed());
-        this.onPrimaryFixedVariant = ColorUtils.fxFromArgb(scheme.getOnPrimaryFixedVariant());
-
-        this.secondary = ColorUtils.fxFromArgb(scheme.getSecondary());
-        this.onSecondary = ColorUtils.fxFromArgb(scheme.getOnSecondary());
-        this.secondaryContainer = ColorUtils.fxFromArgb(scheme.getSecondaryContainer());
-        this.onSecondaryContainer = ColorUtils.fxFromArgb(scheme.getOnSecondaryContainer());
-        this.secondaryFixed = ColorUtils.fxFromArgb(scheme.getSecondaryFixed());
-        this.secondaryFixedDim = ColorUtils.fxFromArgb(scheme.getSecondaryFixedDim());
-        this.onSecondaryFixed = ColorUtils.fxFromArgb(scheme.getOnSecondaryFixed());
-        this.onSecondaryFixedVariant = ColorUtils.fxFromArgb(scheme.getOnSecondaryFixedVariant());
-
-        this.tertiary = ColorUtils.fxFromArgb(scheme.getTertiary());
-        this.onTertiary = ColorUtils.fxFromArgb(scheme.getOnTertiary());
-        this.tertiaryContainer = ColorUtils.fxFromArgb(scheme.getTertiaryContainer());
-        this.onTertiaryContainer = ColorUtils.fxFromArgb(scheme.getTertiaryContainer());
-        this.tertiaryFixed = ColorUtils.fxFromArgb(scheme.getTertiaryFixed());
-        this.tertiaryFixedDim = ColorUtils.fxFromArgb(scheme.getTertiaryFixedDim());
-        this.onTertiaryFixed = ColorUtils.fxFromArgb(scheme.getOnTertiaryFixed());
-        this.onTertiaryFixedVariant = ColorUtils.fxFromArgb(scheme.getOnTertiaryFixedVariant());
-
-        this.error = ColorUtils.fxFromArgb(scheme.getError());
-        this.onError = ColorUtils.fxFromArgb(scheme.getOnError());
-        this.errorContainer = ColorUtils.fxFromArgb(scheme.getErrorContainer());
-        this.onErrorContainer = ColorUtils.fxFromArgb(scheme.getOnErrorContainer());
-
-        this.surface = ColorUtils.fxFromArgb(scheme.getSurface());
-        this.onSurface = ColorUtils.fxFromArgb(scheme.getOnSurface());
-        this.surfaceDim = ColorUtils.fxFromArgb(scheme.getSurfaceDim());
-        this.surfaceBright = ColorUtils.fxFromArgb(scheme.getSurfaceBright());
-        this.surfaceContainerLowest = ColorUtils.fxFromArgb(scheme.getSurfaceContainerLowest());
-        this.surfaceContainerLow = ColorUtils.fxFromArgb(scheme.getSurfaceContainerLow());
-        this.surfaceContainer = ColorUtils.fxFromArgb(scheme.getSurfaceContainer());
-        this.surfaceContainerHigh = ColorUtils.fxFromArgb(scheme.getSurfaceContainerHigh());
-        this.surfaceContainerHighest = ColorUtils.fxFromArgb(scheme.getSurfaceContainerHighest());
-        this.surfaceVariant = ColorUtils.fxFromArgb(scheme.getSurfaceVariant());
-        this.onSurfaceVariant = ColorUtils.fxFromArgb(scheme.getOnSurfaceVariant());
-
-        this.background = ColorUtils.fxFromArgb(scheme.getBackground());
-        this.onBackground = ColorUtils.fxFromArgb(scheme.getOnBackground());
-
-        this.outline = ColorUtils.fxFromArgb(scheme.getOutline());
-        this.outlineVariant = ColorUtils.fxFromArgb(scheme.getOutlineVariant());
-
-        this.shadow = ColorUtils.fxFromArgb(scheme.getShadow());
-        this.scrim = ColorUtils.fxFromArgb(scheme.getScrim());
-        this.inverseSurface = ColorUtils.fxFromArgb(scheme.getInverseSurface());
-        this.inverseOnSurface = ColorUtils.fxFromArgb(scheme.getInverseOnSurface());
-        this.inversePrimary = ColorUtils.fxFromArgb(scheme.getInversePrimary());
-        this.surfaceTint = ColorUtils.fxFromArgb(scheme.getSurfaceTint());
+        this.scheme = scheme;
     }
 
     public Brightness getBrightness() {
-        return brightness;
+        return scheme.isDark ? Brightness.DARK : Brightness.LIGHT;
     }
 
     public double getContrastLevel() {
-        return contrastLevel;
+        return scheme.contrastLevel;
+    }
+
+    public Color getColor(@NotNull ColorRole role) {
+        Color color = colorMap.get(role);
+        if (color == null) {
+            synchronized (this) {
+                color = colorMap.get(role);
+                if (color == null) {
+                    color = ColorUtils.fxFromArgb(role.getArgb(scheme));
+                    colorMap.put(role, color);
+                }
+            }
+        }
+        return color;
     }
 
     public Color getPrimary() {
-        return primary;
+        return getColor(ColorRole.PRIMARY);
     }
 
     public Color getOnPrimary() {
-        return onPrimary;
+        return getColor(ColorRole.ON_PRIMARY);
     }
 
     public Color getPrimaryContainer() {
-        return primaryContainer;
+        return getColor(ColorRole.PRIMARY_CONTAINER);
     }
 
     public Color getOnPrimaryContainer() {
-        return onPrimaryContainer;
+        return getColor(ColorRole.ON_PRIMARY_CONTAINER);
     }
 
     public Color getPrimaryFixed() {
-        return primaryFixed;
+        return getColor(ColorRole.PRIMARY_FIXED);
     }
 
     public Color getPrimaryFixedDim() {
-        return primaryFixedDim;
+        return getColor(ColorRole.PRIMARY_FIXED_DIM);
     }
 
     public Color getOnPrimaryFixed() {
-        return onPrimaryFixed;
+        return getColor(ColorRole.ON_PRIMARY_FIXED);
     }
 
     public Color getOnPrimaryFixedVariant() {
-        return onPrimaryFixedVariant;
+        return getColor(ColorRole.ON_PRIMARY_FIXED_VARIANT);
     }
 
     public Color getSecondary() {
-        return secondary;
+        return getColor(ColorRole.SECONDARY);
     }
 
     public Color getOnSecondary() {
-        return onSecondary;
+        return getColor(ColorRole.ON_SECONDARY);
     }
 
     public Color getSecondaryContainer() {
-        return secondaryContainer;
+        return getColor(ColorRole.SECONDARY_CONTAINER);
     }
 
     public Color getOnSecondaryContainer() {
-        return onSecondaryContainer;
+        return getColor(ColorRole.ON_SECONDARY_CONTAINER);
     }
 
     public Color getSecondaryFixed() {
-        return secondaryFixed;
+        return getColor(ColorRole.SECONDARY_FIXED);
     }
 
     public Color getSecondaryFixedDim() {
-        return secondaryFixedDim;
+        return getColor(ColorRole.SECONDARY_FIXED_DIM);
     }
 
     public Color getOnSecondaryFixed() {
-        return onSecondaryFixed;
+        return getColor(ColorRole.ON_SECONDARY_FIXED);
     }
 
     public Color getOnSecondaryFixedVariant() {
-        return onSecondaryFixedVariant;
+        return getColor(ColorRole.ON_SECONDARY_FIXED_VARIANT);
     }
 
     public Color getTertiary() {
-        return tertiary;
+        return getColor(ColorRole.TERTIARY);
     }
 
     public Color getOnTertiary() {
-        return onTertiary;
+        return getColor(ColorRole.ON_TERTIARY);
     }
 
     public Color getTertiaryContainer() {
-        return tertiaryContainer;
+        return getColor(ColorRole.TERTIARY_CONTAINER);
     }
 
     public Color getOnTertiaryContainer() {
-        return onTertiaryContainer;
+        return getColor(ColorRole.ON_TERTIARY_CONTAINER);
     }
 
     public Color getTertiaryFixed() {
-        return tertiaryFixed;
+        return getColor(ColorRole.TERTIARY_FIXED);
     }
 
     public Color getTertiaryFixedDim() {
-        return tertiaryFixedDim;
+        return getColor(ColorRole.TERTIARY_FIXED_DIM);
     }
 
     public Color getOnTertiaryFixed() {
-        return onTertiaryFixed;
+        return getColor(ColorRole.ON_TERTIARY_FIXED);
     }
 
     public Color getOnTertiaryFixedVariant() {
-        return onTertiaryFixedVariant;
+        return getColor(ColorRole.ON_TERTIARY_FIXED_VARIANT);
     }
 
     public Color getError() {
-        return error;
+        return getColor(ColorRole.ERROR);
     }
 
     public Color getOnError() {
-        return onError;
+        return getColor(ColorRole.ON_ERROR);
     }
 
     public Color getErrorContainer() {
-        return errorContainer;
+        return getColor(ColorRole.ERROR_CONTAINER);
     }
 
     public Color getOnErrorContainer() {
-        return onErrorContainer;
+        return getColor(ColorRole.ON_ERROR_CONTAINER);
     }
 
     public Color getSurface() {
-        return surface;
+        return getColor(ColorRole.SURFACE);
     }
 
     public Color getOnSurface() {
-        return onSurface;
+        return getColor(ColorRole.ON_SURFACE);
     }
 
     public Color getSurfaceDim() {
-        return surfaceDim;
+        return getColor(ColorRole.SURFACE_DIM);
     }
 
     public Color getSurfaceBright() {
-        return surfaceBright;
+        return getColor(ColorRole.SURFACE_BRIGHT);
     }
 
     public Color getSurfaceContainerLowest() {
-        return surfaceContainerLowest;
+        return getColor(ColorRole.SURFACE_CONTAINER_LOWEST);
     }
 
     public Color getSurfaceContainerLow() {
-        return surfaceContainerLow;
+        return getColor(ColorRole.SURFACE_CONTAINER_LOW);
     }
 
     public Color getSurfaceContainer() {
-        return surfaceContainer;
+        return getColor(ColorRole.SURFACE_CONTAINER);
     }
 
     public Color getSurfaceContainerHigh() {
-        return surfaceContainerHigh;
+        return getColor(ColorRole.SURFACE_CONTAINER_HIGH);
     }
 
     public Color getSurfaceContainerHighest() {
-        return surfaceContainerHighest;
+        return getColor(ColorRole.SURFACE_CONTAINER_HIGHEST);
     }
 
     public Color getSurfaceVariant() {
-        return surfaceVariant;
+        return getColor(ColorRole.SURFACE_VARIANT);
     }
 
     public Color getOnSurfaceVariant() {
-        return onSurfaceVariant;
+        return getColor(ColorRole.ON_SURFACE_VARIANT);
     }
 
     public Color getBackground() {
-        return background;
+        return getColor(ColorRole.BACKGROUND);
     }
 
     public Color getOnBackground() {
-        return onBackground;
+        return getColor(ColorRole.ON_BACKGROUND);
     }
 
     public Color getOutline() {
-        return outline;
+        return getColor(ColorRole.OUTLINE);
     }
 
     public Color getOutlineVariant() {
-        return outlineVariant;
+        return getColor(ColorRole.OUTLINE_VARIANT);
     }
 
     public Color getShadow() {
-        return shadow;
+        return getColor(ColorRole.SHADOW);
     }
 
     public Color getScrim() {
-        return scrim;
+        return getColor(ColorRole.SCRIM);
     }
 
     public Color getInverseSurface() {
-        return inverseSurface;
+        return getColor(ColorRole.INVERSE_SURFACE);
     }
 
     public Color getInverseOnSurface() {
-        return inverseOnSurface;
+        return getColor(ColorRole.INVERSE_ON_SURFACE);
     }
 
     public Color getInversePrimary() {
-        return inversePrimary;
+        return getColor(ColorRole.INVERSE_PRIMARY);
     }
 
     public Color getSurfaceTint() {
-        return surfaceTint;
+        return getColor(ColorRole.SURFACE_TINT);
     }
 }
