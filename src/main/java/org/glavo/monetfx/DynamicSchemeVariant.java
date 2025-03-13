@@ -15,7 +15,7 @@
  */
 package org.glavo.monetfx;
 
-/// The algorithm used to construct a [ColorScheme] in \[ColorScheme.fromSeed\].
+/// The algorithm used to construct a [ColorScheme] in [ColorScheme#fromSeed].
 ///
 /// The `tonalSpot` variant builds default Material scheme colors. These colors are
 /// mapped to light or dark tones to achieve visually accessible color
@@ -50,7 +50,7 @@ public enum DynamicSchemeVariant {
     EXPRESSIVE,
 
     /// Almost identical to `fidelity`. Tokens and palettes match the seed color.
-    /// \[ColorScheme.primaryContainer\] is the seed color, adjusted to ensure
+    /// [ColorScheme#getPrimaryContainer] is the seed color, adjusted to ensure
     /// contrast with surfaces. The tertiary palette is analogue of the seed color.
     CONTENT,
 

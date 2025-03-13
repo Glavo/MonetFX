@@ -32,6 +32,7 @@ import org.glavo.monetfx.internal.scheme.SchemeTonalSpot;
 import org.glavo.monetfx.internal.scheme.SchemeVibrant;
 import org.glavo.monetfx.internal.score.Score;
 import org.glavo.monetfx.internal.utils.ColorUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,6 +40,57 @@ import java.util.Map;
 
 // See https://github.com/flutter/flutter/blob/5491c8c146441d3126aff91beaa3fb5df6d710d0/packages/flutter/lib/src/material/color_scheme.dart
 
+/// A set of 45 colors based on the
+/// [Material spec](https://m3.material.io/styles/color/the-color-system/color-roles)
+/// that can be used to configure the color properties of most components.
+///
+/// ### Colors in Material 3
+///
+/// In Material 3, colors are represented using color roles and
+/// corresponding tokens. Each property in the [ColorScheme] class
+/// represents one color role as defined in the spec above.
+///
+/// The main accent color groups in the scheme are [#primary], [#secondary],
+/// and [#tertiary].
+///
+/// * Primary colors are used for key components across the UI, such as the FAB,
+///   prominent buttons, and active states.
+///
+/// * Secondary colors are used for less prominent components in the UI, such as
+///   filter chips, while expanding the opportunity for color expression.
+///
+/// * Tertiary colors are used for contrasting accents that can be used to
+///   balance primary and secondary colors or bring heightened attention to
+///   an element, such as an input field. The tertiary colors are left
+///   for makers to use at their discretion and are intended to support
+///   broader color expression in products.
+///
+/// Each accent color group (primary, secondary and tertiary) includes '-Fixed'
+/// '-Dim' color roles, such as [#primaryFixed] and [#primaryFixedDim]. Fixed roles
+/// are appropriate to use in places where Container roles are normally used,
+/// but they stay the same color between light and dark themes. The '-Dim' roles
+/// provide a stronger, more emphasized color with the same fixed behavior.
+///
+/// The remaining colors of the scheme are composed of neutral colors used for
+/// backgrounds and surfaces, as well as specific colors for errors, dividers
+/// and shadows. Surface colors are used for backgrounds and large, low-emphasis
+/// areas of the screen.
+///
+/// Material 3 also introduces tone-based surfaces and surface containers.
+/// They replace the old opacity-based model which applied a tinted overlay on
+/// top of surfaces based on their elevation. These colors include: [#surfaceBright],
+/// [#surfaceDim], [#surfaceContainerLowest], [#surfaceContainerLow], [#surfaceContainer],
+/// [#surfaceContainerHigh], and [#surfaceContainerHighest].
+///
+/// Many of the colors have matching 'on' colors, which are used for drawing
+/// content on top of the matching color. For example, if something is using
+/// [#primary] for a background color, [#onPrimary] would be used to paint text
+/// and icons on top of it. For this reason, the 'on' colors should have a
+/// contrast ratio with their matching colors of at least 4.5:1 in order to
+/// be readable. On '-FixedVariant' roles, such as [#onPrimaryFixedVariant],
+/// also have the same color between light and dark themes, but compared
+/// with on '-Fixed' roles, such as [#onPrimaryFixed], they provide a
+/// lower-emphasis option for text and icons.
 public final class ColorScheme {
 
     private static int getArgbFromAbgr(int abgr) {
@@ -85,7 +137,14 @@ public final class ColorScheme {
         }
     }
 
-    public static ColorScheme fromImage(Image image, Brightness brightness, DynamicSchemeVariant dynamicSchemeVariant, double contrastLevel) {
+    public static @NotNull ColorScheme fromImage(@NotNull Image image) {
+        return fromImage(image, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, 0.0);
+    }
+
+    public static ColorScheme fromImage(@NotNull Image image,
+                                        @NotNull Brightness brightness,
+                                        @NotNull DynamicSchemeVariant dynamicSchemeVariant,
+                                        double contrastLevel) {
         PixelReader pixelReader = image.getPixelReader();
         if (pixelReader == null) {
             throw new IllegalArgumentException("Unable to read pixels of image");
@@ -103,9 +162,76 @@ public final class ColorScheme {
         final List<Integer> scoredResults = Score.score(colorToCount, 1);
         final Color baseColor = ColorUtils.fxFromArgb(scoredResults.get(0));
 
+        return fromSeed(baseColor, brightness, dynamicSchemeVariant, contrastLevel);
+    }
+
+    /// Generate a [ColorScheme] derived from the given `seedColor`.
+    ///
+    /// Using the `seedColor` as a starting point, a set of tonal palettes are
+    /// constructed. By default, the tonal palettes are based on the Material 3
+    /// Color system and provide all of the [ColorScheme] colors. These colors are
+    /// designed to work well together and meet contrast requirements for
+    /// accessibility.
+    ///
+    /// If any of the optional color parameters are non-null they will be
+    /// used in place of the generated colors for that field in the resulting
+    /// color scheme. This allows apps to override specific colors for their
+    /// needs.
+    ///
+    /// Given the nature of the algorithm, the `seedColor` may not wind up as
+    /// one of the ColorScheme colors.
+    ///
+    /// The `dynamicSchemeVariant` parameter creates different types of
+    /// [DynamicScheme]s, which are used to generate different styles of [ColorScheme]s.
+    /// By default, `dynamicSchemeVariant` is set to `tonalSpot`. A [ColorScheme]
+    /// constructed by `dynamicSchemeVariant.tonalSpot` has pastel palettes and
+    /// won't be too "colorful" even if the `seedColor` has a high chroma value.
+    /// If the resulting color scheme is too dark, consider setting `dynamicSchemeVariant`
+    /// to [DynamicSchemeVariant#FIDELITY], whose palettes match the seed color.
+    ///
+    /// The `contrastLevel` parameter indicates the contrast level between color
+    /// pairs, such as [#primary] and [#onPrimary]. 0.0 is the default (normal);
+    /// -1.0 is the lowest; 1.0 is the highest. From Material Design guideline, the
+    /// medium and high contrast correspond to 0.5 and 1.0 respectively.
+    public static ColorScheme fromSeed(@NotNull Color seedColor) {
+        return fromSeed(seedColor, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, 0.0);
+    }
+
+    /// Generate a [ColorScheme] derived from the given `seedColor`.
+    ///
+    /// Using the `seedColor` as a starting point, a set of tonal palettes are
+    /// constructed. By default, the tonal palettes are based on the Material 3
+    /// Color system and provide all of the [ColorScheme] colors. These colors are
+    /// designed to work well together and meet contrast requirements for
+    /// accessibility.
+    ///
+    /// If any of the optional color parameters are non-null they will be
+    /// used in place of the generated colors for that field in the resulting
+    /// color scheme. This allows apps to override specific colors for their
+    /// needs.
+    ///
+    /// Given the nature of the algorithm, the `seedColor` may not wind up as
+    /// one of the ColorScheme colors.
+    ///
+    /// The `dynamicSchemeVariant` parameter creates different types of
+    /// [DynamicScheme]s, which are used to generate different styles of [ColorScheme]s.
+    /// By default, `dynamicSchemeVariant` is set to `tonalSpot`. A [ColorScheme]
+    /// constructed by `dynamicSchemeVariant.tonalSpot` has pastel palettes and
+    /// won't be too "colorful" even if the `seedColor` has a high chroma value.
+    /// If the resulting color scheme is too dark, consider setting `dynamicSchemeVariant`
+    /// to [DynamicSchemeVariant#FIDELITY], whose palettes match the seed color.
+    ///
+    /// The `contrastLevel` parameter indicates the contrast level between color
+    /// pairs, such as [#primary] and [#onPrimary]. 0.0 is the default (normal);
+    /// -1.0 is the lowest; 1.0 is the highest. From Material Design guideline, the
+    /// medium and high contrast correspond to 0.5 and 1.0 respectively.
+    public static ColorScheme fromSeed(@NotNull Color seedColor,
+                                       @NotNull Brightness brightness,
+                                       @NotNull DynamicSchemeVariant dynamicSchemeVariant,
+                                       double contrastLevel) {
         final DynamicScheme scheme = buildDynamicScheme(
                 brightness,
-                baseColor,
+                seedColor,
                 dynamicSchemeVariant,
                 contrastLevel
         );
@@ -113,119 +239,134 @@ public final class ColorScheme {
         return new ColorScheme(scheme);
     }
 
+    private final Brightness brightness;
+    private final double contrastLevel;
+
     private final Color primary;
     private final Color onPrimary;
     private final Color primaryContainer;
     private final Color onPrimaryContainer;
-    private final Color inversePrimary;
+    private final Color primaryFixed;
+    private final Color primaryFixedDim;
+    private final Color onPrimaryFixed;
+    private final Color onPrimaryFixedVariant;
+
     private final Color secondary;
     private final Color onSecondary;
     private final Color secondaryContainer;
     private final Color onSecondaryContainer;
+    private final Color secondaryFixed;
+    private final Color secondaryFixedDim;
+    private final Color onSecondaryFixed;
+    private final Color onSecondaryFixedVariant;
+
     private final Color tertiary;
     private final Color onTertiary;
     private final Color tertiaryContainer;
     private final Color onTertiaryContainer;
-    private final Color background;
-    private final Color onBackground;
-    private final Color surface;
-    private final Color onSurface;
-    private final Color surfaceVariant;
-    private final Color onSurfaceVariant;
-    private final Color surfaceTint;
-    private final Color inverseSurface;
-    private final Color inverseOnSurface;
+    private final Color tertiaryFixed;
+    private final Color tertiaryFixedDim;
+    private final Color onTertiaryFixed;
+    private final Color onTertiaryFixedVariant;
+
     private final Color error;
     private final Color onError;
     private final Color errorContainer;
     private final Color onErrorContainer;
-    private final Color outline;
-    private final Color outlineVariant;
-    private final Color scrim;
-    private final Color surfaceBright;
+
+    private final Color surface;
+    private final Color onSurface;
     private final Color surfaceDim;
+    private final Color surfaceBright;
+    private final Color surfaceContainerLowest;
+    private final Color surfaceContainerLow;
     private final Color surfaceContainer;
     private final Color surfaceContainerHigh;
     private final Color surfaceContainerHighest;
-    private final Color surfaceContainerLow;
-    private final Color surfaceContainerLowest;
+    private final Color surfaceVariant;
+    private final Color onSurfaceVariant;
 
-    private ColorScheme(Color primary, Color onPrimary, Color primaryContainer, Color onPrimaryContainer, Color inversePrimary, Color secondary, Color onSecondary, Color secondaryContainer, Color onSecondaryContainer, Color tertiary, Color onTertiary, Color tertiaryContainer, Color onTertiaryContainer, Color background, Color onBackground, Color surface, Color onSurface, Color surfaceVariant, Color onSurfaceVariant, Color surfaceTint, Color inverseSurface, Color inverseOnSurface, Color error, Color onError, Color errorContainer, Color onErrorContainer, Color outline, Color outlineVariant, Color scrim, Color surfaceBright, Color surfaceDim, Color surfaceContainer, Color surfaceContainerHigh, Color surfaceContainerHighest, Color surfaceContainerLow, Color surfaceContainerLowest) {
-        this.primary = primary;
-        this.onPrimary = onPrimary;
-        this.primaryContainer = primaryContainer;
-        this.onPrimaryContainer = onPrimaryContainer;
-        this.inversePrimary = inversePrimary;
-        this.secondary = secondary;
-        this.onSecondary = onSecondary;
-        this.secondaryContainer = secondaryContainer;
-        this.onSecondaryContainer = onSecondaryContainer;
-        this.tertiary = tertiary;
-        this.onTertiary = onTertiary;
-        this.tertiaryContainer = tertiaryContainer;
-        this.onTertiaryContainer = onTertiaryContainer;
-        this.background = background;
-        this.onBackground = onBackground;
-        this.surface = surface;
-        this.onSurface = onSurface;
-        this.surfaceVariant = surfaceVariant;
-        this.onSurfaceVariant = onSurfaceVariant;
-        this.surfaceTint = surfaceTint;
-        this.inverseSurface = inverseSurface;
-        this.inverseOnSurface = inverseOnSurface;
-        this.error = error;
-        this.onError = onError;
-        this.errorContainer = errorContainer;
-        this.onErrorContainer = onErrorContainer;
-        this.outline = outline;
-        this.outlineVariant = outlineVariant;
-        this.scrim = scrim;
-        this.surfaceBright = surfaceBright;
-        this.surfaceDim = surfaceDim;
-        this.surfaceContainer = surfaceContainer;
-        this.surfaceContainerHigh = surfaceContainerHigh;
-        this.surfaceContainerHighest = surfaceContainerHighest;
-        this.surfaceContainerLow = surfaceContainerLow;
-        this.surfaceContainerLowest = surfaceContainerLowest;
-    }
+    private final Color background;
+    private final Color onBackground;
+
+    private final Color outline;
+    private final Color outlineVariant;
+
+    private final Color shadow;
+    private final Color scrim;
+    private final Color inverseSurface;
+    private final Color inverseOnSurface;
+    private final Color inversePrimary;
+    private final Color surfaceTint;
 
     private ColorScheme(DynamicScheme scheme) {
+        this.brightness = scheme.isDark ? Brightness.DARK : Brightness.LIGHT;
+        this.contrastLevel = scheme.contrastLevel;
+
         this.primary = ColorUtils.fxFromArgb(scheme.getPrimary());
         this.onPrimary = ColorUtils.fxFromArgb(scheme.getOnPrimary());
         this.primaryContainer = ColorUtils.fxFromArgb(scheme.getPrimaryContainer());
         this.onPrimaryContainer = ColorUtils.fxFromArgb(scheme.getOnPrimaryContainer());
-        this.inversePrimary = ColorUtils.fxFromArgb(scheme.getInversePrimary());
+        this.primaryFixed = ColorUtils.fxFromArgb(scheme.getPrimaryFixed());
+        this.primaryFixedDim = ColorUtils.fxFromArgb(scheme.getPrimaryFixedDim());
+        this.onPrimaryFixed = ColorUtils.fxFromArgb(scheme.getOnPrimaryFixed());
+        this.onPrimaryFixedVariant = ColorUtils.fxFromArgb(scheme.getOnPrimaryFixedVariant());
+
         this.secondary = ColorUtils.fxFromArgb(scheme.getSecondary());
         this.onSecondary = ColorUtils.fxFromArgb(scheme.getOnSecondary());
         this.secondaryContainer = ColorUtils.fxFromArgb(scheme.getSecondaryContainer());
         this.onSecondaryContainer = ColorUtils.fxFromArgb(scheme.getOnSecondaryContainer());
+        this.secondaryFixed = ColorUtils.fxFromArgb(scheme.getSecondaryFixed());
+        this.secondaryFixedDim = ColorUtils.fxFromArgb(scheme.getSecondaryFixedDim());
+        this.onSecondaryFixed = ColorUtils.fxFromArgb(scheme.getOnSecondaryFixed());
+        this.onSecondaryFixedVariant = ColorUtils.fxFromArgb(scheme.getOnSecondaryFixedVariant());
+
         this.tertiary = ColorUtils.fxFromArgb(scheme.getTertiary());
         this.onTertiary = ColorUtils.fxFromArgb(scheme.getOnTertiary());
         this.tertiaryContainer = ColorUtils.fxFromArgb(scheme.getTertiaryContainer());
         this.onTertiaryContainer = ColorUtils.fxFromArgb(scheme.getTertiaryContainer());
-        this.background = ColorUtils.fxFromArgb(scheme.getBackground());
-        this.onBackground = ColorUtils.fxFromArgb(scheme.getOnBackground());
-        this.surface = ColorUtils.fxFromArgb(scheme.getSurface());
-        this.onSurface = ColorUtils.fxFromArgb(scheme.getOnSurface());
-        this.surfaceVariant = ColorUtils.fxFromArgb(scheme.getSurfaceVariant());
-        this.onSurfaceVariant = ColorUtils.fxFromArgb(scheme.getOnSurfaceVariant());
-        this.surfaceTint = ColorUtils.fxFromArgb(scheme.getSurfaceTint());
-        this.inverseSurface = ColorUtils.fxFromArgb(scheme.getInverseSurface());
-        this.inverseOnSurface = ColorUtils.fxFromArgb(scheme.getInverseOnSurface());
+        this.tertiaryFixed = ColorUtils.fxFromArgb(scheme.getTertiaryFixed());
+        this.tertiaryFixedDim = ColorUtils.fxFromArgb(scheme.getTertiaryFixedDim());
+        this.onTertiaryFixed = ColorUtils.fxFromArgb(scheme.getOnTertiaryFixed());
+        this.onTertiaryFixedVariant = ColorUtils.fxFromArgb(scheme.getOnTertiaryFixedVariant());
+
         this.error = ColorUtils.fxFromArgb(scheme.getError());
         this.onError = ColorUtils.fxFromArgb(scheme.getOnError());
         this.errorContainer = ColorUtils.fxFromArgb(scheme.getErrorContainer());
         this.onErrorContainer = ColorUtils.fxFromArgb(scheme.getOnErrorContainer());
-        this.outline = ColorUtils.fxFromArgb(scheme.getOutline());
-        this.outlineVariant = ColorUtils.fxFromArgb(scheme.getOutlineVariant());
-        this.scrim = ColorUtils.fxFromArgb(scheme.getScrim());
-        this.surfaceBright = ColorUtils.fxFromArgb(scheme.getSurfaceBright());
+
+        this.surface = ColorUtils.fxFromArgb(scheme.getSurface());
+        this.onSurface = ColorUtils.fxFromArgb(scheme.getOnSurface());
         this.surfaceDim = ColorUtils.fxFromArgb(scheme.getSurfaceDim());
+        this.surfaceBright = ColorUtils.fxFromArgb(scheme.getSurfaceBright());
+        this.surfaceContainerLowest = ColorUtils.fxFromArgb(scheme.getSurfaceContainerLowest());
+        this.surfaceContainerLow = ColorUtils.fxFromArgb(scheme.getSurfaceContainerLow());
         this.surfaceContainer = ColorUtils.fxFromArgb(scheme.getSurfaceContainer());
         this.surfaceContainerHigh = ColorUtils.fxFromArgb(scheme.getSurfaceContainerHigh());
         this.surfaceContainerHighest = ColorUtils.fxFromArgb(scheme.getSurfaceContainerHighest());
-        this.surfaceContainerLow = ColorUtils.fxFromArgb(scheme.getSurfaceContainerLow());
-        this.surfaceContainerLowest = ColorUtils.fxFromArgb(scheme.getSurfaceContainerLowest());
+        this.surfaceVariant = ColorUtils.fxFromArgb(scheme.getSurfaceVariant());
+        this.onSurfaceVariant = ColorUtils.fxFromArgb(scheme.getOnSurfaceVariant());
+
+        this.background = ColorUtils.fxFromArgb(scheme.getBackground());
+        this.onBackground = ColorUtils.fxFromArgb(scheme.getOnBackground());
+
+        this.outline = ColorUtils.fxFromArgb(scheme.getOutline());
+        this.outlineVariant = ColorUtils.fxFromArgb(scheme.getOutlineVariant());
+
+        this.shadow = ColorUtils.fxFromArgb(scheme.getShadow());
+        this.scrim = ColorUtils.fxFromArgb(scheme.getScrim());
+        this.inverseSurface = ColorUtils.fxFromArgb(scheme.getInverseSurface());
+        this.inverseOnSurface = ColorUtils.fxFromArgb(scheme.getInverseOnSurface());
+        this.inversePrimary = ColorUtils.fxFromArgb(scheme.getInversePrimary());
+        this.surfaceTint = ColorUtils.fxFromArgb(scheme.getSurfaceTint());
+    }
+
+    public Brightness getBrightness() {
+        return brightness;
+    }
+
+    public double getContrastLevel() {
+        return contrastLevel;
     }
 
     public Color getPrimary() {
@@ -244,8 +385,20 @@ public final class ColorScheme {
         return onPrimaryContainer;
     }
 
-    public Color getInversePrimary() {
-        return inversePrimary;
+    public Color getPrimaryFixed() {
+        return primaryFixed;
+    }
+
+    public Color getPrimaryFixedDim() {
+        return primaryFixedDim;
+    }
+
+    public Color getOnPrimaryFixed() {
+        return onPrimaryFixed;
+    }
+
+    public Color getOnPrimaryFixedVariant() {
+        return onPrimaryFixedVariant;
     }
 
     public Color getSecondary() {
@@ -264,6 +417,22 @@ public final class ColorScheme {
         return onSecondaryContainer;
     }
 
+    public Color getSecondaryFixed() {
+        return secondaryFixed;
+    }
+
+    public Color getSecondaryFixedDim() {
+        return secondaryFixedDim;
+    }
+
+    public Color getOnSecondaryFixed() {
+        return onSecondaryFixed;
+    }
+
+    public Color getOnSecondaryFixedVariant() {
+        return onSecondaryFixedVariant;
+    }
+
     public Color getTertiary() {
         return tertiary;
     }
@@ -280,40 +449,20 @@ public final class ColorScheme {
         return onTertiaryContainer;
     }
 
-    public Color getBackground() {
-        return background;
+    public Color getTertiaryFixed() {
+        return tertiaryFixed;
     }
 
-    public Color getOnBackground() {
-        return onBackground;
+    public Color getTertiaryFixedDim() {
+        return tertiaryFixedDim;
     }
 
-    public Color getSurface() {
-        return surface;
+    public Color getOnTertiaryFixed() {
+        return onTertiaryFixed;
     }
 
-    public Color getOnSurface() {
-        return onSurface;
-    }
-
-    public Color getSurfaceVariant() {
-        return surfaceVariant;
-    }
-
-    public Color getOnSurfaceVariant() {
-        return onSurfaceVariant;
-    }
-
-    public Color getSurfaceTint() {
-        return surfaceTint;
-    }
-
-    public Color getInverseSurface() {
-        return inverseSurface;
-    }
-
-    public Color getInverseOnSurface() {
-        return inverseOnSurface;
+    public Color getOnTertiaryFixedVariant() {
+        return onTertiaryFixedVariant;
     }
 
     public Color getError() {
@@ -332,24 +481,28 @@ public final class ColorScheme {
         return onErrorContainer;
     }
 
-    public Color getOutline() {
-        return outline;
+    public Color getSurface() {
+        return surface;
     }
 
-    public Color getOutlineVariant() {
-        return outlineVariant;
+    public Color getOnSurface() {
+        return onSurface;
     }
 
-    public Color getScrim() {
-        return scrim;
+    public Color getSurfaceDim() {
+        return surfaceDim;
     }
 
     public Color getSurfaceBright() {
         return surfaceBright;
     }
 
-    public Color getSurfaceDim() {
-        return surfaceDim;
+    public Color getSurfaceContainerLowest() {
+        return surfaceContainerLowest;
+    }
+
+    public Color getSurfaceContainerLow() {
+        return surfaceContainerLow;
     }
 
     public Color getSurfaceContainer() {
@@ -364,11 +517,51 @@ public final class ColorScheme {
         return surfaceContainerHighest;
     }
 
-    public Color getSurfaceContainerLow() {
-        return surfaceContainerLow;
+    public Color getSurfaceVariant() {
+        return surfaceVariant;
     }
 
-    public Color getSurfaceContainerLowest() {
-        return surfaceContainerLowest;
+    public Color getOnSurfaceVariant() {
+        return onSurfaceVariant;
+    }
+
+    public Color getBackground() {
+        return background;
+    }
+
+    public Color getOnBackground() {
+        return onBackground;
+    }
+
+    public Color getOutline() {
+        return outline;
+    }
+
+    public Color getOutlineVariant() {
+        return outlineVariant;
+    }
+
+    public Color getShadow() {
+        return shadow;
+    }
+
+    public Color getScrim() {
+        return scrim;
+    }
+
+    public Color getInverseSurface() {
+        return inverseSurface;
+    }
+
+    public Color getInverseOnSurface() {
+        return inverseOnSurface;
+    }
+
+    public Color getInversePrimary() {
+        return inversePrimary;
+    }
+
+    public Color getSurfaceTint() {
+        return surfaceTint;
     }
 }
