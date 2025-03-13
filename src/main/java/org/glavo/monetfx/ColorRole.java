@@ -70,9 +70,22 @@ public enum ColorRole {
     INVERSE_PRIMARY,
     SURFACE_TINT;
 
-    static final ColorRole[] ALL =  ColorRole.values();
+    static final ColorRole[] ALL = ColorRole.values();
+
+    final String displayName;
+
+    {
+        String[] parts = this.name().split("_");
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].charAt(0) + parts[i].substring(1).toLowerCase(Locale.ROOT);
+        }
+        displayName = String.join(" ", parts);
+    }
+
 
     final String cssVariableNameBase = name().toLowerCase(Locale.ROOT).replace("_", "-");
+    final String defaultCssVariableName = "-monet-" + cssVariableNameBase;
+
 
     int getArgb(DynamicScheme scheme) {
         switch (this) {
@@ -177,5 +190,18 @@ public enum ColorRole {
             default:
                 throw new AssertionError("Unknown color role: " + this);
         }
+    }
+
+    public String getCssVariableName(String prefix) {
+        return "-" + prefix + "-" + defaultCssVariableName;
+    }
+
+    public String getCssVariableName() {
+        return defaultCssVariableName;
+    }
+
+    @Override
+    public String toString() {
+        return displayName;
     }
 }

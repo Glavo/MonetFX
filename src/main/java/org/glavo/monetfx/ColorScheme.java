@@ -94,16 +94,6 @@ import java.util.Map;
 /// lower-emphasis option for text and icons.
 public final class ColorScheme {
 
-    private static int getArgbFromAbgr(int abgr) {
-        final int exceptRMask = 0xFF00FFFF;
-        final int onlyRMask = ~exceptRMask;
-        final int exceptBMask = 0xFFFFFF00;
-        final int onlyBMask = ~exceptBMask;
-        final int r = (abgr & onlyRMask) >> 16;
-        final int b = abgr & onlyBMask;
-        return (abgr & exceptRMask & exceptBMask) | (b << 16) | r;
-    }
-
     private static DynamicScheme buildDynamicScheme(
             Brightness brightness,
             Color seedColor,
@@ -142,6 +132,10 @@ public final class ColorScheme {
         return fromImage(image, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, 0.0);
     }
 
+    public static @NotNull ColorScheme fromImage(@NotNull Image image, @NotNull Brightness brightness) {
+        return fromImage(image, brightness, DynamicSchemeVariant.TONAL_SPOT, 0.0);
+    }
+
     public static ColorScheme fromImage(@NotNull Image image,
                                         @NotNull Brightness brightness,
                                         @NotNull DynamicSchemeVariant dynamicSchemeVariant,
@@ -151,49 +145,25 @@ public final class ColorScheme {
             throw new IllegalArgumentException("Unable to read pixels of image");
         }
 
-        Map<Integer, Integer> quantizeResult = QuantizerCelebi.quantize(
-                pixelReader, (int) image.getWidth(), (int) image.getHeight(), 128);
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
 
-        LinkedHashMap<Integer, Integer> colorToCount = new LinkedHashMap<>(quantizeResult.size());
-        quantizeResult.forEach((key, value) -> colorToCount.put(getArgbFromAbgr(key), value));
+        Map<Integer, Integer> quantizeResult = QuantizerCelebi.quantize(
+                pixelReader, width, height, 128);
 
         // Score colors for color scheme suitability.
-        final List<Integer> scoredResults = Score.score(colorToCount, 1);
+        final List<Integer> scoredResults = Score.score(quantizeResult, 1);
         final Color baseColor = ColorUtils.fxFromArgb(scoredResults.get(0));
 
         return fromSeed(baseColor, brightness, dynamicSchemeVariant, contrastLevel);
     }
 
-    /// Generate a [ColorScheme] derived from the given `seedColor`.
-    ///
-    /// Using the `seedColor` as a starting point, a set of tonal palettes are
-    /// constructed. By default, the tonal palettes are based on the Material 3
-    /// Color system and provide all of the [ColorScheme] colors. These colors are
-    /// designed to work well together and meet contrast requirements for
-    /// accessibility.
-    ///
-    /// If any of the optional color parameters are non-null they will be
-    /// used in place of the generated colors for that field in the resulting
-    /// color scheme. This allows apps to override specific colors for their
-    /// needs.
-    ///
-    /// Given the nature of the algorithm, the `seedColor` may not wind up as
-    /// one of the ColorScheme colors.
-    ///
-    /// The `dynamicSchemeVariant` parameter creates different types of
-    /// [DynamicScheme]s, which are used to generate different styles of [ColorScheme]s.
-    /// By default, `dynamicSchemeVariant` is set to `tonalSpot`. A [ColorScheme]
-    /// constructed by `dynamicSchemeVariant.tonalSpot` has pastel palettes and
-    /// won't be too "colorful" even if the `seedColor` has a high chroma value.
-    /// If the resulting color scheme is too dark, consider setting `dynamicSchemeVariant`
-    /// to [DynamicSchemeVariant#FIDELITY], whose palettes match the seed color.
-    ///
-    /// The `contrastLevel` parameter indicates the contrast level between color
-    /// pairs, such as [ColorRole#PRIMARY] and [ColorRole#ON_PRIMARY]. 0.0 is the default (normal);
-    /// -1.0 is the lowest; 1.0 is the highest. From Material Design guideline, the
-    /// medium and high contrast correspond to 0.5 and 1.0 respectively.
     public static ColorScheme fromSeed(@NotNull Color seedColor) {
         return fromSeed(seedColor, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, 0.0);
+    }
+
+    public static ColorScheme fromSeed(@NotNull Color seedColor, @NotNull Brightness brightness) {
+        return fromSeed(seedColor, brightness, DynamicSchemeVariant.TONAL_SPOT, 0.0);
     }
 
     /// Generate a [ColorScheme] derived from the given `seedColor`.

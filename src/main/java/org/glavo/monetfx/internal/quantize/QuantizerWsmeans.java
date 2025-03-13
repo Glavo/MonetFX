@@ -234,7 +234,7 @@ public final class QuantizerWsmeans {
         return argbToPopulation;
     }
 
-    public static Map<Integer, Integer> quantize(
+    public static Map<Integer, Integer>  quantize(
             PixelReader reader, int width, int height, int[] startingClusters, int maxColors) {
         // Uses a seeded random number generator to ensure consistent results.
         Random random = new Random(0x42688);

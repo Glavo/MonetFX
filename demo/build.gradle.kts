@@ -1,3 +1,5 @@
+import org.gradle.internal.declarativedsl.parsing.main
+
 /*
  * Copyright 2025 Glavo
  *
@@ -14,6 +16,10 @@
  * limitations under the License.
  */
 
+plugins {
+    id("application")
+}
+
 dependencies {
     implementation(rootProject)
 }
@@ -23,4 +29,6 @@ tasks.withType<JavaCompile> {
     targetCompatibility = "8"
 }
 
-
+application {
+    mainClass.set("org.glavo.monetfx.demo.MonetFXDemo")
+}
