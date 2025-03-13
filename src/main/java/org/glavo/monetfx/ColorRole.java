@@ -15,8 +15,9 @@
  */
 package org.glavo.monetfx;
 
-import javafx.scene.paint.Color;
 import org.glavo.monetfx.internal.dynamiccolor.DynamicScheme;
+
+import java.util.Locale;
 
 public enum ColorRole {
     PRIMARY,
@@ -68,6 +69,10 @@ public enum ColorRole {
     INVERSE_ON_SURFACE,
     INVERSE_PRIMARY,
     SURFACE_TINT;
+
+    static final ColorRole[] ALL =  ColorRole.values();
+
+    final String cssVariableNameBase = name().toLowerCase(Locale.ROOT).replace("_", "-");
 
     int getArgb(DynamicScheme scheme) {
         switch (this) {

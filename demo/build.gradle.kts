@@ -14,21 +14,8 @@
  * limitations under the License.
  */
 
-plugins {
-    id("java-library")
-}
-
-allprojects {
-    apply {
-        plugin("java")
-    }
-
-    group = "org.glavo"
-    version = "1.0-SNAPSHOT"
-
-    repositories {
-        mavenCentral()
-    }
+dependencies {
+    implementation(rootProject)
 }
 
 tasks.withType<JavaCompile> {
@@ -36,6 +23,4 @@ tasks.withType<JavaCompile> {
     targetCompatibility = "8"
 }
 
-dependencies {
-    compileOnlyApi("org.jetbrains:annotations:26.0.2")
-}
+

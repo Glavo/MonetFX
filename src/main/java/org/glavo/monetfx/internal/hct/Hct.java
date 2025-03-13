@@ -159,4 +159,14 @@ public final class Hct {
         chroma = cam.getChroma();
         this.tone = ColorUtils.lstarFromArgb(argb);
     }
+
+    @Override
+    public String toString() {
+        return "Hct{" +
+               "hue=" + hue +
+               ", chroma=" + chroma +
+               ", tone=" + tone +
+               ", argb=" + Integer.toHexString(argb) +
+               '}';
+    }
 }

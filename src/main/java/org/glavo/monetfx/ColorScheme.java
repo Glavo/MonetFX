@@ -155,9 +155,7 @@ public final class ColorScheme {
                 pixelReader, (int) image.getWidth(), (int) image.getHeight(), 128);
 
         LinkedHashMap<Integer, Integer> colorToCount = new LinkedHashMap<>(quantizeResult.size());
-        for (Map.Entry<Integer, Integer> entry : quantizeResult.entrySet()) {
-            colorToCount.put(getArgbFromAbgr(entry.getKey()), entry.getValue());
-        }
+        quantizeResult.forEach((key, value) -> colorToCount.put(getArgbFromAbgr(key), value));
 
         // Score colors for color scheme suitability.
         final List<Integer> scoredResults = Score.score(colorToCount, 1);
@@ -463,5 +461,36 @@ public final class ColorScheme {
 
     public Color getSurfaceTint() {
         return getColor(ColorRole.SURFACE_TINT);
+    }
+
+    public String toCssString() {
+        return toCssString("monet");
+    }
+
+    public String toCssString(String prefix) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("*{\n");
+
+        for (ColorRole colorRole : ColorRole.ALL) {
+            Color color = getColor(colorRole);
+            int r = (int) Math.round(color.getRed() * 255.0);
+            int g = (int) Math.round(color.getGreen() * 255.0);
+            int b = (int) Math.round(color.getBlue() * 255.0);
+            String colorString = String.format("%02x%02x%02x", r, g, b);
+
+            builder.append("  -").append(prefix).append('-').append(colorRole.cssVariableNameBase)
+                    .append(": ")
+                    .append("#").append(colorString)
+                    .append(";\n");
+        }
+
+        builder.append('}');
+        return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return toCssString();
     }
 }

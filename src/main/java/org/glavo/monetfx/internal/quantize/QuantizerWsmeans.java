@@ -82,8 +82,7 @@ public final class QuantizerWsmeans {
         PointProvider pointProvider = new PointProviderLab();
 
         int pointCount = 0;
-        for (int i = 0; i < inputPixels.length; i++) {
-            int inputPixel = inputPixels[i];
+        for (int inputPixel : inputPixels) {
             Integer pixelCount = pixelToCount.get(inputPixel);
             if (pixelCount == null) {
                 points[pointCount] = pointProvider.fromInt(inputPixel);

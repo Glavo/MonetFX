@@ -53,7 +53,10 @@ public class ColorUtils {
     static final double[] WHITE_POINT_D65 = new double[]{95.047, 100.0, 108.883};
 
     public static Color fxFromArgb(int argb) {
-        return Color.color(redFromArgb(argb) / 255.0, greenFromArgb(argb) / 255.0, blueFromArgb(argb) / 255.0, alphaFromArgb(argb) / 255.0);
+        return Color.color(redFromArgb(argb) / 255.0,
+                greenFromArgb(argb) / 255.0,
+                blueFromArgb(argb) / 255.0,
+                alphaFromArgb(argb) / 255.0);
     }
 
     private static int fxQuantityToInt(double value) {
@@ -63,7 +66,7 @@ public class ColorUtils {
     public static int argbFromFx(Color color) {
         return (fxQuantityToInt(color.getOpacity()) << 24)
                | (fxQuantityToInt(color.getRed()) << 16)
-               | (fxQuantityToInt(color.getGreen()) << 16)
+               | (fxQuantityToInt(color.getGreen()) << 8)
                | (fxQuantityToInt(color.getBlue()));
     }
 
