@@ -267,7 +267,7 @@ public final class ColorScheme {
     }
 
     private final DynamicScheme scheme;
-    private final Color[] colorMap = new Color[ColorRole.ALL.size()];
+    private final Color[] colors = new Color[ColorRole.ALL.size()];
 
     private ColorScheme(DynamicScheme scheme) {
         this.scheme = scheme;
@@ -286,15 +286,10 @@ public final class ColorScheme {
     }
 
     public Color getColor(@NotNull ColorRole role) {
-        Color color = colorMap[role.ordinal()];
+        Color color = colors[role.ordinal()];
         if (color == null) {
-            synchronized (this) {
-                color = colorMap[role.ordinal()];
-                if (color == null) {
-                    color = ColorUtils.fxFromArgb(role.getArgb(scheme));
-                    colorMap[role.ordinal()] = color;
-                }
-            }
+            color = ColorUtils.fxFromArgb(role.getArgb(scheme));
+            colors[role.ordinal()] = color;
         }
         return color;
     }
