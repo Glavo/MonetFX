@@ -16,6 +16,7 @@
 package org.glavo.monetfx;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
 import org.glavo.monetfx.internal.dynamiccolor.DynamicScheme;
@@ -35,7 +36,6 @@ import org.glavo.monetfx.internal.utils.ColorUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -128,6 +128,60 @@ public final class ColorScheme {
         }
     }
 
+    static final int MAX_DIMENSION = 112;
+
+    // Scale image size down to reduce computation time of color extraction.
+    static int[] imageToScaled(Image image) {
+        if (image.isBackgroundLoading()) {
+            throw new IllegalArgumentException("The image data is not ready yet");
+        }
+
+        if (image.isError()) {
+            throw new IllegalArgumentException("The image was not loaded successfully", image.getException());
+        }
+
+        int sourceWidth = (int) image.getWidth();
+        int sourceHeight = (int) image.getHeight();
+
+        if (sourceWidth <= 0 || sourceHeight <= 0) {
+            throw new IllegalArgumentException("Image dimensions must be greater than zero.");
+        }
+
+        PixelReader pixelReader = image.getPixelReader();
+        if (pixelReader == null) {
+            throw new IllegalArgumentException("Unable to read pixels of image");
+        }
+
+        if (sourceWidth <= MAX_DIMENSION && sourceHeight <= MAX_DIMENSION) {
+            int[] result = new int[sourceWidth * sourceHeight];
+            pixelReader.getPixels(0, 0,
+                    sourceWidth, sourceHeight,
+                    PixelFormat.getIntArgbInstance(),
+                    result,
+                    0, sourceWidth);
+            return result;
+        }
+
+
+        int targetWidth = Math.min(sourceWidth, MAX_DIMENSION);
+        int targetHeight = Math.min(sourceHeight, MAX_DIMENSION);
+
+        double xScale = (double) sourceWidth / (double) targetWidth;
+        double yScale = (double) sourceHeight / (double) targetHeight;
+
+        int[] result = new int[targetWidth * targetHeight];
+
+        for (int y = 0; y < targetHeight; y++) {
+            int resultOffset = y * targetWidth;
+
+            for (int x = 0; x < targetWidth; x++) {
+                result[resultOffset + x] = pixelReader.getArgb((int) (x * xScale), (int) (y * yScale));
+            }
+        }
+
+        return result;
+    }
+
     public static @NotNull ColorScheme fromImage(@NotNull Image image) {
         return fromImage(image, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, 0.0);
     }
@@ -146,16 +200,9 @@ public final class ColorScheme {
                                         @NotNull Brightness brightness,
                                         @NotNull DynamicSchemeVariant dynamicSchemeVariant,
                                         double contrastLevel) {
-        PixelReader pixelReader = image.getPixelReader();
-        if (pixelReader == null) {
-            throw new IllegalArgumentException("Unable to read pixels of image");
-        }
 
-        int width = (int) image.getWidth();
-        int height = (int) image.getHeight();
-
-        Map<Integer, Integer> quantizeResult = QuantizerCelebi.quantize(
-                pixelReader, width, height, 128);
+        int[] imageData = imageToScaled(image);
+        Map<Integer, Integer> quantizeResult = QuantizerCelebi.quantize(imageData, 128);
 
         // Score colors for color scheme suitability.
         final List<Integer> scoredResults = Score.score(quantizeResult, 1);
