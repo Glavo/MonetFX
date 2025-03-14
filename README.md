@@ -43,7 +43,7 @@ There are two ways to get a `ColorScheme` instance:
 ColorScheme blueScheme = ColorScheme.fromSeed(Color.web("#5C6BC0"));
 
 // Get the color scheme based on the background image
-ColorScheme monetScheme = ColorScheme.fromImage(new Image("file://.../background.png"));
+ColorScheme monetScheme = ColorScheme.fromImage(new Image("file:///.../background.png"));
 ```
 
 These factory methods also accept more parameters:
