@@ -13,56 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.glavo.monetfx.property;
+package org.glavo.monetfx.beans.binding;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ObjectPropertyBase;
 import javafx.scene.paint.Color;
 import org.glavo.monetfx.ColorRole;
 import org.glavo.monetfx.ColorScheme;
+import org.glavo.monetfx.beans.value.ObservableColorSchemeValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.EnumMap;
 import java.util.Objects;
 
-public class SimpleColorSchemeProperty extends ObjectPropertyBase<ColorScheme> {
-
-    private static final Object DEFAULT_BEAN = null;
-    private static final String DEFAULT_NAME = "";
-
-    private final Object bean;
-    private final String name;
+public abstract class ColorSchemeExpression implements ObservableColorSchemeValue {
 
     private final EnumMap<ColorRole, WeakReference<ObjectBinding<Color>>> bindings = new EnumMap<>(ColorRole.class);
 
-    public SimpleColorSchemeProperty() {
-        this(DEFAULT_BEAN, DEFAULT_NAME);
-    }
-
-    public SimpleColorSchemeProperty(ColorScheme initialValue) {
-        this(DEFAULT_BEAN, DEFAULT_NAME, initialValue);
-    }
-
-    public SimpleColorSchemeProperty(Object bean, String name) {
-        this.bean = bean;
-        this.name = (name == null) ? DEFAULT_NAME : name;
-    }
-
-    public SimpleColorSchemeProperty(Object bean, String name, ColorScheme initialValue) {
-        super(initialValue);
-        this.bean = bean;
-        this.name = (name == null) ? DEFAULT_NAME : name;
-    }
-
     @Override
-    public Object getBean() {
-        return bean;
+    public ColorScheme getValue() {
+        return get();
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public BooleanBinding isNull() {
+        return Bindings.isNull(this);
+    }
+
+    public BooleanBinding isNotNull() {
+        return Bindings.isNotNull(this);
     }
 
     public ObjectBinding<Color> getColor(@NotNull ColorRole role) {
@@ -77,17 +57,17 @@ public class SimpleColorSchemeProperty extends ObjectPropertyBase<ColorScheme> {
 
         binding = new ObjectBinding<Color>() {
             {
-                bind(SimpleColorSchemeProperty.this);
+                bind(ColorSchemeExpression.this);
             }
 
             @Override
             public void dispose() {
-                unbind(SimpleColorSchemeProperty.this);
+                unbind(ColorSchemeExpression.this);
             }
 
             @Override
             protected Color computeValue() {
-                ColorScheme colorScheme = SimpleColorSchemeProperty.this.get();
+                ColorScheme colorScheme = ColorSchemeExpression.this.get();
                 return colorScheme != null ? colorScheme.getColor(role) : null;
             }
         };

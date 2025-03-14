@@ -38,7 +38,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.glavo.monetfx.ColorRole;
 import org.glavo.monetfx.ColorScheme;
-import org.glavo.monetfx.property.SimpleColorSchemeProperty;
+import org.glavo.monetfx.beans.property.SimpleColorSchemeProperty;
 
 import java.io.File;
 import java.util.List;
@@ -47,7 +47,7 @@ import static org.glavo.monetfx.ColorRole.*;
 
 public final class MonetFXDemo extends Application {
 
-    private final SimpleColorSchemeProperty scheme = new SimpleColorSchemeProperty(ColorScheme.fromSeed(Color.GREEN));
+    private final SimpleColorSchemeProperty scheme = new SimpleColorSchemeProperty(ColorScheme.fromSeed(Color.YELLOW));
 
     private Node createCard(ColorRole cardRole, ColorRole textRole) {
         StackPane card = new StackPane();
