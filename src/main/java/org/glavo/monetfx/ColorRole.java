@@ -17,6 +17,8 @@ package org.glavo.monetfx;
 
 import org.glavo.monetfx.internal.dynamiccolor.DynamicScheme;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public enum ColorRole {
@@ -70,7 +72,8 @@ public enum ColorRole {
     INVERSE_PRIMARY,
     SURFACE_TINT;
 
-    static final ColorRole[] ALL = ColorRole.values();
+
+    static final List<ColorRole> ALL = Arrays.asList(ColorRole.values());
 
     final String displayName;
 
@@ -82,9 +85,8 @@ public enum ColorRole {
         displayName = String.join(" ", parts);
     }
 
-
-    final String cssVariableNameBase = name().toLowerCase(Locale.ROOT).replace("_", "-");
-    final String defaultCssVariableName = "-monet-" + cssVariableNameBase;
+    final String variableNameBase = name().toLowerCase(Locale.ROOT).replace("_", "-");
+    final String defaultVariableName = "-monet-" + variableNameBase;
 
 
     int getArgb(DynamicScheme scheme) {
@@ -192,12 +194,12 @@ public enum ColorRole {
         }
     }
 
-    public String getCssVariableName(String prefix) {
-        return "-" + prefix + "-" + defaultCssVariableName;
+    public String getVariableName(String prefix) {
+        return "-" + prefix + "-" + variableNameBase;
     }
 
-    public String getCssVariableName() {
-        return defaultCssVariableName;
+    public String getVariableName() {
+        return defaultVariableName;
     }
 
     @Override

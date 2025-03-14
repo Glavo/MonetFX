@@ -52,7 +52,6 @@ import javafx.stage.Stage;
 import org.glavo.monetfx.Brightness;
 import org.glavo.monetfx.ColorRole;
 import org.glavo.monetfx.ColorScheme;
-import org.glavo.monetfx.DynamicSchemeVariant;
 import org.glavo.monetfx.beans.property.ColorSchemeProperty;
 import org.glavo.monetfx.beans.property.SimpleColorSchemeProperty;
 
@@ -127,10 +126,10 @@ public final class MonetFXDemo extends Application {
         card.setPrefSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
         Label text = new Label(cardRole.toString());
 
-        card.setStyle("-fx-background-color: " + cardRole.getCssVariableName());
+        card.setStyle("-fx-background-color: " + cardRole.getVariableName());
 
         if (textRole != null) {
-            text.setStyle("-fx-text-fill: " + textRole.getCssVariableName());
+            text.setStyle("-fx-text-fill: " + textRole.getVariableName());
         } else {
             text.setTextFill(Color.WHITE);
         }
@@ -151,7 +150,7 @@ public final class MonetFXDemo extends Application {
 
     Path prevCssFile;
     private void updateCss(Scene scene) {
-        String css = scheme.get().toCssString();
+        String css = scheme.get().toStyleSheet();
         try {
             Path tempFile = Files.createTempFile("monetfx-", ".css");
             System.out.println("CSS File: " + tempFile.toAbsolutePath());
