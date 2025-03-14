@@ -25,12 +25,12 @@ import org.glavo.monetfx.beans.value.ObservableColorSchemeValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
-import java.util.EnumMap;
 import java.util.Objects;
 
 public abstract class ColorSchemeExpression implements ObservableColorSchemeValue {
 
-    private final EnumMap<ColorRole, WeakReference<ObjectBinding<Color>>> bindings = new EnumMap<>(ColorRole.class);
+    @SuppressWarnings("unchecked")
+    private final WeakReference<ObjectBinding<Color>>[] bindings = new WeakReference[ColorRole.ALL.size()];
 
     @Override
     public ColorScheme getValue() {
@@ -48,7 +48,7 @@ public abstract class ColorSchemeExpression implements ObservableColorSchemeValu
     public ObjectBinding<Color> getColor(@NotNull ColorRole role) {
         Objects.requireNonNull(role);
 
-        WeakReference<ObjectBinding<Color>> bindingRef = bindings.get(role);
+        WeakReference<ObjectBinding<Color>> bindingRef = bindings[role.ordinal()];
         ObjectBinding<Color> binding;
 
         if (bindingRef != null && (binding = bindingRef.get()) != null) {
@@ -72,7 +72,7 @@ public abstract class ColorSchemeExpression implements ObservableColorSchemeValu
             }
         };
 
-        bindings.put(role, new WeakReference<>(binding));
+        bindings[role.ordinal()] = new WeakReference<>(binding);
         return binding;
     }
 

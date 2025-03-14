@@ -18,6 +18,7 @@ package org.glavo.monetfx;
 import org.glavo.monetfx.internal.dynamiccolor.DynamicScheme;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -72,8 +73,7 @@ public enum ColorRole {
     INVERSE_PRIMARY,
     SURFACE_TINT;
 
-
-    static final List<ColorRole> ALL = Arrays.asList(ColorRole.values());
+    public static final List<ColorRole> ALL = Collections.unmodifiableList(Arrays.asList(ColorRole.values()));
 
     final String displayName;
 
