@@ -18,6 +18,7 @@ package org.glavo.monetfx.beans.binding;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.scene.paint.Color;
 import org.glavo.monetfx.ColorRole;
 import org.glavo.monetfx.ColorScheme;
@@ -270,5 +271,24 @@ public abstract class ColorSchemeExpression implements ObservableColorSchemeValu
 
     public ObjectBinding<Color> getSurfaceTint() {
         return getColor(ColorRole.SURFACE_TINT);
+    }
+
+    public StringBinding toStyleSheet() {
+        return new StringBinding() {
+            {
+                bind(ColorSchemeExpression.this);
+            }
+
+            @Override
+            public void dispose() {
+                unbind(ColorSchemeExpression.this);
+            }
+
+            @Override
+            protected String computeValue() {
+                ColorScheme scheme = ColorSchemeExpression.this.get();
+                return scheme != null ? scheme.toStyleSheet() : null;
+            }
+        };
     }
 }
