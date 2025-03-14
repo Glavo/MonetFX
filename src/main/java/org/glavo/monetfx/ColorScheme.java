@@ -138,6 +138,12 @@ public final class ColorScheme {
 
     public static ColorScheme fromImage(@NotNull Image image,
                                         @NotNull Brightness brightness,
+                                        @NotNull DynamicSchemeVariant dynamicSchemeVariant) {
+        return fromImage(image, brightness, dynamicSchemeVariant, 0.0);
+    }
+
+    public static ColorScheme fromImage(@NotNull Image image,
+                                        @NotNull Brightness brightness,
                                         @NotNull DynamicSchemeVariant dynamicSchemeVariant,
                                         double contrastLevel) {
         PixelReader pixelReader = image.getPixelReader();
@@ -164,6 +170,12 @@ public final class ColorScheme {
 
     public static ColorScheme fromSeed(@NotNull Color seedColor, @NotNull Brightness brightness) {
         return fromSeed(seedColor, brightness, DynamicSchemeVariant.TONAL_SPOT, 0.0);
+    }
+
+    public static ColorScheme fromSeed(@NotNull Color seedColor,
+                                       @NotNull Brightness brightness,
+                                       @NotNull DynamicSchemeVariant dynamicSchemeVariant) {
+        return fromSeed(seedColor, brightness, dynamicSchemeVariant, 0.0);
     }
 
     /// Generate a [ColorScheme] derived from the given `seedColor`.
@@ -221,6 +233,10 @@ public final class ColorScheme {
 
     public double getContrastLevel() {
         return scheme.contrastLevel;
+    }
+
+    public Color getSourceColor() {
+        return ColorUtils.fxFromArgb(scheme.sourceColorArgb);
     }
 
     public Color getColor(@NotNull ColorRole role) {
