@@ -93,14 +93,18 @@ import java.util.Map;
 /// lower-emphasis option for text and icons.
 public final class ColorScheme {
 
+    private static void checkContrast(double contrastLevel) {
+        if (contrastLevel < 0.0 || contrastLevel > 1.0) {
+            throw new IllegalArgumentException("contrast level must be between 0.0 and 1.0");
+        }
+    }
+
     private static DynamicScheme buildDynamicScheme(
             Brightness brightness,
             Color seedColor,
             DynamicSchemeVariant schemeVariant,
             double contrastLevel
     ) {
-        assert contrastLevel >= -1.0 && contrastLevel <= 1.0 : "contrastLevel must be between -1.0 and 1.0 inclusive.";
-
         final boolean isDark = brightness == Brightness.DARK;
         final Hct sourceColor = Hct.fromInt(ColorUtils.argbFromFx(seedColor));
         switch (schemeVariant) {
@@ -199,7 +203,6 @@ public final class ColorScheme {
                                         @NotNull Brightness brightness,
                                         @NotNull DynamicSchemeVariant dynamicSchemeVariant,
                                         double contrastLevel) {
-
         int[] imageData = imageToScaled(image);
         Map<Integer, Integer> quantizeResult = QuantizerCelebi.quantize(imageData, 128);
 
@@ -256,6 +259,8 @@ public final class ColorScheme {
                                        @NotNull Brightness brightness,
                                        @NotNull DynamicSchemeVariant dynamicSchemeVariant,
                                        double contrastLevel) {
+        checkContrast(contrastLevel);
+
         final DynamicScheme scheme = buildDynamicScheme(
                 brightness,
                 seedColor,

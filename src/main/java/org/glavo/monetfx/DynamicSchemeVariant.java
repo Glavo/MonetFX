@@ -17,7 +17,7 @@ package org.glavo.monetfx;
 
 /// The algorithm used to construct a [ColorScheme] in [ColorScheme#fromSeed].
 ///
-/// The `tonalSpot` variant builds default Material scheme colors. These colors are
+/// The [#TONAL_SPOT] variant builds default Material scheme colors. These colors are
 /// mapped to light or dark tones to achieve visually accessible color
 /// pairings with sufficient contrast between foreground and background elements.
 ///

@@ -329,7 +329,7 @@ public final class MonetFXDemo extends Application {
         root.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
             Image image = backgroundImageProperty.get();
             if (image != null) {
-                return new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)));
+                return new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
             } else {
                 Color backgroundColor = darkModeProperty.get() ? DARK_COLOR : Color.WHITE;
                 return new Background(new BackgroundFill(backgroundColor, null, null));
