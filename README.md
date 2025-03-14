@@ -2,9 +2,7 @@
 
 MonetFX provides support for the [Material 3 color system](https://m3.material.io/styles/color/system/overview) for JavaFX.
 
-MonetFX helps you easily introduce Material 3 dynamic colors into your applications.
-
-MonetFX requires JavaFX 8~24 (and higher). 
+MonetFX requires JavaFX 8~24 (and higher).
 
 This project is currently in beta and may undergo breaking changes in the future.
 
