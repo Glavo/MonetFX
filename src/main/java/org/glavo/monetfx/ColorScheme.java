@@ -35,7 +35,6 @@ import org.glavo.monetfx.internal.score.Score;
 import org.glavo.monetfx.internal.utils.ColorUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -268,7 +267,7 @@ public final class ColorScheme {
     }
 
     private final DynamicScheme scheme;
-    private final EnumMap<ColorRole, Color> colorMap = new EnumMap<>(ColorRole.class);
+    private final Color[] colorMap = new Color[ColorRole.ALL.size()];
 
     private ColorScheme(DynamicScheme scheme) {
         this.scheme = scheme;
@@ -287,13 +286,13 @@ public final class ColorScheme {
     }
 
     public Color getColor(@NotNull ColorRole role) {
-        Color color = colorMap.get(role);
+        Color color = colorMap[role.ordinal()];
         if (color == null) {
             synchronized (this) {
-                color = colorMap.get(role);
+                color = colorMap[role.ordinal()];
                 if (color == null) {
                     color = ColorUtils.fxFromArgb(role.getArgb(scheme));
-                    colorMap.put(role, color);
+                    colorMap[role.ordinal()] = color;
                 }
             }
         }

@@ -27,9 +27,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
@@ -67,9 +67,6 @@ import java.util.List;
 import static org.glavo.monetfx.ColorRole.*;
 
 public final class MonetFXDemo extends Application {
-
-    @SuppressWarnings("DataFlowIssue")
-    private static final String ROOT_CSS = MonetFXDemo.class.getResource("root.css").toExternalForm();
 
     private static final Color DEFAULT_COLOR = Color.web("#5C6BC0");
     private static final Color DARK_COLOR = Color.web("#141314");
@@ -162,7 +159,7 @@ public final class MonetFXDemo extends Application {
             if (prevCssFile != null)
                 Files.deleteIfExists(prevCssFile);
             prevCssFile = tempFile;
-            scene.getStylesheets().setAll(tempFile.toUri().toString(), ROOT_CSS);
+            scene.getStylesheets().setAll(tempFile.toUri().toString());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -211,9 +208,9 @@ public final class MonetFXDemo extends Application {
                     label.setStyle("-fx-text-fill: -monet-on-primary-container");
                     darkModePane.setLeft(label);
 
-                    RadioButton toggleButton = new RadioButton();
-                    toggleButton.selectedProperty().bindBidirectional(darkModeProperty);
-                    darkModePane.setRight(toggleButton);
+                    CheckBox checkBox = new CheckBox();
+                    checkBox.selectedProperty().bindBidirectional(darkModeProperty);
+                    darkModePane.setRight(checkBox);
                 }
 
                 BorderPane colorPickerPane = new BorderPane();
@@ -241,7 +238,6 @@ public final class MonetFXDemo extends Application {
                     BorderPane.setAlignment(label, Pos.CENTER_LEFT);
                     label.setStyle("-fx-text-fill: -monet-on-primary-container");
                     backgroundChooserPane.setLeft(label);
-
 
                     Button chooseButton = new Button("Choose");
                     chooseButton.setOnAction(event -> {
