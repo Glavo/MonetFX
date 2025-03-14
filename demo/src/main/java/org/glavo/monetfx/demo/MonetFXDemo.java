@@ -95,21 +95,21 @@ public final class MonetFXDemo extends Application {
             );
 
             gridPane.getRowConstraints().setAll(
-                    new RowConstraints(defaultCardHeight),
+                    new RowConstraints(defaultCardHeight * 2),
                     new RowConstraints(defaultCardHeight),
                     new RowConstraints(smallGap),
                     new RowConstraints(defaultCardHeight),
                     new RowConstraints(defaultCardHeight),
                     new RowConstraints(largeGap),
-                    new RowConstraints(defaultCardHeight),
+                    new RowConstraints(defaultCardHeight * 2),
                     new RowConstraints(defaultCardHeight),
                     new RowConstraints(defaultCardHeight),
                     new RowConstraints(largeGap),
-                    new RowConstraints(defaultCardHeight),
+                    new RowConstraints(defaultCardHeight * 2),
                     new RowConstraints(smallGap),
-                    new RowConstraints(defaultCardHeight),
+                    new RowConstraints(defaultCardHeight * 2),
                     new RowConstraints(smallGap),
-                    new RowConstraints(defaultCardHeight)
+                    new RowConstraints(defaultCardHeight * 2)
             );
 
 
@@ -209,7 +209,7 @@ public final class MonetFXDemo extends Application {
             }
         });
 
-        Scene scene = new Scene(root, 1080, 560);
+        Scene scene = new Scene(root, 1080, 800);
         primaryStage.setTitle("MonetFX Demo");
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
