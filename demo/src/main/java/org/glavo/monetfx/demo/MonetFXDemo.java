@@ -109,7 +109,7 @@ public final class MonetFXDemo extends Application {
                 color = DEFAULT_COLOR;
             }
 
-            scheme.set(ColorScheme.fromSeed(color, brightness, DynamicSchemeVariant.FIDELITY));
+            scheme.set(ColorScheme.fromSeed(color, brightness));
         } else {
             scheme.set(ColorScheme.fromImage(image, brightness));
         }
@@ -128,7 +128,12 @@ public final class MonetFXDemo extends Application {
         Label text = new Label(cardRole.toString());
 
         card.setStyle("-fx-background-color: " + cardRole.getCssVariableName());
-        text.setStyle("-fx-text-fill: " + textRole.getCssVariableName());
+
+        if (textRole != null) {
+            text.setStyle("-fx-text-fill: " + textRole.getCssVariableName());
+        } else {
+            text.setTextFill(Color.WHITE);
+        }
 
         card.getChildren().add(text);
         return card;
@@ -220,6 +225,13 @@ public final class MonetFXDemo extends Application {
                     colorPickerPane.setLeft(label);
 
                     ColorPicker colorPicker = new ColorPicker();
+                    colorPicker.getCustomColors().setAll(
+                            DEFAULT_COLOR,
+                            Color.web("#b33b15"),
+                            Color.web("#63a002"),
+                            Color.web("#769cdf"),
+                            Color.web("#ffde3f")
+                    );
                     colorPicker.valueProperty().bindBidirectional(colorProperty);
                     colorPickerPane.setRight(colorPicker);
                 }
@@ -310,7 +322,7 @@ public final class MonetFXDemo extends Application {
             GridPane.setRowSpan(inverseBox, 3);
             gridPane.add(inverseBox, 6, 10);
 
-            HBox bottomRightBox = createSplitCard(SCRIM, ON_PRIMARY, SHADOW, ON_PRIMARY);
+            HBox bottomRightBox = createSplitCard(SCRIM, null, SHADOW, null);
             bottomRightBox.setSpacing(largeGap);
             gridPane.add(bottomRightBox, 6, 14);
 
