@@ -82,7 +82,11 @@ public final class ColorSchemeTest {
     @ParameterizedTest
     @MethodSource("arguments")
     public void testFromSeed(Color seed, Brightness brightness, DynamicSchemeVariant variant, Contrast contrast, Map<ColorRole, Color> colors) {
-        ColorScheme scheme = ColorScheme.fromSeed(seed, brightness, variant, contrast);
+        ColorScheme scheme = ColorScheme.newBuilder(seed)
+                .setBrightness(brightness)
+                .setDynamicSchemeVariant(variant)
+                .setContrast(contrast)
+                .build();
 
         assertAll(colors.keySet().stream().map(role ->
                 () -> {
