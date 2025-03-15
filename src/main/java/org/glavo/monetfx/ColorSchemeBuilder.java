@@ -28,7 +28,7 @@ public final class ColorSchemeBuilder {
 
     private Color fallbackColor = ColorScheme.FALLBACK_COLOR;
     private Brightness brightness = Brightness.LIGHT;
-    private DynamicSchemeVariant dynamicSchemeVariant = DynamicSchemeVariant.FIDELITY;
+    private DynamicSchemeVariant dynamicSchemeVariant = DynamicSchemeVariant.TONAL_SPOT;
     private Contrast contrast = Contrast.STANDARD;
 
     ColorSchemeBuilder(Color seed) {
