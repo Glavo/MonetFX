@@ -16,11 +16,15 @@
 package org.glavo.monetfx;
 
 import org.glavo.monetfx.internal.dynamiccolor.DynamicScheme;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public enum ColorRole {
     PRIMARY,
@@ -74,6 +78,31 @@ public enum ColorRole {
     SURFACE_TINT;
 
     public static final List<ColorRole> ALL = Collections.unmodifiableList(Arrays.asList(ColorRole.values()));
+
+    private static String normalizeName(String name) {
+        if (name.indexOf('_') >= 0) {
+            name = name.replace("_", "");
+        } else if (name.indexOf('-') >= 0) {
+            name = name.replace("-", "");
+        }
+
+        return name.toLowerCase(Locale.ROOT);
+    }
+
+
+    private static final Map<String, ColorRole> searchTable = new HashMap<>();
+
+    static {
+        for (ColorRole role : ALL) {
+            if (searchTable.put(normalizeName(role.name()), role) != null) {
+                throw new AssertionError("Duplicate role: " + role);
+            }
+        }
+    }
+
+    public static @Nullable ColorRole of(@NotNull String role) {
+        return searchTable.get(normalizeName(role));
+    }
 
     final String displayName;
 

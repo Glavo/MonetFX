@@ -42,7 +42,7 @@ dependencies {
     compileOnlyApi("org.jetbrains:annotations:26.0.2")
 
     testImplementation("com.google.code.gson:gson:2.12.1")
-
+    testImplementation("org.hildan.fxgson:fx-gson:5.0.0")
     testImplementation(platform("org.junit:junit-bom:5.12.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -56,6 +56,8 @@ tasks.withType<JavaCompile> {
 tasks.test {
     useJUnitPlatform()
     testLogging.showStandardStreams = true
+
+    maxParallelForks = 2
 }
 
 tasks.withType<GenerateModuleMetadata>().configureEach {
