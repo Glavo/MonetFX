@@ -1,3 +1,5 @@
+import kotlin.math.max
+
 /*
  * Copyright 2025 Glavo
  *
@@ -57,7 +59,7 @@ tasks.test {
     useJUnitPlatform()
     testLogging.showStandardStreams = true
 
-    maxParallelForks = 2
+    maxParallelForks = max(Runtime.getRuntime().availableProcessors() / 4, 1)
 }
 
 tasks.withType<GenerateModuleMetadata>().configureEach {
