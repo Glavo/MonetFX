@@ -16,8 +16,6 @@
 
 package org.glavo.monetfx.internal.quantize;
 
-import javafx.scene.image.PixelReader;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -35,24 +33,6 @@ public final class QuantizerMap implements Quantizer {
             final int newPixelCount = currentPixelCount == null ? 1 : currentPixelCount + 1;
             pixelByCount.put(pixel, newPixelCount);
         }
-        colorToCount = pixelByCount;
-        return new QuantizerResult(pixelByCount);
-    }
-
-    @Override
-    public QuantizerResult quantize(PixelReader reader, int width, int height, int maxColors) {
-        final Map<Integer, Integer> pixelByCount = new LinkedHashMap<>();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int pixel = reader.getArgb(x, y);
-
-                final Integer currentPixelCount = pixelByCount.get(pixel);
-                final int newPixelCount = currentPixelCount == null ? 1 : currentPixelCount + 1;
-                pixelByCount.put(pixel, newPixelCount);
-            }
-        }
-
         colorToCount = pixelByCount;
         return new QuantizerResult(pixelByCount);
     }

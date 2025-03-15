@@ -180,6 +180,15 @@ public final class ColorScheme {
         return result;
     }
 
+    static Color extractColor(Image image) {
+        int[] imageData = imageToScaled(image);
+        Map<Integer, Integer> quantizeResult = QuantizerCelebi.quantize(imageData, 128);
+
+        // Score colors for color scheme suitability.
+        final List<Integer> scoredResults = Score.score(quantizeResult, 1);
+        return ColorUtils.fxFromArgb(scoredResults.get(0));
+    }
+
     public static @NotNull ColorScheme fromImage(@NotNull Image image) {
         return fromImage(image, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, Contrast.STANDARD);
     }
@@ -198,14 +207,7 @@ public final class ColorScheme {
                                         @NotNull Brightness brightness,
                                         @NotNull DynamicSchemeVariant dynamicSchemeVariant,
                                         @NotNull Contrast contrastLevel) {
-        int[] imageData = imageToScaled(image);
-        Map<Integer, Integer> quantizeResult = QuantizerCelebi.quantize(imageData, 128);
-
-        // Score colors for color scheme suitability.
-        final List<Integer> scoredResults = Score.score(quantizeResult, 1);
-        final Color baseColor = ColorUtils.fxFromArgb(scoredResults.get(0));
-
-        return fromSeed(baseColor, brightness, dynamicSchemeVariant, contrastLevel);
+        return fromSeed(extractColor(image), brightness, dynamicSchemeVariant, contrastLevel);
     }
 
     public static ColorScheme fromSeed(@NotNull Color seedColor) {

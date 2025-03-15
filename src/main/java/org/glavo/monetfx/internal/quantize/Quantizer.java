@@ -16,10 +16,6 @@
 
 package org.glavo.monetfx.internal.quantize;
 
-import javafx.scene.image.PixelReader;
-
 interface Quantizer {
     QuantizerResult quantize(int[] pixels, int maxColors);
-
-    QuantizerResult quantize(PixelReader reader, int width, int height, int maxColors);
 }

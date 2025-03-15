@@ -16,7 +16,6 @@
 
 package org.glavo.monetfx.internal.quantize;
 
-import javafx.scene.image.PixelReader;
 import org.glavo.monetfx.internal.utils.ColorUtils;
 
 import java.util.ArrayList;
@@ -49,20 +48,6 @@ public final class QuantizerWu implements Quantizer {
     @Override
     public QuantizerResult quantize(int[] pixels, int colorCount) {
         QuantizerResult mapResult = new QuantizerMap().quantize(pixels, colorCount);
-        constructHistogram(mapResult.colorToCount);
-        createMoments();
-        CreateBoxesResult createBoxesResult = createBoxes(colorCount);
-        List<Integer> colors = createResult(createBoxesResult.resultCount);
-        Map<Integer, Integer> resultMap = new LinkedHashMap<>();
-        for (int color : colors) {
-            resultMap.put(color, 0);
-        }
-        return new QuantizerResult(resultMap);
-    }
-
-    @Override
-    public QuantizerResult quantize(PixelReader reader, int width, int height, int colorCount) {
-        QuantizerResult mapResult = new QuantizerMap().quantize(reader, width, height, colorCount);
         constructHistogram(mapResult.colorToCount);
         createMoments();
         CreateBoxesResult createBoxesResult = createBoxes(colorCount);

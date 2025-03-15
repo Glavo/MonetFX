@@ -16,8 +16,6 @@
 
 package org.glavo.monetfx.internal.quantize;
 
-import javafx.scene.image.PixelReader;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -56,19 +54,5 @@ public final class QuantizerCelebi {
         }
 
         return QuantizerWsmeans.quantize(pixels, wuClusters, maxColors);
-    }
-
-    public static Map<Integer, Integer> quantize(PixelReader reader, int width, int height, int maxColors) {
-        QuantizerWu wu = new QuantizerWu();
-        QuantizerResult wuResult = wu.quantize(reader, width, height, maxColors);
-
-        Set<Integer> wuClustersAsObjects = wuResult.colorToCount.keySet();
-        int index = 0;
-        int[] wuClusters = new int[wuClustersAsObjects.size()];
-        for (Integer argb : wuClustersAsObjects) {
-            wuClusters[index++] = argb;
-        }
-
-        return QuantizerWsmeans.quantize(reader, width, height, wuClusters, maxColors);
     }
 }
