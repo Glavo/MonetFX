@@ -15,6 +15,8 @@
  */
 package org.glavo.monetfx;
 
+import java.util.Locale;
+
 /// The algorithm used to construct a [ColorScheme] in [ColorScheme#fromSeed].
 ///
 /// The [#TONAL_SPOT] variant builds default Material scheme colors. These colors are
@@ -23,7 +25,7 @@ package org.glavo.monetfx;
 ///
 /// In some cases, the tones can prevent colors from appearing as intended,
 /// such as when a color is too light to offer enough contrast for accessibility.
-/// Color fidelity (`DynamicSchemeVariant.fidelity`) is a feature that adjusts
+/// Color fidelity (`DynamicSchemeVariant.FIDELITY`) is a feature that adjusts
 /// tones in these cases to produce the intended visual results without harming
 /// visual contrast.
 public enum DynamicSchemeVariant {
@@ -58,5 +60,20 @@ public enum DynamicSchemeVariant {
     RAINBOW,
 
     /// A playful theme - the seed color's hue does not appear in the theme.
-    FRUIT_SALAD,
+    FRUIT_SALAD;
+
+    private final String displayName;
+
+    DynamicSchemeVariant() {
+        String[] parts = this.name().split("_");
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].charAt(0) + parts[i].substring(1).toLowerCase(Locale.ROOT);
+        }
+        this.displayName = String.join(" ", parts);
+    }
+
+    @Override
+    public String toString() {
+        return displayName;
+    }
 }

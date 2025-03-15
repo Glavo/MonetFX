@@ -19,8 +19,10 @@ import javafx.application.Application;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -29,7 +31,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
@@ -52,6 +56,9 @@ import javafx.stage.Stage;
 import org.glavo.monetfx.Brightness;
 import org.glavo.monetfx.ColorRole;
 import org.glavo.monetfx.ColorScheme;
+import org.glavo.monetfx.ColorSchemeBuilder;
+import org.glavo.monetfx.Contrast;
+import org.glavo.monetfx.DynamicSchemeVariant;
 import org.glavo.monetfx.beans.property.ColorSchemeProperty;
 import org.glavo.monetfx.beans.property.SimpleColorSchemeProperty;
 
@@ -83,6 +90,8 @@ public final class MonetFXDemo extends Application {
     private final BooleanProperty darkModeProperty = new SimpleBooleanProperty(false);
     private final ObjectProperty<Color> colorProperty = new SimpleObjectProperty<>(DEFAULT_COLOR);
     private final ObjectProperty<Image> backgroundImageProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<DynamicSchemeVariant> dynamicSchemeVariantProperty = new SimpleObjectProperty<>(DynamicSchemeVariant.TONAL_SPOT);
+    private final DoubleProperty contrastProperty = new SimpleDoubleProperty(0.0);
 
     private final ColorSchemeProperty scheme = new SimpleColorSchemeProperty();
 
@@ -100,21 +109,24 @@ public final class MonetFXDemo extends Application {
 
         Brightness brightness = darkModeProperty.get() ? Brightness.DARK : Brightness.LIGHT;
         Image image = backgroundImageProperty.get();
+
+        ColorSchemeBuilder builder;
         if (image == null) {
             Color color = colorProperty.get();
             if (color == null) {
                 color = DEFAULT_COLOR;
             }
 
-            scheme.set(ColorScheme.newBuilder(color)
-                    .setBrightness(brightness)
-                    .build());
+            builder = ColorScheme.newBuilder(color);
         } else {
-            scheme.set(ColorScheme.newBuilder(image)
-                    .setFallbackColor(DEFAULT_COLOR)
-                    .setBrightness(brightness)
-                    .build());
+            builder = ColorScheme.newBuilder(image).setFallbackColor(DEFAULT_COLOR);
         }
+
+        scheme.set(builder
+                .setBrightness(brightness)
+                .setDynamicSchemeVariant(dynamicSchemeVariantProperty.get())
+                .setContrast(new Contrast(contrastProperty.get()))
+                .build());
     };
 
     {
@@ -122,6 +134,8 @@ public final class MonetFXDemo extends Application {
         colorProperty.addListener(listener);
         backgroundImageProperty.addListener(listener);
         darkModeProperty.addListener(listener);
+        dynamicSchemeVariantProperty.addListener(listener);
+        contrastProperty.addListener(listener);
     }
 
     private Node createCard(ColorRole cardRole, ColorRole textRole) {
@@ -200,12 +214,12 @@ public final class MonetFXDemo extends Application {
             settingsPane.setTop(titlePane);
             {
                 Label label = new Label("Settings");
-                label.setStyle("-fx-text-fill: -monet-on-primary-container; -fx-font-size: 16");
-                label.setPadding(new Insets(0, 0, 10, 0));
+                label.setStyle("-fx-text-fill: -monet-on-primary-container; -fx-font-size: 15");
+                label.setPadding(new Insets(0, 0, 8, 0));
                 titlePane.getChildren().add(label);
             }
 
-            VBox content = new VBox(10);
+            VBox content = new VBox(8);
             settingsPane.setCenter(content);
             {
                 BorderPane darkModePane = new BorderPane();
@@ -257,7 +271,39 @@ public final class MonetFXDemo extends Application {
                     backgroundChooserPane.setRight(chooseButton);
                 }
 
-                content.getChildren().setAll(darkModePane, colorPickerPane, backgroundChooserPane);
+
+                BorderPane variantPane = new BorderPane();
+                {
+                    Label label = new Label("Variant");
+                    BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+                    label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                    variantPane.setLeft(label);
+
+                    ComboBox<DynamicSchemeVariant> comboBox = new ComboBox<>();
+                    comboBox.getItems().addAll(DynamicSchemeVariant.values());
+                    comboBox.getSelectionModel().select(DynamicSchemeVariant.TONAL_SPOT);
+                    comboBox.getSelectionModel().selectedItemProperty().addListener(
+                            (observable, oldValue, newValue) ->
+                                    this.dynamicSchemeVariantProperty.set(newValue));
+                    variantPane.setRight(comboBox);
+                }
+
+                BorderPane contrastPane = new BorderPane();
+                {
+                    Label label = new Label("Contrast");
+                    BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+                    label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                    contrastPane.setLeft(label);
+
+                    Slider slider = new Slider(-1.0, 1.0, 0.0);
+                    slider.setShowTickMarks(true);
+                    slider.setShowTickLabels(true);
+                    slider.setMajorTickUnit(0.5);
+                    slider.valueProperty().bindBidirectional(contrastProperty);
+                    contrastPane.setRight(slider);
+                }
+
+                content.getChildren().setAll(darkModePane, colorPickerPane, backgroundChooserPane, variantPane, contrastPane);
             }
         }
 
