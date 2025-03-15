@@ -72,6 +72,7 @@ public final class MonetFXDemo extends Application {
     private static final Color DARK_COLOR = Color.web("#141314");
 
     private final FileChooser fileChooser = new FileChooser();
+
     {
         fileChooser.setTitle("Choose background image");
         fileChooser.getExtensionFilters().setAll(
@@ -105,9 +106,14 @@ public final class MonetFXDemo extends Application {
                 color = DEFAULT_COLOR;
             }
 
-            scheme.set(ColorScheme.fromSeed(color, brightness));
+            scheme.set(ColorScheme.newBuilder(color)
+                    .setBrightness(brightness)
+                    .build());
         } else {
-            scheme.set(ColorScheme.fromImage(image, brightness));
+            scheme.set(ColorScheme.newBuilder(image)
+                    .setFallbackColor(DEFAULT_COLOR)
+                    .setBrightness(brightness)
+                    .build());
         }
     };
 
@@ -146,6 +152,7 @@ public final class MonetFXDemo extends Application {
     }
 
     Path prevCssFile;
+
     private void updateCss(Scene scene) {
         String css = scheme.get().toStyleSheet();
         try {

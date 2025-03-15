@@ -52,12 +52,10 @@ public final class ExtractColorTest {
         return writableImage;
     }
 
-    private static final Color FALLBACK_COLOR = Color.web("#4285f4");
-
     private static Stream<Arguments> monochromes() {
         List<Pair<Color, Color>> colors = Arrays.asList(
-                pair(Color.BLACK, FALLBACK_COLOR),
-                pair(Color.WHITE, FALLBACK_COLOR),
+                pair(Color.BLACK, ColorScheme.FALLBACK_COLOR),
+                pair(Color.WHITE, ColorScheme.FALLBACK_COLOR),
                 pair(Color.GREEN, Color.GREEN),
                 pair(Color.RED, Color.RED),
                 pair(Color.BLUE, Color.BLUE)
@@ -80,6 +78,6 @@ public final class ExtractColorTest {
     @ParameterizedTest
     @MethodSource("monochromes")
     public void testExtractMonochrome(Color sourceColor, Color targetColor, int width, int height) {
-        assertEquals(targetColor, ColorScheme.extractColor(createMonochromeImage(sourceColor, width, height)));
+        assertEquals(targetColor, ColorScheme.extractColor(createMonochromeImage(sourceColor, width, height), ColorScheme.FALLBACK_COLOR));
     }
 }

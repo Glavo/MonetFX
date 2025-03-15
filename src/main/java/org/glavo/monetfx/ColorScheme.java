@@ -94,14 +94,13 @@ import java.util.Map;
 /// lower-emphasis option for text and icons.
 public final class ColorScheme {
 
-    private static DynamicScheme buildDynamicScheme(
-            Brightness brightness,
-            Color seedColor,
+    static DynamicScheme buildDynamicScheme(
+            Color seedColor, Brightness brightness,
             DynamicSchemeVariant schemeVariant,
             Contrast contrastLevel
     ) {
-        final boolean isDark = brightness == Brightness.DARK;
         final Hct sourceColor = Hct.fromInt(ColorUtils.argbFromFx(seedColor));
+        final boolean isDark = brightness == Brightness.DARK;
         switch (schemeVariant) {
             case TONAL_SPOT:
                 return new SchemeTonalSpot(sourceColor, isDark, contrastLevel.getValue());
@@ -126,6 +125,7 @@ public final class ColorScheme {
         }
     }
 
+    static final Color FALLBACK_COLOR = Color.web("#4285f4");
     static final int MAX_DIMENSION = 112;
 
     // Scale image size down to reduce computation time of color extraction.
@@ -180,96 +180,42 @@ public final class ColorScheme {
         return result;
     }
 
-    static Color extractColor(Image image) {
+    static Color extractColor(Image image, Color fallbackColor) {
         int[] imageData = imageToScaled(image);
         Map<Integer, Integer> quantizeResult = QuantizerCelebi.quantize(imageData, 128);
 
         // Score colors for color scheme suitability.
-        final List<Integer> scoredResults = Score.score(quantizeResult, 1);
+        final List<Integer> scoredResults = Score.score(quantizeResult, 1, ColorUtils.argbFromFx(fallbackColor));
         return ColorUtils.fxFromArgb(scoredResults.get(0));
     }
 
     public static @NotNull ColorScheme fromImage(@NotNull Image image) {
-        return fromImage(image, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, Contrast.STANDARD);
-    }
-
-    public static @NotNull ColorScheme fromImage(@NotNull Image image, @NotNull Brightness brightness) {
-        return fromImage(image, brightness, DynamicSchemeVariant.TONAL_SPOT, Contrast.STANDARD);
-    }
-
-    public static ColorScheme fromImage(@NotNull Image image,
-                                        @NotNull Brightness brightness,
-                                        @NotNull DynamicSchemeVariant dynamicSchemeVariant) {
-        return fromImage(image, brightness, dynamicSchemeVariant, Contrast.STANDARD);
-    }
-
-    public static ColorScheme fromImage(@NotNull Image image,
-                                        @NotNull Brightness brightness,
-                                        @NotNull DynamicSchemeVariant dynamicSchemeVariant,
-                                        @NotNull Contrast contrastLevel) {
-        return fromSeed(extractColor(image), brightness, dynamicSchemeVariant, contrastLevel);
+        return fromSeed(extractColor(image, ColorScheme.FALLBACK_COLOR));
     }
 
     public static ColorScheme fromSeed(@NotNull Color seedColor) {
-        return fromSeed(seedColor, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, Contrast.STANDARD);
-    }
-
-    public static ColorScheme fromSeed(@NotNull Color seedColor, @NotNull Brightness brightness) {
-        return fromSeed(seedColor, brightness, DynamicSchemeVariant.TONAL_SPOT, Contrast.STANDARD);
-    }
-
-    public static ColorScheme fromSeed(@NotNull Color seedColor,
-                                       @NotNull Brightness brightness,
-                                       @NotNull DynamicSchemeVariant dynamicSchemeVariant) {
-        return fromSeed(seedColor, brightness, dynamicSchemeVariant, Contrast.STANDARD);
-    }
-
-    /// Generate a [ColorScheme] derived from the given `seedColor`.
-    ///
-    /// Using the `seedColor` as a starting point, a set of tonal palettes are
-    /// constructed. By default, the tonal palettes are based on the Material 3
-    /// Color system and provide all of the [ColorScheme] colors. These colors are
-    /// designed to work well together and meet contrast requirements for
-    /// accessibility.
-    ///
-    /// If any of the optional color parameters are non-null they will be
-    /// used in place of the generated colors for that field in the resulting
-    /// color scheme. This allows apps to override specific colors for their
-    /// needs.
-    ///
-    /// Given the nature of the algorithm, the `seedColor` may not wind up as
-    /// one of the ColorScheme colors.
-    ///
-    /// The `dynamicSchemeVariant` parameter creates different types of
-    /// [DynamicScheme]s, which are used to generate different styles of [ColorScheme]s.
-    /// By default, `dynamicSchemeVariant` is set to `tonalSpot`. A [ColorScheme]
-    /// constructed by `dynamicSchemeVariant.tonalSpot` has pastel palettes and
-    /// won't be too "colorful" even if the `seedColor` has a high chroma value.
-    /// If the resulting color scheme is too dark, consider setting `dynamicSchemeVariant`
-    /// to [DynamicSchemeVariant#FIDELITY], whose palettes match the seed color.
-    ///
-    /// The `contrastLevel` parameter indicates the contrast level between color
-    /// pairs, such as [ColorRole#PRIMARY] and [ColorRole#ON_PRIMARY]. 0.0 is the default (normal);
-    /// -1.0 is the lowest; 1.0 is the highest. From Material Design guideline, the
-    /// medium and high contrast correspond to 0.5 and 1.0 respectively.
-    public static ColorScheme fromSeed(@NotNull Color seedColor,
-                                       @NotNull Brightness brightness,
-                                       @NotNull DynamicSchemeVariant dynamicSchemeVariant,
-                                       @NotNull Contrast contrastLevel) {
         final DynamicScheme scheme = buildDynamicScheme(
-                brightness,
                 seedColor,
-                dynamicSchemeVariant,
-                contrastLevel
+                Brightness.LIGHT,
+                DynamicSchemeVariant.TONAL_SPOT,
+                Contrast.STANDARD
         );
 
         return new ColorScheme(scheme);
     }
 
+    public static ColorSchemeBuilder newBuilder(@NotNull Image image) {
+        return new ColorSchemeBuilder(image);
+    }
+
+    public static ColorSchemeBuilder newBuilder(@NotNull Color seedColor) {
+        return new ColorSchemeBuilder(seedColor);
+    }
+
     private final DynamicScheme scheme;
     private final Color[] colors = new Color[ColorRole.ALL.size()];
 
-    private ColorScheme(DynamicScheme scheme) {
+    ColorScheme(DynamicScheme scheme) {
         this.scheme = scheme;
     }
 
@@ -523,6 +469,19 @@ public final class ColorScheme {
 
         builder.append("}\n");
         return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+
+
+        return super.equals(obj);
     }
 
     @Override
