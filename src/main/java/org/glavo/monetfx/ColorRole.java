@@ -77,6 +77,8 @@ public enum ColorRole {
     INVERSE_PRIMARY,
     SURFACE_TINT;
 
+    static final String DEFAULT_VARIABLE_NAME_PREFIX = "-monet";
+
     public static final List<ColorRole> ALL = Collections.unmodifiableList(Arrays.asList(ColorRole.values()));
 
     private static String normalizeName(String name) {
@@ -88,7 +90,6 @@ public enum ColorRole {
 
         return name.toLowerCase(Locale.ROOT);
     }
-
 
     private static final Map<String, ColorRole> searchTable = new HashMap<>();
 
@@ -115,8 +116,7 @@ public enum ColorRole {
     }
 
     final String variableNameBase = name().toLowerCase(Locale.ROOT).replace("_", "-");
-    final String defaultVariableName = "-monet-" + variableNameBase;
-
+    final String defaultVariableName = DEFAULT_VARIABLE_NAME_PREFIX + "-" + variableNameBase;
 
     int getArgb(DynamicScheme scheme) {
         switch (this) {
@@ -224,7 +224,7 @@ public enum ColorRole {
     }
 
     public String getVariableName(String prefix) {
-        return "-" + prefix + "-" + variableNameBase;
+        return prefix + "-" + variableNameBase;
     }
 
     public String getVariableName() {

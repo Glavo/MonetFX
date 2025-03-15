@@ -34,6 +34,7 @@ import org.glavo.monetfx.internal.scheme.SchemeVibrant;
 import org.glavo.monetfx.internal.score.Score;
 import org.glavo.monetfx.internal.utils.ColorUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -488,36 +489,37 @@ public final class ColorScheme {
     }
 
     public String toStyleSheet() {
-        return toStyleSheet("monet");
+        return toStyleSheet(null, null, null);
     }
 
-    public String toStyleSheet(String prefix) {
-        return toStyleSheet(prefix, ColorRole.ALL);
-    }
-
-    public String toStyleSheet(Iterable<ColorRole> colorRoles) {
-        return toStyleSheet("monet", colorRoles);
-    }
-
-    public String toStyleSheet(String prefix, Iterable<ColorRole> colorRoles) {
+    public String toStyleSheet(@Nullable String cssClass, @Nullable String prefix, @Nullable Iterable<ColorRole> colorRoles) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("*{\n");
+        if (cssClass != null) {
+            builder.append('.').append(cssClass).append(" {\n");
+        } else {
+            builder.append("* {\n");
+        }
+
+        if (prefix == null) {
+            prefix = ColorRole.DEFAULT_VARIABLE_NAME_PREFIX;
+        }
+
+        if (colorRoles == null) {
+            colorRoles = ColorRole.ALL;
+        }
 
         for (ColorRole colorRole : colorRoles) {
             Color color = getColor(colorRole);
             int r = (int) Math.round(color.getRed() * 255.0);
             int g = (int) Math.round(color.getGreen() * 255.0);
             int b = (int) Math.round(color.getBlue() * 255.0);
-            String colorString = String.format("%02x%02x%02x", r, g, b);
 
-            builder.append("  -").append(prefix).append('-').append(colorRole.variableNameBase)
-                    .append(": ")
-                    .append("#").append(colorString)
-                    .append(";\n");
+            builder.append("  ").append(prefix).append('-').append(colorRole.variableNameBase)
+                    .append(": rgb(").append(r).append(", ").append(g).append(", ").append(b).append(");\n");
         }
 
-        builder.append('}');
+        builder.append("}\n");
         return builder.toString();
     }
 
