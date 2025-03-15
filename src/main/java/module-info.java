@@ -15,6 +15,7 @@
  */
 module org.glavo.monetfx {
     requires javafx.base;
+    requires javafx.graphics;
 
     exports org.glavo.monetfx;
     exports org.glavo.monetfx.beans.binding;
