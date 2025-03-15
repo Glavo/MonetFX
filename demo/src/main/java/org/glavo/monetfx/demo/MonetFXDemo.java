@@ -84,6 +84,8 @@ public final class MonetFXDemo extends Application {
     private static final Color DEFAULT_COLOR = Color.web("#5C6BC0");
     private static final Color DARK_COLOR = Color.web("#141314");
 
+    private static final String STYLESHEET_PATH = MonetFXDemo.class.getResource("style.css").toExternalForm();
+
     private static String toWeb(Color color) {
         return String.format("#%02X%02X%02X",
                 Math.round(color.getRed() * 255),
@@ -215,7 +217,7 @@ public final class MonetFXDemo extends Application {
             if (prevCssFile != null)
                 Files.deleteIfExists(prevCssFile);
             prevCssFile = tempFile;
-            scene.getStylesheets().setAll(tempFile.toUri().toString());
+            scene.getStylesheets().setAll(tempFile.toUri().toString(), STYLESHEET_PATH);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
