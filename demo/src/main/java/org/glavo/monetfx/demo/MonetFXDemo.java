@@ -18,6 +18,7 @@ package org.glavo.monetfx.demo;
 import javafx.application.Application;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -26,6 +27,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -35,6 +37,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -69,6 +74,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import static org.glavo.monetfx.ColorRole.*;
@@ -77,6 +83,13 @@ public final class MonetFXDemo extends Application {
 
     private static final Color DEFAULT_COLOR = Color.web("#5C6BC0");
     private static final Color DARK_COLOR = Color.web("#141314");
+
+    private static String toWeb(Color color) {
+        return String.format("#%02X%02X%02X",
+                Math.round(color.getRed() * 255),
+                Math.round(color.getGreen() * 255),
+                Math.round(color.getBlue() * 255));
+    }
 
     private final FileChooser fileChooser = new FileChooser();
 
@@ -139,19 +152,41 @@ public final class MonetFXDemo extends Application {
     }
 
     private Node createCard(ColorRole cardRole, ColorRole textRole) {
-        StackPane card = new StackPane();
+        BorderPane card = new BorderPane();
         card.setPrefSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
-        Label text = new Label(cardRole.toString());
-
         card.setStyle("-fx-background-color: " + cardRole.getVariableName());
 
+        Label nameLabel = new Label(cardRole.toString());
+        BorderPane.setAlignment(nameLabel, Pos.TOP_LEFT);
+        BorderPane.setMargin(nameLabel, new Insets(5));
+        card.setTop(nameLabel);
+
+        Label colorLabel = new Label();
+        BorderPane.setAlignment(colorLabel, Pos.BOTTOM_RIGHT);
+        BorderPane.setMargin(colorLabel, new Insets(5));
+        card.setBottom(colorLabel);
+
+        ObjectBinding<Color> colorBinding = scheme.getColor(cardRole);
+        colorLabel.textProperty().bind(Bindings.createStringBinding(() -> toWeb(colorBinding.get()), colorBinding));
+
         if (textRole != null) {
-            text.setStyle("-fx-text-fill: " + textRole.getVariableName());
+            nameLabel.textFillProperty().bind(scheme.getColor(textRole));
+            colorLabel.textFillProperty().bind(scheme.getColor(textRole));
         } else {
-            text.setTextFill(Color.WHITE);
+            nameLabel.setTextFill(Color.WHITE);
+            colorLabel.setTextFill(Color.WHITE);
         }
 
-        card.getChildren().add(text);
+        card.setCursor(Cursor.CROSSHAIR);
+        card.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
+                String color = toWeb(colorBinding.get());
+                Dragboard.getSystemClipboard().setContent(Collections.singletonMap(DataFormat.PLAIN_TEXT, color));
+                System.out.println("Copy color " + color + " to clipboard");
+                event.consume();
+            }
+        });
+
         return card;
     }
 
