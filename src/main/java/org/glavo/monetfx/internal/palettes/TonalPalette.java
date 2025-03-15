@@ -27,7 +27,6 @@ import java.util.Map;
  * <p>TonalPalette is intended for use in a single thread due to its stateful caching.
  */
 public final class TonalPalette {
-    final Map<Integer, Integer> cache;
     final Hct keyColor;
     final double hue;
     final double chroma;
@@ -65,7 +64,6 @@ public final class TonalPalette {
     }
 
     private TonalPalette(double hue, double chroma, Hct keyColor) {
-        cache = new HashMap<>();
         this.hue = hue;
         this.chroma = chroma;
         this.keyColor = keyColor;
@@ -78,12 +76,7 @@ public final class TonalPalette {
      * @return ARGB representation of a color with that tone.
      */
     public int tone(int tone) {
-        Integer color = cache.get(tone);
-        if (color == null) {
-            color = Hct.from(this.hue, this.chroma, tone).toInt();
-            cache.put(tone, color);
-        }
-        return color;
+        return getHct(tone).toInt();
     }
 
     /**
