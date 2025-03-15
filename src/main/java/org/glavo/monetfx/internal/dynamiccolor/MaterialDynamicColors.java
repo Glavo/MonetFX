@@ -27,12 +27,6 @@ import java.util.function.Supplier;
 /**
  * Named colors, otherwise known as tokens, or roles, in the Material Design system.
  */
-// Prevent lint for Function.apply not being available on Android before API level 14 (4.0.1).
-// "AndroidJdkLibsChecker" for Function, "NewApi" for Function.apply().
-// A java_library Bazel rule with an Android constraint cannot skip these warnings without this
-// annotation; another solution would be to create an android_library rule and supply
-// AndroidManifest with an SDK set higher than 14.
-@SuppressWarnings({"AndroidJdkLibsChecker", "NewApi"})
 public final class MaterialDynamicColors {
     /**
      * Optionally use fidelity on most color schemes.
@@ -46,47 +40,6 @@ public final class MaterialDynamicColors {
     @NotNull
     public DynamicColor highestSurface(@NotNull DynamicScheme s) {
         return s.isDark ? surfaceBright() : surfaceDim();
-    }
-
-    // Compatibility Keys Colors for Android
-    @NotNull
-    public DynamicColor primaryPaletteKeyColor() {
-        return DynamicColor.fromPalette(
-                /* name= */ "primary_palette_key_color",
-                /* palette= */ (s) -> s.primaryPalette,
-                /* tone= */ (s) -> s.primaryPalette.getKeyColor().getTone());
-    }
-
-    @NotNull
-    public DynamicColor secondaryPaletteKeyColor() {
-        return DynamicColor.fromPalette(
-                /* name= */ "secondary_palette_key_color",
-                /* palette= */ (s) -> s.secondaryPalette,
-                /* tone= */ (s) -> s.secondaryPalette.getKeyColor().getTone());
-    }
-
-    @NotNull
-    public DynamicColor tertiaryPaletteKeyColor() {
-        return DynamicColor.fromPalette(
-                /* name= */ "tertiary_palette_key_color",
-                /* palette= */ (s) -> s.tertiaryPalette,
-                /* tone= */ (s) -> s.tertiaryPalette.getKeyColor().getTone());
-    }
-
-    @NotNull
-    public DynamicColor neutralPaletteKeyColor() {
-        return DynamicColor.fromPalette(
-                /* name= */ "neutral_palette_key_color",
-                /* palette= */ (s) -> s.neutralPalette,
-                /* tone= */ (s) -> s.neutralPalette.getKeyColor().getTone());
-    }
-
-    @NotNull
-    public DynamicColor neutralVariantPaletteKeyColor() {
-        return DynamicColor.fromPalette(
-                /* name= */ "neutral_variant_palette_key_color",
-                /* palette= */ (s) -> s.neutralVariantPalette,
-                /* tone= */ (s) -> s.neutralVariantPalette.getKeyColor().getTone());
     }
 
     @NotNull
@@ -939,11 +892,6 @@ public final class MaterialDynamicColors {
      */
     public List<Supplier<DynamicColor>> allDynamicColors() {
         return Arrays.<Supplier<DynamicColor>>asList(
-                this::primaryPaletteKeyColor,
-                this::secondaryPaletteKeyColor,
-                this::tertiaryPaletteKeyColor,
-                this::neutralPaletteKeyColor,
-                this::neutralVariantPaletteKeyColor,
                 this::background,
                 this::onBackground,
                 this::surface,

@@ -125,26 +125,6 @@ public class DynamicScheme {
         return dynamicColor.getArgb(this);
     }
 
-    public int getPrimaryPaletteKeyColor() {
-        return getArgb(new MaterialDynamicColors().primaryPaletteKeyColor());
-    }
-
-    public int getSecondaryPaletteKeyColor() {
-        return getArgb(new MaterialDynamicColors().secondaryPaletteKeyColor());
-    }
-
-    public int getTertiaryPaletteKeyColor() {
-        return getArgb(new MaterialDynamicColors().tertiaryPaletteKeyColor());
-    }
-
-    public int getNeutralPaletteKeyColor() {
-        return getArgb(new MaterialDynamicColors().neutralPaletteKeyColor());
-    }
-
-    public int getNeutralVariantPaletteKeyColor() {
-        return getArgb(new MaterialDynamicColors().neutralVariantPaletteKeyColor());
-    }
-
     public int getBackground() {
         return getArgb(new MaterialDynamicColors().background());
     }
