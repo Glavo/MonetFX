@@ -93,39 +93,33 @@ import java.util.Map;
 /// lower-emphasis option for text and icons.
 public final class ColorScheme {
 
-    private static void checkContrast(double contrastLevel) {
-        if (contrastLevel < 0.0 || contrastLevel > 1.0) {
-            throw new IllegalArgumentException("contrast level must be between 0.0 and 1.0");
-        }
-    }
-
     private static DynamicScheme buildDynamicScheme(
             Brightness brightness,
             Color seedColor,
             DynamicSchemeVariant schemeVariant,
-            double contrastLevel
+            Contrast contrastLevel
     ) {
         final boolean isDark = brightness == Brightness.DARK;
         final Hct sourceColor = Hct.fromInt(ColorUtils.argbFromFx(seedColor));
         switch (schemeVariant) {
             case TONAL_SPOT:
-                return new SchemeTonalSpot(sourceColor, isDark, contrastLevel);
+                return new SchemeTonalSpot(sourceColor, isDark, contrastLevel.getValue());
             case FIDELITY:
-                return new SchemeFidelity(sourceColor, isDark, contrastLevel);
+                return new SchemeFidelity(sourceColor, isDark, contrastLevel.getValue());
             case CONTENT:
-                return new SchemeContent(sourceColor, isDark, contrastLevel);
+                return new SchemeContent(sourceColor, isDark, contrastLevel.getValue());
             case MONOCHROME:
-                return new SchemeMonochrome(sourceColor, isDark, contrastLevel);
+                return new SchemeMonochrome(sourceColor, isDark, contrastLevel.getValue());
             case NEUTRAL:
-                return new SchemeNeutral(sourceColor, isDark, contrastLevel);
+                return new SchemeNeutral(sourceColor, isDark, contrastLevel.getValue());
             case VIBRANT:
-                return new SchemeVibrant(sourceColor, isDark, contrastLevel);
+                return new SchemeVibrant(sourceColor, isDark, contrastLevel.getValue());
             case EXPRESSIVE:
-                return new SchemeExpressive(sourceColor, isDark, contrastLevel);
+                return new SchemeExpressive(sourceColor, isDark, contrastLevel.getValue());
             case RAINBOW:
-                return new SchemeRainbow(sourceColor, isDark, contrastLevel);
+                return new SchemeRainbow(sourceColor, isDark, contrastLevel.getValue());
             case FRUIT_SALAD:
-                return new SchemeFruitSalad(sourceColor, isDark, contrastLevel);
+                return new SchemeFruitSalad(sourceColor, isDark, contrastLevel.getValue());
             default:
                 throw new AssertionError("Unknown scheme variant " + schemeVariant);
         }
@@ -186,23 +180,23 @@ public final class ColorScheme {
     }
 
     public static @NotNull ColorScheme fromImage(@NotNull Image image) {
-        return fromImage(image, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, 0.0);
+        return fromImage(image, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, Contrast.STANDARD);
     }
 
     public static @NotNull ColorScheme fromImage(@NotNull Image image, @NotNull Brightness brightness) {
-        return fromImage(image, brightness, DynamicSchemeVariant.TONAL_SPOT, 0.0);
+        return fromImage(image, brightness, DynamicSchemeVariant.TONAL_SPOT, Contrast.STANDARD);
     }
 
     public static ColorScheme fromImage(@NotNull Image image,
                                         @NotNull Brightness brightness,
                                         @NotNull DynamicSchemeVariant dynamicSchemeVariant) {
-        return fromImage(image, brightness, dynamicSchemeVariant, 0.0);
+        return fromImage(image, brightness, dynamicSchemeVariant, Contrast.STANDARD);
     }
 
     public static ColorScheme fromImage(@NotNull Image image,
                                         @NotNull Brightness brightness,
                                         @NotNull DynamicSchemeVariant dynamicSchemeVariant,
-                                        double contrastLevel) {
+                                        @NotNull Contrast contrastLevel) {
         int[] imageData = imageToScaled(image);
         Map<Integer, Integer> quantizeResult = QuantizerCelebi.quantize(imageData, 128);
 
@@ -214,17 +208,17 @@ public final class ColorScheme {
     }
 
     public static ColorScheme fromSeed(@NotNull Color seedColor) {
-        return fromSeed(seedColor, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, 0.0);
+        return fromSeed(seedColor, Brightness.LIGHT, DynamicSchemeVariant.TONAL_SPOT, Contrast.STANDARD);
     }
 
     public static ColorScheme fromSeed(@NotNull Color seedColor, @NotNull Brightness brightness) {
-        return fromSeed(seedColor, brightness, DynamicSchemeVariant.TONAL_SPOT, 0.0);
+        return fromSeed(seedColor, brightness, DynamicSchemeVariant.TONAL_SPOT, Contrast.STANDARD);
     }
 
     public static ColorScheme fromSeed(@NotNull Color seedColor,
                                        @NotNull Brightness brightness,
                                        @NotNull DynamicSchemeVariant dynamicSchemeVariant) {
-        return fromSeed(seedColor, brightness, dynamicSchemeVariant, 0.0);
+        return fromSeed(seedColor, brightness, dynamicSchemeVariant, Contrast.STANDARD);
     }
 
     /// Generate a [ColorScheme] derived from the given `seedColor`.
@@ -258,9 +252,7 @@ public final class ColorScheme {
     public static ColorScheme fromSeed(@NotNull Color seedColor,
                                        @NotNull Brightness brightness,
                                        @NotNull DynamicSchemeVariant dynamicSchemeVariant,
-                                       double contrastLevel) {
-        checkContrast(contrastLevel);
-
+                                       @NotNull Contrast contrastLevel) {
         final DynamicScheme scheme = buildDynamicScheme(
                 brightness,
                 seedColor,
