@@ -13,30 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+module org.glavo.monetfx {
+    requires javafx.base;
 
-plugins {
-    id("java-library")
-    id("org.glavo.compile-module-info-plugin") version "2.0"
-}
-
-allprojects {
-    apply {
-        plugin("java")
-    }
-
-    group = "org.glavo"
-    version = "1.0-SNAPSHOT"
-
-    repositories {
-        mavenCentral()
-    }
-}
-
-tasks.withType<JavaCompile> {
-    sourceCompatibility = "8"
-    targetCompatibility = "8"
-}
-
-dependencies {
-    compileOnlyApi("org.jetbrains:annotations:26.0.2")
+    exports org.glavo.monetfx;
+    exports org.glavo.monetfx.beans.binding;
+    exports org.glavo.monetfx.beans.property;
+    exports org.glavo.monetfx.beans.value;
 }

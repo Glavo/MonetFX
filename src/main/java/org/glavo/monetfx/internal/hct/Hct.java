@@ -16,7 +16,6 @@
 
 package org.glavo.monetfx.internal.hct;
 
-import javafx.scene.paint.Color;
 import org.glavo.monetfx.internal.utils.ColorUtils;
 
 /*
@@ -39,10 +38,10 @@ import org.glavo.monetfx.internal.utils.ColorUtils;
  * lighting environments.
  */
 public final class Hct {
-    private double hue;
-    private double chroma;
-    private double tone;
-    private int argb;
+    private final double hue;
+    private final double chroma;
+    private final double tone;
+    private final int argb;
 
     /**
      * Create an HCT color from hue, chroma, and tone.
@@ -69,7 +68,11 @@ public final class Hct {
     }
 
     private Hct(int argb) {
-        setInternalState(argb);
+        this.argb = argb;
+        Cam16 cam = Cam16.fromInt(argb);
+        hue = cam.getHue();
+        chroma = cam.getChroma();
+        this.tone = ColorUtils.lstarFromArgb(argb);
     }
 
     public double getHue() {
@@ -86,40 +89,6 @@ public final class Hct {
 
     public int toInt() {
         return argb;
-    }
-
-    public Color toColor() {
-        return ColorUtils.fxFromArgb(argb);
-    }
-
-    /**
-     * Set the hue of this color. Chroma may decrease because chroma has a different maximum for any
-     * given hue and tone.
-     *
-     * @param newHue 0 <= newHue < 360; invalid values are corrected.
-     */
-    public void setHue(double newHue) {
-        setInternalState(HctSolver.solveToInt(newHue, chroma, tone));
-    }
-
-    /**
-     * Set the chroma of this color. Chroma may decrease because chroma has a different maximum for
-     * any given hue and tone.
-     *
-     * @param newChroma 0 <= newChroma < ?
-     */
-    public void setChroma(double newChroma) {
-        setInternalState(HctSolver.solveToInt(hue, newChroma, tone));
-    }
-
-    /**
-     * Set the tone of this color. Chroma may decrease because chroma has a different maximum for any
-     * given hue and tone.
-     *
-     * @param newTone 0 <= newTone <= 100; invalid valids are corrected.
-     */
-    public void setTone(double newTone) {
-        setInternalState(HctSolver.solveToInt(hue, chroma, newTone));
     }
 
     /**
@@ -150,14 +119,6 @@ public final class Hct {
         // - L* converted from Y in XYZ coordinates in specified VC.
         return Hct.from(
                 recastInVc.getHue(), recastInVc.getChroma(), ColorUtils.lstarFromY(viewedInVc[1]));
-    }
-
-    private void setInternalState(int argb) {
-        this.argb = argb;
-        Cam16 cam = Cam16.fromInt(argb);
-        hue = cam.getHue();
-        chroma = cam.getChroma();
-        this.tone = ColorUtils.lstarFromArgb(argb);
     }
 
     @Override
