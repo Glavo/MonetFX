@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.function.Function;
 
 import static java.lang.Math.max;
@@ -66,8 +65,6 @@ public final class DynamicColor {
     public final Function<DynamicScheme, ToneDeltaPair> toneDeltaPair;
 
     public final Function<DynamicScheme, Double> opacity;
-
-    private final HashMap<DynamicScheme, Hct> hctCache = new HashMap<>();
 
     /**
      * A constructor for DynamicColor.
@@ -286,10 +283,6 @@ public final class DynamicColor {
      */
     @NotNull
     public Hct getHct(@NotNull DynamicScheme scheme) {
-        Hct cachedAnswer = hctCache.get(scheme);
-        if (cachedAnswer != null) {
-            return cachedAnswer;
-        }
         // This is crucial for aesthetics: we aren't simply the taking the standard color
         // and changing its tone for contrast. Rather, we find the tone for contrast, then
         // use the specified chroma from the palette to construct a new color.
@@ -297,14 +290,7 @@ public final class DynamicColor {
         // For example, this enables colors with standard tone of T90, which has limited chroma, to
         // "recover" intended chroma as contrast increases.
         double tone = getTone(scheme);
-        Hct answer = palette.apply(scheme).getHct(tone);
-        // NOMUTANTS--trivial test with onerous dependency injection requirement.
-        if (hctCache.size() > 4) {
-            hctCache.clear();
-        }
-        // NOMUTANTS--trivial test with onerous dependency injection requirement.
-        hctCache.put(scheme, answer);
-        return answer;
+        return palette.apply(scheme).getHct(tone);
     }
 
     /**
