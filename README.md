@@ -46,18 +46,21 @@ ColorScheme blueScheme = ColorScheme.fromSeed(Color.web("#5C6BC0"));
 ColorScheme monetScheme = ColorScheme.fromImage(new Image("file:///.../background.png"));
 ```
 
-These factory methods also accept more parameters:
+If you want to customize the theme in more detail, you can use the `ColorSchemeBuilder`:
 
 ```java
-// The second parameter is used to specify light mode or dark mode (The default value is Brightness.LIGHT)
-// The third parameter specifies the algorithm for constructing the color scheme (The default value is DynamicSchemeVariant.TONAL_SPOT)
-// The fourth parameter specifies the contrast (The value range is -1.0~1.0, and the default value is 0.0)
-ColorScheme scheme = ColorScheme.fromSeed(Color.web("#5C6BC0"), Brightness.DARK, DynamicSchemeVariant.FIDELITY, 0.5);
+ColorScheme scheme = ColorScheme.newBuilder(Color.web("#5C6BC0"))
+                // Specify whether to use light mode or dark mode (The default value is light mode)
+                .setBrightness(Brightness.DARK)
+                // Specifies the algorithm for constructing the color scheme (The default value is `DynamicSchemeVariant.TONAL_SPOT`)
+                .setDynamicSchemeVariant(DynamicSchemeVariant.FIDELITY)
+                // Specifies the contrast (The default value is `Contrast.STANDARD`)
+                .setContrast(Contrast.MEDIUM);
 ```
 
 ### Use the color scheme
 
-Once you have a color scheme, you can use it in two ways: Get the color directly through the method, or generate a CSS style sheet.
+Once you have a color scheme, you can use it in two ways: Get the color directly through the method, or generate a CSS stylesheet.
 
 The `ColorScheme` class provides a series of methods to get the color of the corresponding role 
 (For more information about color roles, see the [Material 3 documentation](https://m3.material.io/styles/color/roles)):
@@ -80,15 +83,15 @@ A more convenient way is to generate a stylesheet for the `ColorScheme` and refe
 ```java
 ColorScheme scheme = ColorScheme.fromSeed(Color.web("#5C6BC0"));
 
-// Write the style sheet to a file
+// Write the stylesheet to a file
 Path cssFile = Files.createTempFile("monetfx-", ".css");
 Files.writeString(cssFile, scheme.toStyleSheet());
 
 // Load the stylesheet
 scene.getStylesheets().add(tempFile.toUri().toString());
 
-// Reference the "on primary" color in CSS
 Label label = new Label();
+// Reference the "on primary" color in CSS
 label.setStyle("-fx-background-color: -monet-on-primary");
 ```
 
@@ -100,6 +103,10 @@ Not only inline styles, you can also reference these colors in other CSS stylesh
     -fx-text-fill: -monet-on-primary;
 }
 ```
+
+The names of these CSS variables are prefixed with `-monet-`.
+This is different from the CSS exported by Material Theme Builder, which is prefixed with `--md-sys-color-`.
+The reason for this difference is that JavaFX does not support CSS variables prefixed with `--`.
 
 ### Using `ColorSchemeBinding` and `ColorSchemeProperty`
 
