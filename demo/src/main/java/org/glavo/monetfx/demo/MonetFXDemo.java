@@ -298,6 +298,7 @@ public final class MonetFXDemo extends Application {
                     Slider slider = new Slider(-1.0, 1.0, 0.0);
                     slider.setShowTickMarks(true);
                     slider.setShowTickLabels(true);
+                    slider.setSnapToTicks(true);
                     slider.setMajorTickUnit(0.5);
                     slider.valueProperty().bindBidirectional(contrastProperty);
                     contrastPane.setRight(slider);
