@@ -40,13 +40,22 @@ description = ""
 
 dependencies {
     compileOnlyApi("org.jetbrains:annotations:26.0.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+
+    testImplementation("com.google.code.gson:gson:2.12.1")
+
+    testImplementation(platform("org.junit:junit-bom:5.12.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<JavaCompile> {
     sourceCompatibility = "8"
     targetCompatibility = "8"
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging.showStandardStreams = true
 }
 
 tasks.withType<GenerateModuleMetadata>().configureEach {
