@@ -348,8 +348,8 @@ public final class MonetFXDemo extends Application {
         GridPane gridPane = new GridPane();
         root.setCenter(gridPane);
         {
-            int defaultCardWidth = 260;
-            int defaultCardHeight = 50;
+            int defaultCardWidth = 280;
+            int defaultCardHeight = 55;
             int smallGap = 5;
             int largeGap = 10;
 
@@ -450,7 +450,7 @@ public final class MonetFXDemo extends Application {
             }
         });
 
-        Scene scene = new Scene(root, 1080, 800);
+        Scene scene = new Scene(root);
 
         updateCss(scene);
         scheme.addListener((observable, oldValue, newValue) -> updateCss(scene));
