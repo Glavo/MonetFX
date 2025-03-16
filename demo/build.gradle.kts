@@ -18,6 +18,7 @@ import org.gradle.internal.declarativedsl.parsing.main
 
 plugins {
     id("application")
+    id("com.gradleup.shadow") version "8.3.5"
 }
 
 dependencies {
@@ -31,4 +32,8 @@ tasks.withType<JavaCompile> {
 
 application {
     mainClass.set("org.glavo.monetfx.demo.MonetFXDemo")
+}
+
+tasks.withType<Jar> {
+    manifest.attributes("Main-Class" to "org.glavo.monetfx.Demo")
 }
