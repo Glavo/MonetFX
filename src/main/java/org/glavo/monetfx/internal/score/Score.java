@@ -20,7 +20,6 @@ import org.glavo.monetfx.internal.hct.Hct;
 import org.glavo.monetfx.internal.utils.MathUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +108,7 @@ public final class Score {
             scoredHcts.add(new ScoredHCT(hct, score));
         }
         // Sorted so that colors with higher scores come first.
-        Collections.sort(scoredHcts, new ScoredComparator());
+        scoredHcts.sort(SCORED_COMPARATOR);
 
         // Iterates through potential hue differences in degrees in order to select
         // the colors with the largest distribution of hues possible. Starting at
@@ -158,13 +157,6 @@ public final class Score {
         }
     }
 
-    private static class ScoredComparator implements Comparator<ScoredHCT> {
-        public ScoredComparator() {
-        }
 
-        @Override
-        public int compare(ScoredHCT entry1, ScoredHCT entry2) {
-            return Double.compare(entry2.score, entry1.score);
-        }
-    }
+    private static final Comparator<ScoredHCT> SCORED_COMPARATOR = (entry1, entry2) -> Double.compare(entry2.score, entry1.score);
 }
