@@ -43,15 +43,6 @@ public final class Score {
     private Score() {
     }
 
-    public static List<Integer> score(Map<Integer, Integer> colorsToPopulation) {
-        // Fallback color is Google Blue.
-        return score(colorsToPopulation, 4, 0xff4285f4, true);
-    }
-
-    public static List<Integer> score(Map<Integer, Integer> colorsToPopulation, int desired) {
-        return score(colorsToPopulation, desired, 0xff4285f4, true);
-    }
-
     public static List<Integer> score(
             Map<Integer, Integer> colorsToPopulation, int desired, int fallbackColorArgb) {
         return score(colorsToPopulation, desired, fallbackColorArgb, true);
