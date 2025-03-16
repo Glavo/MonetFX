@@ -82,7 +82,6 @@ import static org.glavo.monetfx.ColorRole.*;
 public final class MonetFXDemo extends Application {
 
     private static final Color DEFAULT_COLOR = Color.web("#5C6BC0");
-    private static final Color DARK_COLOR = Color.web("#141314");
 
     private static final String STYLESHEET_PATH = MonetFXDemo.class.getResource("style.css").toExternalForm();
 
@@ -422,10 +421,9 @@ public final class MonetFXDemo extends Application {
             if (image != null) {
                 return new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
             } else {
-                Color backgroundColor = darkModeProperty.get() ? DARK_COLOR : Color.WHITE;
-                return new Background(new BackgroundFill(backgroundColor, null, null));
+                return new Background(new BackgroundFill(scheme.get().getSurface(), null, null));
             }
-        }, backgroundImageProperty, darkModeProperty));
+        }, backgroundImageProperty, scheme));
 
         root.setOnDragOver(event -> {
             if (event.getDragboard().hasFiles()) {
