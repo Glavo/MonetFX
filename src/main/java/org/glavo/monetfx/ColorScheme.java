@@ -22,15 +22,6 @@ import javafx.scene.paint.Color;
 import org.glavo.monetfx.internal.dynamiccolor.DynamicScheme;
 import org.glavo.monetfx.internal.hct.Hct;
 import org.glavo.monetfx.internal.quantize.QuantizerCelebi;
-import org.glavo.monetfx.internal.scheme.SchemeContent;
-import org.glavo.monetfx.internal.scheme.SchemeExpressive;
-import org.glavo.monetfx.internal.scheme.SchemeFidelity;
-import org.glavo.monetfx.internal.scheme.SchemeFruitSalad;
-import org.glavo.monetfx.internal.scheme.SchemeMonochrome;
-import org.glavo.monetfx.internal.scheme.SchemeNeutral;
-import org.glavo.monetfx.internal.scheme.SchemeRainbow;
-import org.glavo.monetfx.internal.scheme.SchemeTonalSpot;
-import org.glavo.monetfx.internal.scheme.SchemeVibrant;
 import org.glavo.monetfx.internal.score.Score;
 import org.glavo.monetfx.internal.utils.ColorUtils;
 import org.jetbrains.annotations.NotNull;
@@ -93,37 +84,6 @@ import java.util.Map;
 /// with on '-Fixed' roles, such as [ColorRole#ON_PRIMARY_FIXED], they provide a
 /// lower-emphasis option for text and icons.
 public final class ColorScheme {
-
-    static DynamicScheme buildDynamicScheme(
-            Color seedColor, Brightness brightness,
-            DynamicSchemeVariant schemeVariant,
-            Contrast contrastLevel
-    ) {
-        final Hct sourceColor = Hct.fromInt(ColorUtils.argbFromFx(seedColor));
-        final boolean isDark = brightness == Brightness.DARK;
-        switch (schemeVariant) {
-            case TONAL_SPOT:
-                return new SchemeTonalSpot(sourceColor, isDark, contrastLevel.getValue());
-            case FIDELITY:
-                return new SchemeFidelity(sourceColor, isDark, contrastLevel.getValue());
-            case CONTENT:
-                return new SchemeContent(sourceColor, isDark, contrastLevel.getValue());
-            case MONOCHROME:
-                return new SchemeMonochrome(sourceColor, isDark, contrastLevel.getValue());
-            case NEUTRAL:
-                return new SchemeNeutral(sourceColor, isDark, contrastLevel.getValue());
-            case VIBRANT:
-                return new SchemeVibrant(sourceColor, isDark, contrastLevel.getValue());
-            case EXPRESSIVE:
-                return new SchemeExpressive(sourceColor, isDark, contrastLevel.getValue());
-            case RAINBOW:
-                return new SchemeRainbow(sourceColor, isDark, contrastLevel.getValue());
-            case FRUIT_SALAD:
-                return new SchemeFruitSalad(sourceColor, isDark, contrastLevel.getValue());
-            default:
-                throw new AssertionError("Unknown scheme variant " + schemeVariant);
-        }
-    }
 
     static final Color FALLBACK_COLOR = Color.web("#4285f4");
     static final int MAX_DIMENSION = 112;
@@ -194,22 +154,31 @@ public final class ColorScheme {
     }
 
     public static ColorScheme fromSeed(@NotNull Color seedColor) {
-        final DynamicScheme scheme = buildDynamicScheme(
-                seedColor,
-                Brightness.LIGHT,
+        final Hct sourceColor = Hct.fromInt(ColorUtils.argbFromFx(seedColor));
+        double contrastLevel = Contrast.STANDARD.getValue();
+
+        final DynamicScheme scheme = new DynamicScheme(
+                sourceColor,
                 DynamicSchemeVariant.TONAL_SPOT,
-                Contrast.STANDARD
+                false,
+                Contrast.STANDARD.getValue(),
+                DynamicSchemeVariant.TONAL_SPOT.getPrimaryPalette(sourceColor, false, contrastLevel),
+                DynamicSchemeVariant.TONAL_SPOT.getSecondaryPalette(sourceColor, false, contrastLevel),
+                DynamicSchemeVariant.TONAL_SPOT.getTertiaryPalette(sourceColor, false, contrastLevel),
+                DynamicSchemeVariant.TONAL_SPOT.getNeutralPalette(sourceColor, false, contrastLevel),
+                DynamicSchemeVariant.TONAL_SPOT.getNeutralVariantPalette(sourceColor, false, contrastLevel),
+                DynamicScheme.DEFAULT_ERROR_PALETTE
         );
 
         return new ColorScheme(scheme);
     }
 
     public static ColorSchemeBuilder newBuilder(@NotNull Image image) {
-        return new ColorSchemeBuilder(image);
+        return new ColorSchemeBuilder().setWallpaperImage(image);
     }
 
     public static ColorSchemeBuilder newBuilder(@NotNull Color seedColor) {
-        return new ColorSchemeBuilder(seedColor);
+        return new ColorSchemeBuilder().setPrimaryColor(seedColor);
     }
 
     private final DynamicScheme scheme;
@@ -228,7 +197,7 @@ public final class ColorScheme {
     }
 
     public Color getSourceColor() {
-        return ColorUtils.fxFromArgb(scheme.sourceColorArgb);
+        return ColorUtils.fxFromArgb(scheme.sourceColorHct.toInt());
     }
 
     public Color getColor(@NotNull ColorRole role) {

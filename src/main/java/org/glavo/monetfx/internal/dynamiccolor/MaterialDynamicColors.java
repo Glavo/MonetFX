@@ -16,6 +16,7 @@
 
 package org.glavo.monetfx.internal.dynamiccolor;
 
+import org.glavo.monetfx.DynamicSchemeVariant;
 import org.glavo.monetfx.internal.dislike.DislikeAnalyzer;
 import org.glavo.monetfx.internal.hct.Hct;
 import org.jetbrains.annotations.NotNull;
@@ -953,15 +954,15 @@ public final class MaterialDynamicColors {
 
     private boolean isFidelity(DynamicScheme scheme) {
         if (this.isExtendedFidelity
-            && scheme.variant != Variant.MONOCHROME
-            && scheme.variant != Variant.NEUTRAL) {
+            && scheme.variant != DynamicSchemeVariant.MONOCHROME
+            && scheme.variant != DynamicSchemeVariant.NEUTRAL) {
             return true;
         }
-        return scheme.variant == Variant.FIDELITY || scheme.variant == Variant.CONTENT;
+        return scheme.variant == DynamicSchemeVariant.FIDELITY || scheme.variant == DynamicSchemeVariant.CONTENT;
     }
 
     private static boolean isMonochrome(DynamicScheme scheme) {
-        return scheme.variant == Variant.MONOCHROME;
+        return scheme.variant == DynamicSchemeVariant.MONOCHROME;
     }
 
     static double findDesiredChromaByTone(

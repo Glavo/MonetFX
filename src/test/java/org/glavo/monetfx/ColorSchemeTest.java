@@ -53,8 +53,8 @@ public final class ColorSchemeTest {
         return variant == DynamicSchemeVariant.TONAL_SPOT ? "" : "-" + variant.name().toLowerCase(Locale.ROOT);
     }
 
-    private static Stream<Arguments> arguments() {
-        return Stream.of("red", "green", "blue", "yellow")
+    private static Stream<Arguments> testFromSeedArguments() {
+        return Stream.of("red", "green", "blue", "yellow", "custom")
                 .flatMap(name -> Arrays.stream(DynamicSchemeVariant.values())
                         .flatMap(variant -> {
                             String fileName = "theme-" + name + toPostfix(variant) + ".json";
@@ -73,16 +73,27 @@ public final class ColorSchemeTest {
                 .flatMap(theme -> theme.schemes.entrySet().stream().map(pair -> {
                     Brightness brightness = pair.getKey().getKey();
                     Contrast contrast = pair.getKey().getValue();
+                    Map<String, Color> coreColors = theme.coreColors;
                     Map<ColorRole, Color> colors = pair.getValue();
 
-                    return Arguments.of(theme.seed, brightness, theme.variant, contrast, colors);
+                    return Arguments.of(
+                            coreColors.get("primary"), coreColors.get("secondary"), coreColors.get("tertiary"),
+                            coreColors.get("neutral"), coreColors.get("neutralVariant"), coreColors.get("error"),
+                            brightness, theme.variant, contrast, colors);
                 }));
     }
 
     @ParameterizedTest
-    @MethodSource("arguments")
-    public void testFromSeed(Color seed, Brightness brightness, DynamicSchemeVariant variant, Contrast contrast, Map<ColorRole, Color> colors) {
-        ColorScheme scheme = ColorScheme.newBuilder(seed)
+    @MethodSource("testFromSeedArguments")
+    public void testFromSeed(Color primaryColor, Color secondaryColor, Color tertiaryColor,
+                             Color neutralColor, Color neutralVariantColor, Color errorColor,
+                             Brightness brightness, DynamicSchemeVariant variant, Contrast contrast, Map<ColorRole, Color> colors) {
+        ColorScheme scheme = ColorScheme.newBuilder(primaryColor)
+                .setSecondaryColor(secondaryColor)
+                .setTertiaryColor(tertiaryColor)
+                .setNeutralColor(neutralColor)
+                .setNeutralVariantColor(neutralVariantColor)
+                .setErrorColor(errorColor)
                 .setBrightness(brightness)
                 .setDynamicSchemeVariant(variant)
                 .setContrast(contrast)
@@ -126,7 +137,10 @@ public final class ColorSchemeTest {
                 throw new UncheckedIOException(e);
             }
 
-            Color seed = Color.web(raw.get("seed").getAsString());
+            LinkedHashMap<String, Color> colorColors = new LinkedHashMap<>();
+
+            raw.getAsJsonObject("coreColors").asMap().forEach((name, value) -> colorColors.put(name, Color.web(value.getAsString())));
+
             LinkedHashMap<Map.Entry<Brightness, Contrast>, Map<ColorRole, Color>> schemes = new LinkedHashMap<>();
             raw.get("schemes").getAsJsonObject().asMap().forEach((schemeName, scheme) -> {
                 EnumMap<ColorRole, Color> colors = new EnumMap<>(ColorRole.class);
@@ -135,15 +149,15 @@ public final class ColorSchemeTest {
                 schemes.put(parseSchemeName(schemeName), colors);
             });
 
-            return new MaterialTheme(seed, variant, schemes);
+            return new MaterialTheme(colorColors, variant, schemes);
         }
 
-        public final Color seed;
+        public final Map<String, Color> coreColors;
         public final DynamicSchemeVariant variant;
         public final Map<Map.Entry<Brightness, Contrast>, Map<ColorRole, Color>> schemes;
 
-        private MaterialTheme(Color seed, DynamicSchemeVariant variant, Map<Map.Entry<Brightness, Contrast>, Map<ColorRole, Color>> schemes) {
-            this.seed = seed;
+        private MaterialTheme(Map<String, Color> coreColors, DynamicSchemeVariant variant, Map<Map.Entry<Brightness, Contrast>, Map<ColorRole, Color>> schemes) {
+            this.coreColors = coreColors;
             this.variant = variant;
             this.schemes = schemes;
         }

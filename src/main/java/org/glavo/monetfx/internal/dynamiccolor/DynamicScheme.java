@@ -16,11 +16,10 @@
 
 package org.glavo.monetfx.internal.dynamiccolor;
 
+import org.glavo.monetfx.DynamicSchemeVariant;
 import org.glavo.monetfx.internal.hct.Hct;
 import org.glavo.monetfx.internal.palettes.TonalPalette;
 import org.glavo.monetfx.internal.utils.MathUtils;
-
-import java.util.Optional;
 
 /**
  * Provides important settings for creating colors dynamically, and 6 color palettes. Requires: 1. A
@@ -28,9 +27,10 @@ import java.util.Optional;
  * (-1 to 1, currently contrast ratio 3.0 and 7.0)
  */
 public class DynamicScheme {
-    public final int sourceColorArgb;
+    public static final TonalPalette DEFAULT_ERROR_PALETTE = TonalPalette.fromHueAndChroma(25.0, 84.0);
+
     public final Hct sourceColorHct;
-    public final Variant variant;
+    public final DynamicSchemeVariant variant;
     public final boolean isDark;
     public final double contrastLevel;
 
@@ -43,30 +43,7 @@ public class DynamicScheme {
 
     public DynamicScheme(
             Hct sourceColorHct,
-            Variant variant,
-            boolean isDark,
-            double contrastLevel,
-            TonalPalette primaryPalette,
-            TonalPalette secondaryPalette,
-            TonalPalette tertiaryPalette,
-            TonalPalette neutralPalette,
-            TonalPalette neutralVariantPalette) {
-        this(
-                sourceColorHct,
-                variant,
-                isDark,
-                contrastLevel,
-                primaryPalette,
-                secondaryPalette,
-                tertiaryPalette,
-                neutralPalette,
-                neutralVariantPalette,
-                Optional.empty());
-    }
-
-    public DynamicScheme(
-            Hct sourceColorHct,
-            Variant variant,
+            DynamicSchemeVariant variant,
             boolean isDark,
             double contrastLevel,
             TonalPalette primaryPalette,
@@ -74,8 +51,7 @@ public class DynamicScheme {
             TonalPalette tertiaryPalette,
             TonalPalette neutralPalette,
             TonalPalette neutralVariantPalette,
-            Optional<TonalPalette> errorPalette) {
-        this.sourceColorArgb = sourceColorHct.toInt();
+            TonalPalette errorPalette) {
         this.sourceColorHct = sourceColorHct;
         this.variant = variant;
         this.isDark = isDark;
@@ -86,7 +62,7 @@ public class DynamicScheme {
         this.tertiaryPalette = tertiaryPalette;
         this.neutralPalette = neutralPalette;
         this.neutralVariantPalette = neutralVariantPalette;
-        this.errorPalette = errorPalette.orElse(TonalPalette.fromHueAndChroma(25.0, 84.0));
+        this.errorPalette = errorPalette;
     }
 
     /**

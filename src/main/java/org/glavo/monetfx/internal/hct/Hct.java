@@ -16,6 +16,7 @@
 
 package org.glavo.monetfx.internal.hct;
 
+import javafx.scene.paint.Color;
 import org.glavo.monetfx.internal.utils.ColorUtils;
 
 /*
@@ -65,6 +66,10 @@ public final class Hct {
      */
     public static Hct fromInt(int argb) {
         return new Hct(argb);
+    }
+
+    public static Hct fromFx(Color color) {
+        return fromInt(ColorUtils.argbFromFx(color));
     }
 
     private Hct(int argb) {
