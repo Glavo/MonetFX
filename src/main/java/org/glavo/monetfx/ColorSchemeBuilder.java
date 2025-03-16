@@ -142,11 +142,11 @@ public final class ColorSchemeBuilder {
 
                 this.neutralColor == null
                         ? dynamicSchemeVariant.getNeutralPalette(primaryColorHct, isDark, contrastLevel)
-                        : dynamicSchemeVariant.getPrimaryPalette(Hct.fromFx(this.neutralColor), isDark, contrastLevel),
+                        : dynamicSchemeVariant.getNeutralPalette(Hct.fromFx(this.neutralColor), isDark, contrastLevel),
 
                 this.neutralVariantColor == null
                         ? dynamicSchemeVariant.getNeutralVariantPalette(primaryColorHct, isDark, contrastLevel)
-                        : dynamicSchemeVariant.getPrimaryPalette(Hct.fromFx(this.neutralVariantColor), isDark, contrastLevel),
+                        : dynamicSchemeVariant.getNeutralVariantPalette(Hct.fromFx(this.neutralVariantColor), isDark, contrastLevel),
 
                 this.errorColor == null
                         ? DynamicScheme.DEFAULT_ERROR_PALETTE
