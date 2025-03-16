@@ -241,108 +241,115 @@ public final class MonetFXDemo extends Application {
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(10));
 
-        BorderPane settingsPane = new BorderPane();
-        settingsPane.setPadding(new Insets(10));
+        VBox leftPane  = new VBox(8);
+        leftPane.setPrefWidth(280);
+        BorderPane.setMargin(leftPane, new Insets(20, 20, 20, 10));
+        root.setLeft(leftPane);
         {
-            settingsPane.setStyle("-fx-background-color: -monet-primary-container");
-
-            StackPane titlePane = new StackPane();
-            settingsPane.setTop(titlePane);
+            BorderPane settingsPane = new BorderPane();
+            settingsPane.setPadding(new Insets(10));
             {
-                Label label = new Label("Settings");
-                label.setStyle("-fx-text-fill: -monet-on-primary-container; -fx-font-size: 15");
-                label.setPadding(new Insets(0, 0, 8, 0));
-                titlePane.getChildren().add(label);
+                settingsPane.setStyle("-fx-background-color: -monet-primary-container");
+
+                StackPane titlePane = new StackPane();
+                settingsPane.setTop(titlePane);
+                {
+                    Label label = new Label("Theme Settings");
+                    label.setStyle("-fx-text-fill: -monet-on-primary-container; -fx-font-size: 15");
+                    label.setPadding(new Insets(0, 0, 8, 0));
+                    titlePane.getChildren().add(label);
+                }
+
+                VBox content = new VBox(8);
+                settingsPane.setCenter(content);
+                {
+                    BorderPane darkModePane = new BorderPane();
+                    {
+                        Label label = new Label("Dark Mode");
+                        BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+                        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                        darkModePane.setLeft(label);
+
+                        CheckBox checkBox = new CheckBox();
+                        checkBox.selectedProperty().bindBidirectional(darkModeProperty);
+                        darkModePane.setRight(checkBox);
+                    }
+
+                    BorderPane backgroundChooserPane = new BorderPane();
+                    {
+                        Label label = new Label("Background Image");
+                        BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+                        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                        backgroundChooserPane.setLeft(label);
+
+                        Button chooseButton = new Button("Choose");
+                        chooseButton.setOnAction(event -> {
+                            File file = fileChooser.showOpenDialog(primaryStage);
+                            if (file != null) {
+                                updateBackgroundImage(file.toPath());
+                                fileChooser.setInitialDirectory(file.getParentFile());
+                            }
+                        });
+                        backgroundChooserPane.setRight(chooseButton);
+                    }
+
+                    BorderPane primaryColorPane = new BorderPane();
+                    {
+                        Label label = new Label("Primary Color");
+                        BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+                        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                        primaryColorPane.setLeft(label);
+
+                        ColorPicker colorPicker = new ColorPicker();
+                        colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
+                        colorPicker.getCustomColors().setAll(
+                                DEFAULT_COLOR,
+                                Color.web("#b33b15"),
+                                Color.web("#63a002"),
+                                Color.web("#769cdf"),
+                                Color.web("#ffde3f")
+                        );
+                        colorPicker.valueProperty().bindBidirectional(colorProperty);
+                        primaryColorPane.setRight(colorPicker);
+                    }
+
+                    BorderPane variantPane = new BorderPane();
+                    {
+                        Label label = new Label("Variant");
+                        BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+                        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                        variantPane.setLeft(label);
+
+                        ComboBox<DynamicSchemeVariant> comboBox = new ComboBox<>();
+                        comboBox.getItems().addAll(DynamicSchemeVariant.values());
+                        comboBox.getSelectionModel().select(DynamicSchemeVariant.TONAL_SPOT);
+                        comboBox.getSelectionModel().selectedItemProperty().addListener(
+                                (observable, oldValue, newValue) ->
+                                        this.dynamicSchemeVariantProperty.set(newValue));
+                        variantPane.setRight(comboBox);
+                    }
+
+                    BorderPane contrastPane = new BorderPane();
+                    {
+                        Label label = new Label("Contrast");
+                        BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+                        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                        contrastPane.setLeft(label);
+
+                        Slider slider = new Slider(-1.0, 1.0, 0.0);
+                        slider.setShowTickMarks(true);
+                        slider.setShowTickLabels(true);
+                        slider.setSnapToTicks(true);
+                        slider.setMajorTickUnit(0.5);
+                        slider.valueProperty().bindBidirectional(contrastProperty);
+                        contrastPane.setRight(slider);
+                    }
+
+                    content.getChildren().setAll(darkModePane, backgroundChooserPane, primaryColorPane, variantPane, contrastPane);
+                }
             }
 
-            VBox content = new VBox(8);
-            settingsPane.setCenter(content);
-            {
-                BorderPane darkModePane = new BorderPane();
-                {
-                    Label label = new Label("Dark Mode");
-                    BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-                    label.setStyle("-fx-text-fill: -monet-on-primary-container");
-                    darkModePane.setLeft(label);
-
-                    CheckBox checkBox = new CheckBox();
-                    checkBox.selectedProperty().bindBidirectional(darkModeProperty);
-                    darkModePane.setRight(checkBox);
-                }
-
-                BorderPane colorPickerPane = new BorderPane();
-                {
-                    Label label = new Label("Color Picker");
-                    BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-                    label.setStyle("-fx-text-fill: -monet-on-primary-container");
-                    colorPickerPane.setLeft(label);
-
-                    ColorPicker colorPicker = new ColorPicker();
-                    colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
-                    colorPicker.getCustomColors().setAll(
-                            DEFAULT_COLOR,
-                            Color.web("#b33b15"),
-                            Color.web("#63a002"),
-                            Color.web("#769cdf"),
-                            Color.web("#ffde3f")
-                    );
-                    colorPicker.valueProperty().bindBidirectional(colorProperty);
-                    colorPickerPane.setRight(colorPicker);
-                }
-
-                BorderPane backgroundChooserPane = new BorderPane();
-                {
-                    Label label = new Label("Background Image");
-                    BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-                    label.setStyle("-fx-text-fill: -monet-on-primary-container");
-                    backgroundChooserPane.setLeft(label);
-
-                    Button chooseButton = new Button("Choose");
-                    chooseButton.setOnAction(event -> {
-                        File file = fileChooser.showOpenDialog(primaryStage);
-                        if (file != null) {
-                            updateBackgroundImage(file.toPath());
-                            fileChooser.setInitialDirectory(file.getParentFile());
-                        }
-                    });
-                    backgroundChooserPane.setRight(chooseButton);
-                }
-
-
-                BorderPane variantPane = new BorderPane();
-                {
-                    Label label = new Label("Variant");
-                    BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-                    label.setStyle("-fx-text-fill: -monet-on-primary-container");
-                    variantPane.setLeft(label);
-
-                    ComboBox<DynamicSchemeVariant> comboBox = new ComboBox<>();
-                    comboBox.getItems().addAll(DynamicSchemeVariant.values());
-                    comboBox.getSelectionModel().select(DynamicSchemeVariant.TONAL_SPOT);
-                    comboBox.getSelectionModel().selectedItemProperty().addListener(
-                            (observable, oldValue, newValue) ->
-                                    this.dynamicSchemeVariantProperty.set(newValue));
-                    variantPane.setRight(comboBox);
-                }
-
-                BorderPane contrastPane = new BorderPane();
-                {
-                    Label label = new Label("Contrast");
-                    BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-                    label.setStyle("-fx-text-fill: -monet-on-primary-container");
-                    contrastPane.setLeft(label);
-
-                    Slider slider = new Slider(-1.0, 1.0, 0.0);
-                    slider.setShowTickMarks(true);
-                    slider.setShowTickLabels(true);
-                    slider.setSnapToTicks(true);
-                    slider.setMajorTickUnit(0.5);
-                    slider.valueProperty().bindBidirectional(contrastProperty);
-                    contrastPane.setRight(slider);
-                }
-
-                content.getChildren().setAll(darkModePane, colorPickerPane, backgroundChooserPane, variantPane, contrastPane);
-            }
+            leftPane.getChildren().setAll(settingsPane);
         }
 
         GridPane gridPane = new GridPane();
@@ -411,10 +418,6 @@ public final class MonetFXDemo extends Application {
             HBox bottomRightBox = createSplitCard(SCRIM, null, SHADOW, null);
             bottomRightBox.setSpacing(largeGap);
             gridPane.add(bottomRightBox, 6, 14);
-
-
-            GridPane.setRowSpan(settingsPane, 3);
-            gridPane.add(settingsPane, 6, 6);
         }
 
         root.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
