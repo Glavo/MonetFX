@@ -151,6 +151,6 @@ public final class ColorSchemeBuilder {
                 this.errorColor == null
                         ? DynamicScheme.DEFAULT_ERROR_PALETTE
                         : dynamicSchemeVariant.getPrimaryPalette(Hct.fromFx(this.errorColor), isDark, contrastLevel)
-        ));
+        ), primaryColor, secondaryColor, tertiaryColor, neutralColor, neutralVariantColor, errorColor);
     }
 }

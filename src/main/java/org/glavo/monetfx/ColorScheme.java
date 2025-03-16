@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 // See https://github.com/flutter/flutter/blob/5491c8c146441d3126aff91beaa3fb5df6d710d0/packages/flutter/lib/src/material/color_scheme.dart
 
@@ -154,23 +155,23 @@ public final class ColorScheme {
     }
 
     public static ColorScheme fromSeed(@NotNull Color seedColor) {
-        final Hct sourceColor = Hct.fromInt(ColorUtils.argbFromFx(seedColor));
+        final Hct seedColorHct = Hct.fromInt(ColorUtils.argbFromFx(seedColor));
         double contrastLevel = Contrast.STANDARD.getValue();
 
         final DynamicScheme scheme = new DynamicScheme(
-                sourceColor,
+                seedColorHct,
                 DynamicSchemeVariant.TONAL_SPOT,
                 false,
                 Contrast.STANDARD.getValue(),
-                DynamicSchemeVariant.TONAL_SPOT.getPrimaryPalette(sourceColor, false, contrastLevel),
-                DynamicSchemeVariant.TONAL_SPOT.getSecondaryPalette(sourceColor, false, contrastLevel),
-                DynamicSchemeVariant.TONAL_SPOT.getTertiaryPalette(sourceColor, false, contrastLevel),
-                DynamicSchemeVariant.TONAL_SPOT.getNeutralPalette(sourceColor, false, contrastLevel),
-                DynamicSchemeVariant.TONAL_SPOT.getNeutralVariantPalette(sourceColor, false, contrastLevel),
+                DynamicSchemeVariant.TONAL_SPOT.getPrimaryPalette(seedColorHct, false, contrastLevel),
+                DynamicSchemeVariant.TONAL_SPOT.getSecondaryPalette(seedColorHct, false, contrastLevel),
+                DynamicSchemeVariant.TONAL_SPOT.getTertiaryPalette(seedColorHct, false, contrastLevel),
+                DynamicSchemeVariant.TONAL_SPOT.getNeutralPalette(seedColorHct, false, contrastLevel),
+                DynamicSchemeVariant.TONAL_SPOT.getNeutralVariantPalette(seedColorHct, false, contrastLevel),
                 DynamicScheme.DEFAULT_ERROR_PALETTE
         );
 
-        return new ColorScheme(scheme);
+        return new ColorScheme(scheme, seedColor, null, null, null, null, null);
     }
 
     public static ColorSchemeBuilder newBuilder(@NotNull Image image) {
@@ -182,10 +183,26 @@ public final class ColorScheme {
     }
 
     private final DynamicScheme scheme;
+    private final @NotNull Color corePrimaryColor;
+    private final @Nullable Color coreSecondaryColor;
+    private final @Nullable Color coreTertiaryColor;
+    private final @Nullable Color coreNeutralColor;
+    private final @Nullable Color coreNeutralVariantColor;
+    private final @Nullable Color coreErrorColor;
+
+
     private final Color[] colors = new Color[ColorRole.ALL.size()];
 
-    ColorScheme(DynamicScheme scheme) {
+    ColorScheme(DynamicScheme scheme,
+                Color corePrimaryColor, Color coreSecondaryColor, Color coreTertiaryColor,
+                Color coreNeutralColor, Color sourceNeutralVariantColor, Color coreErrorColor) {
         this.scheme = scheme;
+        this.corePrimaryColor = corePrimaryColor;
+        this.coreSecondaryColor = coreSecondaryColor;
+        this.coreTertiaryColor = coreTertiaryColor;
+        this.coreNeutralColor = coreNeutralColor;
+        this.coreNeutralVariantColor = sourceNeutralVariantColor;
+        this.coreErrorColor = coreErrorColor;
     }
 
     public Brightness getBrightness() {
@@ -438,6 +455,37 @@ public final class ColorScheme {
 
         builder.append("}\n");
         return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                this.scheme.isDark, this.scheme.contrastLevel, this.scheme.variant,
+                this.corePrimaryColor, this.coreSecondaryColor, this.coreTertiaryColor,
+                this.coreNeutralColor, this.coreNeutralVariantColor, this.coreErrorColor
+        );
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof ColorScheme)) {
+            return false;
+        }
+
+        ColorScheme that = (ColorScheme) obj;
+        return this.scheme.isDark == that.scheme.isDark
+               && this.scheme.contrastLevel == that.scheme.contrastLevel
+               && this.scheme.variant == that.scheme.variant
+               && this.corePrimaryColor.equals(that.corePrimaryColor)
+               && Objects.equals(this.coreSecondaryColor, that.coreSecondaryColor)
+               && Objects.equals(this.coreTertiaryColor, that.coreTertiaryColor)
+               && Objects.equals(this.coreNeutralColor, that.coreNeutralColor)
+               && Objects.equals(this.coreNeutralVariantColor, that.coreNeutralVariantColor)
+               && Objects.equals(this.coreErrorColor, that.coreErrorColor);
     }
 
     @Override
