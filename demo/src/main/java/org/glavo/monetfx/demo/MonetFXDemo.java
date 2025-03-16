@@ -278,6 +278,7 @@ public final class MonetFXDemo extends Application {
                     colorPickerPane.setLeft(label);
 
                     ColorPicker colorPicker = new ColorPicker();
+                    colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
                     colorPicker.getCustomColors().setAll(
                             DEFAULT_COLOR,
                             Color.web("#b33b15"),

@@ -14,22 +14,3 @@
  * limitations under the License.
  */
 
-/*.check-box {*/
-/*    -fx-fill: -monet-on-primary;*/
-/*}*/
-
-/*.check-box > .box {*/
-/*    -fx-background-color: -monet-primary;*/
-/*}*/
-
-/*.button:focused,*/
-/*.toggle-button:focused,*/
-/*.radio-button:focused > .radio,*/
-/*.check-box:focused > .box,*/
-/*.color-picker.split-button:focused > .color-picker-label,*/
-/*.combo-box-base:focused,*/
-/*.slider:focused .thumb {*/
-/*    -fx-background-color: -monet-on-secondary-container;*/
-/*    -fx-background-insets: -0.2, 1, 2, -1.4, 2.6;*/
-/*    -fx-background-radius: 3, 2, 1, 4, 1;*/
-/*}*/
