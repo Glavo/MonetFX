@@ -265,7 +265,7 @@ public final class MonetFXDemo extends Application {
 
         Label label = new Label(name);
         BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+        label.setStyle("-fx-text-fill: -monet-on-surface");
         colorPane.setLeft(label);
 
         ColorPicker colorPicker = new ColorPicker();
@@ -309,7 +309,7 @@ public final class MonetFXDemo extends Application {
                 settingsPane.setTop(titlePane);
                 {
                     Label label = new Label("Theme Settings");
-                    label.setStyle("-fx-text-fill: -monet-on-primary-container; -fx-font-size: 15");
+                    label.setStyle("-fx-text-fill: -monet-on-surface; -fx-font-size: 15");
                     label.setPadding(new Insets(0, 0, 8, 0));
                     titlePane.getChildren().add(label);
                 }
@@ -321,7 +321,7 @@ public final class MonetFXDemo extends Application {
                     {
                         Label label = new Label("Dark Mode");
                         BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-                        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                        label.setStyle("-fx-text-fill: -monet-on-surface");
                         darkModePane.setLeft(label);
 
                         CheckBox checkBox = new CheckBox();
@@ -333,7 +333,7 @@ public final class MonetFXDemo extends Application {
                     {
                         Label label = new Label("Background Image");
                         BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-                        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                        label.setStyle("-fx-text-fill: -monet-on-surface");
                         backgroundChooserPane.setLeft(label);
 
                         Button chooseButton = new Button("Choose");
@@ -363,7 +363,7 @@ public final class MonetFXDemo extends Application {
                     {
                         Label label = new Label("Variant");
                         BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-                        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                        label.setStyle("-fx-text-fill: -monet-on-surface");
                         variantPane.setLeft(label);
 
                         ComboBox<DynamicSchemeVariant> comboBox = new ComboBox<>();
@@ -379,7 +379,7 @@ public final class MonetFXDemo extends Application {
                     {
                         Label label = new Label("Contrast");
                         BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-                        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+                        label.setStyle("-fx-text-fill: -monet-on-surface");
                         contrastPane.setLeft(label);
 
                         Slider slider = new Slider(-1.0, 1.0, 0.0);

@@ -29,12 +29,12 @@
 }
 
 .contrast-slider .axis {
-    -fx-tick-label-fill: -monet-on-primary-container;
+    -fx-tick-label-fill: -monet-on-surface;
 }
 
 .check-box > .box {
     -fx-background-color: null;
-    -fx-border-color: -monet-on-surface-variant;
+    -fx-border-color: -monet-on-surface;
     -fx-border-radius: 2;
     -fx-border-width: 2;
 }
@@ -45,10 +45,6 @@
 
 .check-box:selected > .box > .mark {
     -fx-background-color: -monet-on-primary-container;
-}
-
-.check-box:hover {
-    -fx-effect: dropshadow(gaussian, -monet-shadow, 2, 0.0, 0.0, 0.0);
 }
 
 .button {
@@ -78,10 +74,9 @@
     -fx-background-color: -monet-primary-container;
 }
 
-.combo-box:hover {
+.combo-box:hover > picker-color {
     -fx-effect: dropshadow(gaussian, -monet-shadow, 2, 0.0, 0.0, 0.0);
 }
-
 
 .combo-box .list-cell {
     -fx-text-fill: -monet-on-primary-container;
