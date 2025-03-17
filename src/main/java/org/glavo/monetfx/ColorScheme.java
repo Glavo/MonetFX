@@ -190,7 +190,6 @@ public final class ColorScheme {
     private final @Nullable Color coreNeutralVariantColor;
     private final @Nullable Color coreErrorColor;
 
-
     private final Color[] colors = new Color[ColorRole.ALL.size()];
 
     ColorScheme(DynamicScheme scheme,

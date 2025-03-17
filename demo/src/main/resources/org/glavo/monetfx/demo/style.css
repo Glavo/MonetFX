@@ -50,6 +50,10 @@
     -fx-text-fill: -monet-on-primary;
 }
 
+.color-picker > .color-picker-label > .picker-color > .picker-color-rect {
+    -fx-stroke: -monet-on-primary;
+}
+
 .combo-box {
     -fx-background-color: -monet-primary;
 }

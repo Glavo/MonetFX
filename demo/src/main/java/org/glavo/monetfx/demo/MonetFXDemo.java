@@ -102,7 +102,13 @@ public final class MonetFXDemo extends Application {
     }
 
     private final BooleanProperty darkModeProperty = new SimpleBooleanProperty(false);
-    private final ObjectProperty<Color> colorProperty = new SimpleObjectProperty<>(DEFAULT_COLOR);
+    private final ObjectProperty<Color> primaryColorProperty = new SimpleObjectProperty<>(DEFAULT_COLOR);
+    private final ObjectProperty<Color> secondaryColorProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Color> tertiaryColorProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Color> neutralColorProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Color> neutralVariantColorProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Color> errorColorProperty = new SimpleObjectProperty<>();
+
     private final ObjectProperty<Image> backgroundImageProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<DynamicSchemeVariant> dynamicSchemeVariantProperty = new SimpleObjectProperty<>(DynamicSchemeVariant.TONAL_SPOT);
     private final DoubleProperty contrastProperty = new SimpleDoubleProperty(0.0);
@@ -115,9 +121,14 @@ public final class MonetFXDemo extends Application {
             return;
         }
 
-        if (observable == colorProperty) {
+        if (observable == primaryColorProperty) {
             skipUpdateScheme = true;
             backgroundImageProperty.set(null);
+            secondaryColorProperty.set(null);
+            tertiaryColorProperty.set(null);
+            neutralColorProperty.set(null);
+            neutralVariantColorProperty.set(null);
+            errorColorProperty.set(null);
             skipUpdateScheme = false;
         }
 
@@ -125,8 +136,8 @@ public final class MonetFXDemo extends Application {
         Image image = backgroundImageProperty.get();
 
         ColorSchemeBuilder builder;
-        if (image == null) {
-            Color color = colorProperty.get();
+        if (image == null || observable == primaryColorProperty) {
+            Color color = primaryColorProperty.get();
             if (color == null) {
                 color = DEFAULT_COLOR;
             }
@@ -137,6 +148,11 @@ public final class MonetFXDemo extends Application {
         }
 
         scheme.set(builder
+                .setSecondaryColor(secondaryColorProperty.get())
+                .setTertiaryColor(tertiaryColorProperty.get())
+                .setNeutralColor(neutralColorProperty.get())
+                .setNeutralVariantColor(neutralVariantColorProperty.get())
+                .setErrorColor(errorColorProperty.get())
                 .setBrightness(brightness)
                 .setDynamicSchemeVariant(dynamicSchemeVariantProperty.get())
                 .setContrast(new Contrast(contrastProperty.get()))
@@ -144,12 +160,52 @@ public final class MonetFXDemo extends Application {
     };
 
     {
-        listener.invalidated(null);
-        colorProperty.addListener(listener);
+        listener.invalidated(primaryColorProperty);
+        primaryColorProperty.addListener(listener);
+        secondaryColorProperty.addListener(listener);
+        tertiaryColorProperty.addListener(listener);
+        neutralColorProperty.addListener(listener);
+        neutralVariantColorProperty.addListener(listener);
+        errorColorProperty.addListener(listener);
         backgroundImageProperty.addListener(listener);
         darkModeProperty.addListener(listener);
         dynamicSchemeVariantProperty.addListener(listener);
         contrastProperty.addListener(listener);
+    }
+
+    Path prevCssFile;
+
+    private void updateCss(Scene scene) {
+        String css = scheme.get().toStyleSheet();
+        try {
+            Path tempFile = Files.createTempFile("monetfx-", ".css");
+            System.out.println("CSS File: " + tempFile.toAbsolutePath());
+            tempFile.toFile().deleteOnExit();
+            try (BufferedWriter writer = Files.newBufferedWriter(tempFile)) {
+                writer.write(css);
+            }
+
+            if (prevCssFile != null)
+                Files.deleteIfExists(prevCssFile);
+            prevCssFile = tempFile;
+            scene.getStylesheets().setAll(tempFile.toUri().toString(), STYLESHEET_PATH);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private void updateBackgroundImage(Path file) {
+        try (InputStream inputStream = Files.newInputStream(file)) {
+            Image image = new Image(inputStream);
+            backgroundImageProperty.set(image);
+
+            skipUpdateScheme = true;
+            primaryColorProperty.set(scheme.get().getSourceColor());
+            skipUpdateScheme = false;
+        } catch (IOException e) {
+            System.err.println("Failed to load background image from: " + file);
+            e.printStackTrace(System.err);
+        }
     }
 
     private Node createCard(ColorRole cardRole, ColorRole textRole) {
@@ -201,39 +257,24 @@ public final class MonetFXDemo extends Application {
         return new HBox(card1, card2);
     }
 
-    Path prevCssFile;
+    private BorderPane createColorSettingsPane(String name, ObjectProperty<Color> property, Color... customColors) {
+        BorderPane colorPane = new BorderPane();
 
-    private void updateCss(Scene scene) {
-        String css = scheme.get().toStyleSheet();
-        try {
-            Path tempFile = Files.createTempFile("monetfx-", ".css");
-            System.out.println("CSS File: " + tempFile.toAbsolutePath());
-            tempFile.toFile().deleteOnExit();
-            try (BufferedWriter writer = Files.newBufferedWriter(tempFile)) {
-                writer.write(css);
-            }
+        Label label = new Label(name);
+        BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+        label.setStyle("-fx-text-fill: -monet-on-primary-container");
+        colorPane.setLeft(label);
 
-            if (prevCssFile != null)
-                Files.deleteIfExists(prevCssFile);
-            prevCssFile = tempFile;
-            scene.getStylesheets().setAll(tempFile.toUri().toString(), STYLESHEET_PATH);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+        ColorPicker colorPicker = new ColorPicker();
+        colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
+        colorPicker.valueProperty().bindBidirectional(property);
+        colorPane.setRight(colorPicker);
+
+        if (customColors.length > 0) {
+            colorPicker.getCustomColors().setAll(customColors);
         }
-    }
 
-    private void updateBackgroundImage(Path file) {
-        try (InputStream inputStream = Files.newInputStream(file)) {
-            Image image = new Image(inputStream);
-            backgroundImageProperty.set(image);
-
-            skipUpdateScheme = true;
-            colorProperty.set(scheme.get().getSourceColor());
-            skipUpdateScheme = false;
-        } catch (IOException e) {
-            System.err.println("Failed to load background image from: " + file);
-            e.printStackTrace(System.err);
-        }
+        return colorPane;
     }
 
     @Override
@@ -241,7 +282,7 @@ public final class MonetFXDemo extends Application {
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(10));
 
-        VBox leftPane  = new VBox(8);
+        VBox leftPane = new VBox(8);
         leftPane.setPrefWidth(280);
         BorderPane.setMargin(leftPane, new Insets(20, 20, 20, 10));
         root.setLeft(leftPane);
@@ -293,25 +334,17 @@ public final class MonetFXDemo extends Application {
                         backgroundChooserPane.setRight(chooseButton);
                     }
 
-                    BorderPane primaryColorPane = new BorderPane();
-                    {
-                        Label label = new Label("Primary Color");
-                        BorderPane.setAlignment(label, Pos.CENTER_LEFT);
-                        label.setStyle("-fx-text-fill: -monet-on-primary-container");
-                        primaryColorPane.setLeft(label);
-
-                        ColorPicker colorPicker = new ColorPicker();
-                        colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
-                        colorPicker.getCustomColors().setAll(
-                                DEFAULT_COLOR,
-                                Color.web("#b33b15"),
-                                Color.web("#63a002"),
-                                Color.web("#769cdf"),
-                                Color.web("#ffde3f")
-                        );
-                        colorPicker.valueProperty().bindBidirectional(colorProperty);
-                        primaryColorPane.setRight(colorPicker);
-                    }
+                    BorderPane primaryColorPane = createColorSettingsPane("Primary Color", primaryColorProperty,
+                            DEFAULT_COLOR,
+                            Color.web("#b33b15"),
+                            Color.web("#63a002"),
+                            Color.web("#769cdf"),
+                            Color.web("#ffde3f"));
+                    BorderPane secondaryColorPane = createColorSettingsPane("Secondary Color", secondaryColorProperty);
+                    BorderPane tertiaryColorPane = createColorSettingsPane("Tertiary Color", tertiaryColorProperty);
+                    BorderPane neutralColorPane = createColorSettingsPane("Neutral Color", neutralColorProperty);
+                    BorderPane neutralVariantColorPane = createColorSettingsPane("Neutral Variant Color", neutralVariantColorProperty);
+                    BorderPane errorColorPane = createColorSettingsPane("Error Color", errorColorProperty);
 
                     BorderPane variantPane = new BorderPane();
                     {
@@ -346,7 +379,10 @@ public final class MonetFXDemo extends Application {
                         contrastPane.setRight(slider);
                     }
 
-                    content.getChildren().setAll(darkModePane, backgroundChooserPane, primaryColorPane, variantPane, contrastPane);
+                    content.getChildren().setAll(darkModePane, backgroundChooserPane,
+                            primaryColorPane, secondaryColorPane, tertiaryColorPane,
+                            neutralColorPane, neutralVariantColorPane, errorColorPane,
+                            variantPane, contrastPane);
                 }
             }
 
