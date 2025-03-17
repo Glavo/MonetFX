@@ -47,9 +47,19 @@
     -fx-background-color: -monet-on-primary-container;
 }
 
+.check-box:hover {
+    -fx-effect: dropshadow(gaussian, -monet-shadow, 2, 0.0, 0.0, 0.0);
+}
+
 .button {
     -fx-text-fill: -monet-on-primary-container;
     -fx-background-color: -monet-primary-container;
+}
+
+.button:hover {
+    -fx-text-fill: -monet-on-primary-container;
+    -fx-background-color: -monet-primary-container;
+    -fx-effect: dropshadow(gaussian, -monet-shadow, 2, 0.0, 0.0, 0.0);
 }
 
 .color-picker > .color-picker-label {
@@ -67,6 +77,11 @@
 .combo-box {
     -fx-background-color: -monet-primary-container;
 }
+
+.combo-box:hover {
+    -fx-effect: dropshadow(gaussian, -monet-shadow, 2, 0.0, 0.0, 0.0);
+}
+
 
 .combo-box .list-cell {
     -fx-text-fill: -monet-on-primary-container;
