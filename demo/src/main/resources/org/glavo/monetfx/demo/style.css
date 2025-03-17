@@ -59,11 +59,11 @@
 }
 
 .combo-box .list-view .list-cell {
-    -fx-text-fill: -monet-on-primary;
-    -fx-background-color: -monet-primary;
+    -fx-text-fill: -monet-on-secondary-container;
+    -fx-background-color: -monet-surface-container;
 }
 
 .combo-box .list-view .list-cell:hover {
-    -fx-background-color : #5F9EA0;
-    -fx-text-fill: white;
+    -fx-text-fill: -monet-on-surface;
+    -fx-background-color: -monet-secondary-container;
 }
