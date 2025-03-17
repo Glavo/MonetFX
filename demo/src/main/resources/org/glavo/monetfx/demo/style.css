@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+.settings-card {
+    -fx-padding: 10px;
+    -fx-background-color: -monet-surface-container;
+    -fx-effect: dropshadow(gaussian, -monet-shadow, 5, 0.0, 0.0, 0.0);
+}
+
 .contrast-slider .track {
     -fx-background-color: -monet-surface;
 }
@@ -34,32 +40,36 @@
 }
 
 .check-box:selected > .box {
-    -fx-background-color: -monet-primary;
+    -fx-background-color: -monet-primary-container;
 }
 
 .check-box:selected > .box > .mark {
-    -fx-background-color: -monet-on-primary;
+    -fx-background-color: -monet-on-primary-container;
 }
 
 .button {
-    -fx-text-fill: -monet-on-primary;
-    -fx-background-color: -monet-primary;
+    -fx-text-fill: -monet-on-primary-container;
+    -fx-background-color: -monet-primary-container;
 }
 
 .color-picker > .color-picker-label {
-    -fx-text-fill: -monet-on-primary;
+    -fx-text-fill: -monet-on-primary-container;
 }
 
 .color-picker > .color-picker-label > .picker-color > .picker-color-rect {
-    -fx-stroke: -monet-on-primary;
+    -fx-stroke: -monet-on-primary-container;
+}
+
+.color-picker-null > .color-picker-label > .picker-color > .picker-color-rect {
+    -fx-stroke: -monet-primary-container;
 }
 
 .combo-box {
-    -fx-background-color: -monet-primary;
+    -fx-background-color: -monet-primary-container;
 }
 
 .combo-box .list-cell {
-    -fx-text-fill: -monet-on-primary;
+    -fx-text-fill: -monet-on-primary-container;
 }
 
 .combo-box .list-view .list-cell {

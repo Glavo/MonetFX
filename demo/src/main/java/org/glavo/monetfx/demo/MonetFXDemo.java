@@ -25,6 +25,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -36,6 +37,8 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
@@ -267,12 +270,24 @@ public final class MonetFXDemo extends Application {
 
         ColorPicker colorPicker = new ColorPicker();
         colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
+        colorPicker.setPrefSize(90, 25);
+        if (property != primaryColorProperty) {
+            ChangeListener<Color> changeListener = (observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    colorPicker.getStyleClass().add("color-picker-null");
+                } else {
+                    colorPicker.getStyleClass().remove("color-picker-null");
+                }
+            };
+            colorPicker.valueProperty().addListener(changeListener);
+        }
         colorPicker.valueProperty().bindBidirectional(property);
         colorPane.setRight(colorPicker);
 
         if (customColors.length > 0) {
             colorPicker.getCustomColors().setAll(customColors);
         }
+
 
         return colorPane;
     }
@@ -288,10 +303,8 @@ public final class MonetFXDemo extends Application {
         root.setLeft(leftPane);
         {
             BorderPane settingsPane = new BorderPane();
-            settingsPane.setPadding(new Insets(10));
+            settingsPane.getStyleClass().add("settings-card");
             {
-                settingsPane.setStyle("-fx-background-color: -monet-primary-container");
-
                 StackPane titlePane = new StackPane();
                 settingsPane.setTop(titlePane);
                 {
