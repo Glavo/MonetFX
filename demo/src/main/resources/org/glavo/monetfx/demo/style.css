@@ -14,3 +14,56 @@
  * limitations under the License.
  */
 
+.contrast-slider .track {
+    -fx-background-color: -monet-surface;
+}
+
+.contrast-slider .thumb {
+    -fx-background-color: -monet-primary;
+}
+
+.contrast-slider .axis {
+    -fx-tick-label-fill: -monet-on-primary-container;
+}
+
+.check-box > .box {
+    -fx-background-color: null;
+    -fx-border-color: -monet-on-surface-variant;
+    -fx-border-radius: 2;
+    -fx-border-width: 2;
+}
+
+.check-box:selected > .box {
+    -fx-background-color: -monet-primary;
+}
+
+.check-box:selected > .box > .mark {
+    -fx-background-color: -monet-on-primary;
+}
+
+.button {
+    -fx-text-fill: -monet-on-primary;
+    -fx-background-color: -monet-primary;
+}
+
+.color-picker > .color-picker-label {
+    -fx-text-fill: -monet-on-primary;
+}
+
+.combo-box {
+    -fx-background-color: -monet-primary;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: -monet-on-primary;
+}
+
+.combo-box .list-view .list-cell {
+    -fx-text-fill: -monet-on-primary;
+    -fx-background-color: -monet-primary;
+}
+
+.combo-box .list-view .list-cell:hover {
+    -fx-background-color : #5F9EA0;
+    -fx-text-fill: white;
+}

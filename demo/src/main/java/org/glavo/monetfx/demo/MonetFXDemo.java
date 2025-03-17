@@ -337,6 +337,7 @@ public final class MonetFXDemo extends Application {
                         contrastPane.setLeft(label);
 
                         Slider slider = new Slider(-1.0, 1.0, 0.0);
+                        slider.getStyleClass().add("contrast-slider");
                         slider.setShowTickMarks(true);
                         slider.setShowTickLabels(true);
                         slider.setSnapToTicks(true);
