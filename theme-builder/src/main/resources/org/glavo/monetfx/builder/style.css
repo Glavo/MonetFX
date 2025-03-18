@@ -52,9 +52,12 @@
     -fx-background-color: -monet-primary-container;
 }
 
+.primary-button {
+    -fx-text-fill: -monet-on-primary;
+    -fx-background-color: -monet-primary;
+}
+
 .button:hover {
-    -fx-text-fill: -monet-on-primary-container;
-    -fx-background-color: -monet-primary-container;
     -fx-effect: dropshadow(gaussian, -monet-shadow, 2, 0.0, 0.0, 0.0);
 }
 

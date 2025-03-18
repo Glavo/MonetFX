@@ -1,3 +1,3 @@
 rootProject.name = "MonetFX"
 
-include(":demo")
+include(":theme-builder")

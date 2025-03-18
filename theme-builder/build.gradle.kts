@@ -30,10 +30,12 @@ tasks.withType<JavaCompile> {
     targetCompatibility = "8"
 }
 
+val mainClassName = "org.glavo.monetfx.builder.MonetFXThemeBuilder"
+
 application {
-    mainClass.set("org.glavo.monetfx.demo.MonetFXDemo")
+    mainClass.set(mainClassName)
 }
 
 tasks.withType<Jar> {
-    manifest.attributes("Main-Class" to "org.glavo.monetfx.Demo")
+    manifest.attributes("Main-Class" to mainClassName)
 }

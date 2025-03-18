@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.glavo.monetfx.demo;
+package org.glavo.monetfx.builder;
 
 import javafx.application.Application;
 import javafx.beans.InvalidationListener;
@@ -37,8 +37,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
@@ -59,6 +57,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.glavo.monetfx.Brightness;
@@ -82,11 +81,11 @@ import java.util.List;
 
 import static org.glavo.monetfx.ColorRole.*;
 
-public final class MonetFXDemo extends Application {
+public final class MonetFXThemeBuilder extends Application {
 
     private static final Color DEFAULT_COLOR = Color.web("#5C6BC0");
 
-    private static final String STYLESHEET_PATH = MonetFXDemo.class.getResource("style.css").toExternalForm();
+    private static final String STYLESHEET_PATH = MonetFXThemeBuilder.class.getResource("style.css").toExternalForm();
 
     private static String toWeb(Color color) {
         return String.format("#%02X%02X%02X",
@@ -127,6 +126,11 @@ public final class MonetFXDemo extends Application {
         if (observable == primaryColorProperty) {
             skipUpdateScheme = true;
             backgroundImageProperty.set(null);
+            skipUpdateScheme = false;
+        }
+
+        if (observable == primaryColorProperty || observable == backgroundImageProperty) {
+            skipUpdateScheme = true;
             secondaryColorProperty.set(null);
             tertiaryColorProperty.set(null);
             neutralColorProperty.set(null);
@@ -297,7 +301,7 @@ public final class MonetFXDemo extends Application {
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(10));
 
-        VBox leftPane = new VBox(8);
+        VBox leftPane = new VBox(20);
         leftPane.setPrefWidth(280);
         BorderPane.setMargin(leftPane, new Insets(20, 20, 20, 10));
         root.setLeft(leftPane);
@@ -392,11 +396,46 @@ public final class MonetFXDemo extends Application {
                         contrastPane.setRight(slider);
                     }
 
+                    BorderPane exportPane = new BorderPane();
+                    {
+                        HBox buttonsBar = new HBox();
+                        exportPane.setRight(buttonsBar);
+                        {
+                            Button exportButton = new Button("Export");
+                            exportButton.getStyleClass().add("primary-button");
+
+                            buttonsBar.getChildren().add(exportButton);
+                        }
+                    }
+
                     content.getChildren().setAll(darkModePane, backgroundChooserPane,
                             primaryColorPane, secondaryColorPane, tertiaryColorPane,
                             neutralColorPane, neutralVariantColorPane, errorColorPane,
-                            variantPane, contrastPane);
+                            variantPane, contrastPane,
+                            exportPane);
                 }
+            }
+
+            BorderPane aboutPane = new BorderPane();
+            aboutPane.getStyleClass().add("settings-card");
+            {
+                StackPane titlePane = new StackPane();
+                aboutPane.setTop(titlePane);
+                {
+                    Label label = new Label("About");
+                    label.setStyle("-fx-text-fill: -monet-on-surface; -fx-font-size: 15");
+                    label.setPadding(new Insets(0, 0, 8, 0));
+                    titlePane.getChildren().add(label);
+                }
+
+
+                TextFlow content = new TextFlow();
+                aboutPane.setCenter(content);
+
+                content.getChildren().setAll(
+
+
+                );
             }
 
             leftPane.getChildren().setAll(settingsPane);
@@ -507,7 +546,7 @@ public final class MonetFXDemo extends Application {
         updateCss(scene);
         scheme.addListener((observable, oldValue, newValue) -> updateCss(scene));
 
-        primaryStage.setTitle("MonetFX Demo");
+        primaryStage.setTitle("MonetFX Theme Builder");
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -516,6 +555,6 @@ public final class MonetFXDemo extends Application {
 
 
     public static void main(String[] args) {
-        Application.launch(MonetFXDemo.class, args);
+        Application.launch(MonetFXThemeBuilder.class, args);
     }
 }

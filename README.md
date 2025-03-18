@@ -8,7 +8,7 @@ This project is currently in beta and may undergo breaking changes in the future
 
 ## Demo
 
-We provide a demo that you can run with `./gradlew demo:run`.
+We provide a demo that you can run with `./gradlew theme-builder:run`.
 
 Light mode:
 
