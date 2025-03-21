@@ -94,3 +94,20 @@
     -fx-text-fill: -monet-on-surface;
     -fx-background-color: -monet-secondary-container;
 }
+
+.menu-item {
+    -fx-background-color: -monet-surface-container;
+}
+
+.menu-item > .label {
+    -fx-text-fill: -monet-on-secondary-container;
+}
+
+.menu-item:hover {
+    -fx-background-color: -monet-secondary-container;
+}
+
+.menu-item:hover > .label {
+    -fx-text-fill: -monet-on-surface;
+}
+

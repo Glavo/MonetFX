@@ -28,14 +28,18 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.input.DataFormat;
@@ -69,6 +73,7 @@ import org.glavo.monetfx.DynamicSchemeVariant;
 import org.glavo.monetfx.beans.property.ColorSchemeProperty;
 import org.glavo.monetfx.beans.property.SimpleColorSchemeProperty;
 
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -94,14 +99,16 @@ public final class MonetFXThemeBuilder extends Application {
                 Math.round(color.getBlue() * 255));
     }
 
-    private final FileChooser fileChooser = new FileChooser();
+    private final FileChooser backgroundFileChooser = new FileChooser();
 
     {
-        fileChooser.setTitle("Choose background image");
-        fileChooser.getExtensionFilters().setAll(
+        backgroundFileChooser.setTitle("Choose background image");
+        backgroundFileChooser.getExtensionFilters().setAll(
                 new FileChooser.ExtensionFilter("Image File", "*.png", "*.jpg", "*.jpeg")
         );
     }
+
+    private final FileChooser exportFileChooser = new FileChooser();
 
     private final BooleanProperty darkModeProperty = new SimpleBooleanProperty(false);
     private final ObjectProperty<Color> primaryColorProperty = new SimpleObjectProperty<>(DEFAULT_COLOR);
@@ -149,9 +156,9 @@ public final class MonetFXThemeBuilder extends Application {
                 color = DEFAULT_COLOR;
             }
 
-            builder = ColorScheme.newBuilder(color);
+            builder = ColorScheme.newBuilder().setPrimaryColor(color);
         } else {
-            builder = ColorScheme.newBuilder(image).setFallbackColor(DEFAULT_COLOR);
+            builder = ColorScheme.newBuilder().setWallpaperImage(image).setFallbackColor(DEFAULT_COLOR);
         }
 
         scheme.set(builder
@@ -342,10 +349,10 @@ public final class MonetFXThemeBuilder extends Application {
 
                         Button chooseButton = new Button("Choose");
                         chooseButton.setOnAction(event -> {
-                            File file = fileChooser.showOpenDialog(primaryStage);
+                            File file = backgroundFileChooser.showOpenDialog(primaryStage);
                             if (file != null) {
                                 updateBackgroundImage(file.toPath());
-                                fileChooser.setInitialDirectory(file.getParentFile());
+                                backgroundFileChooser.setInitialDirectory(file.getParentFile());
                             }
                         });
                         backgroundChooserPane.setRight(chooseButton);
@@ -403,6 +410,27 @@ public final class MonetFXThemeBuilder extends Application {
                         {
                             Button exportButton = new Button("Export");
                             exportButton.getStyleClass().add("primary-button");
+                            {
+                                ContextMenu contextMenu = new ContextMenu();
+                                exportButton.setOnAction(e -> contextMenu.show(exportButton, Side.BOTTOM, 0, 0));
+
+                                for (ThemeExporter exporter : ThemeExporter.values()) {
+                                    MenuItem item = new MenuItem(exporter.name);
+                                    item.setOnAction(e -> {
+                                        exportFileChooser.getExtensionFilters().setAll(exporter.extensionFilter);
+                                        File file = exportFileChooser.showSaveDialog(primaryStage);
+                                        if (file != null) {
+                                            exportFileChooser.setInitialDirectory(file.getParentFile());
+
+                                            if (!exporter.export(file.toPath(), scheme.get())) {
+                                                Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to export theme.");
+                                                alert.show();
+                                            }
+                                        }
+                                    });
+                                    contextMenu.getItems().add(item);
+                                }
+                            }
 
                             buttonsBar.getChildren().add(exportButton);
                         }

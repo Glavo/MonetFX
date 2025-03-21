@@ -174,12 +174,8 @@ public final class ColorScheme {
         return new ColorScheme(scheme, seedColor, null, null, null, null, null);
     }
 
-    public static ColorSchemeBuilder newBuilder(@NotNull Image image) {
-        return new ColorSchemeBuilder().setWallpaperImage(image);
-    }
-
-    public static ColorSchemeBuilder newBuilder(@NotNull Color seedColor) {
-        return new ColorSchemeBuilder().setPrimaryColor(seedColor);
+    public static ColorSchemeBuilder newBuilder() {
+        return new ColorSchemeBuilder();
     }
 
     private final DynamicScheme scheme;

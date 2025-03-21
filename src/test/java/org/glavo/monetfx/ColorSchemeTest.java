@@ -88,7 +88,8 @@ public final class ColorSchemeTest {
     public void testFromSeed(Color primaryColor, Color secondaryColor, Color tertiaryColor,
                              Color neutralColor, Color neutralVariantColor, Color errorColor,
                              Brightness brightness, DynamicSchemeVariant variant, Contrast contrast, Map<ColorRole, Color> colors) {
-        ColorScheme scheme = ColorScheme.newBuilder(primaryColor)
+        ColorScheme scheme = ColorScheme.newBuilder()
+                .setPrimaryColor(primaryColor)
                 .setSecondaryColor(secondaryColor)
                 .setTertiaryColor(tertiaryColor)
                 .setNeutralColor(neutralColor)
