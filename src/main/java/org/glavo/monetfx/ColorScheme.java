@@ -208,10 +208,6 @@ public final class ColorScheme {
         return scheme.contrastLevel;
     }
 
-    public Color getSourceColor() {
-        return ColorUtils.fxFromArgb(scheme.sourceColorHct.toInt());
-    }
-
     public @NotNull Color getPrimaryColorSeed() {
         return primaryColorSeed;
     }
