@@ -69,11 +69,10 @@ import org.glavo.monetfx.ColorRole;
 import org.glavo.monetfx.ColorScheme;
 import org.glavo.monetfx.ColorSchemeBuilder;
 import org.glavo.monetfx.Contrast;
-import org.glavo.monetfx.DynamicSchemeVariant;
+import org.glavo.monetfx.ColorStyle;
 import org.glavo.monetfx.beans.property.ColorSchemeProperty;
 import org.glavo.monetfx.beans.property.SimpleColorSchemeProperty;
 
-import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -119,7 +118,7 @@ public final class MonetFXThemeBuilder extends Application {
     private final ObjectProperty<Color> errorColorProperty = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Image> backgroundImageProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<DynamicSchemeVariant> dynamicSchemeVariantProperty = new SimpleObjectProperty<>(DynamicSchemeVariant.TONAL_SPOT);
+    private final ObjectProperty<ColorStyle> dynamicSchemeVariantProperty = new SimpleObjectProperty<>(ColorStyle.TONAL_SPOT);
     private final DoubleProperty contrastProperty = new SimpleDoubleProperty(0.0);
 
     private final ColorSchemeProperty scheme = new SimpleColorSchemeProperty();
@@ -168,7 +167,7 @@ public final class MonetFXThemeBuilder extends Application {
                 .setNeutralVariantColor(neutralVariantColorProperty.get())
                 .setErrorColor(errorColorProperty.get())
                 .setBrightness(brightness)
-                .setDynamicSchemeVariant(dynamicSchemeVariantProperty.get())
+                .setColorStyle(dynamicSchemeVariantProperty.get())
                 .setContrast(new Contrast(contrastProperty.get()))
                 .build());
     };
@@ -377,9 +376,9 @@ public final class MonetFXThemeBuilder extends Application {
                         label.setStyle("-fx-text-fill: -monet-on-surface");
                         variantPane.setLeft(label);
 
-                        ComboBox<DynamicSchemeVariant> comboBox = new ComboBox<>();
-                        comboBox.getItems().addAll(DynamicSchemeVariant.values());
-                        comboBox.getSelectionModel().select(DynamicSchemeVariant.TONAL_SPOT);
+                        ComboBox<ColorStyle> comboBox = new ComboBox<>();
+                        comboBox.getItems().addAll(ColorStyle.values());
+                        comboBox.getSelectionModel().select(ColorStyle.TONAL_SPOT);
                         comboBox.getSelectionModel().selectedItemProperty().addListener(
                                 (observable, oldValue, newValue) ->
                                         this.dynamicSchemeVariantProperty.set(newValue));

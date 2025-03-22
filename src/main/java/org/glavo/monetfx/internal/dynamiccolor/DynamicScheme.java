@@ -16,7 +16,7 @@
 
 package org.glavo.monetfx.internal.dynamiccolor;
 
-import org.glavo.monetfx.DynamicSchemeVariant;
+import org.glavo.monetfx.ColorStyle;
 import org.glavo.monetfx.internal.hct.Hct;
 import org.glavo.monetfx.internal.palettes.TonalPalette;
 import org.glavo.monetfx.internal.utils.MathUtils;
@@ -30,7 +30,7 @@ public class DynamicScheme {
     public static final TonalPalette DEFAULT_ERROR_PALETTE = TonalPalette.fromHueAndChroma(25.0, 84.0);
 
     public final Hct sourceColorHct;
-    public final DynamicSchemeVariant variant;
+    public final ColorStyle variant;
     public final boolean isDark;
     public final double contrastLevel;
 
@@ -43,7 +43,7 @@ public class DynamicScheme {
 
     public DynamicScheme(
             Hct sourceColorHct,
-            DynamicSchemeVariant variant,
+            ColorStyle variant,
             boolean isDark,
             double contrastLevel,
             TonalPalette primaryPalette,

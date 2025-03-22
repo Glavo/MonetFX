@@ -160,14 +160,14 @@ public final class ColorScheme {
 
         final DynamicScheme scheme = new DynamicScheme(
                 seedColorHct,
-                DynamicSchemeVariant.TONAL_SPOT,
+                ColorStyle.TONAL_SPOT,
                 false,
                 Contrast.STANDARD.getValue(),
-                DynamicSchemeVariant.TONAL_SPOT.getPrimaryPalette(seedColorHct, false, contrastLevel),
-                DynamicSchemeVariant.TONAL_SPOT.getSecondaryPalette(seedColorHct, false, contrastLevel),
-                DynamicSchemeVariant.TONAL_SPOT.getTertiaryPalette(seedColorHct, false, contrastLevel),
-                DynamicSchemeVariant.TONAL_SPOT.getNeutralPalette(seedColorHct, false, contrastLevel),
-                DynamicSchemeVariant.TONAL_SPOT.getNeutralVariantPalette(seedColorHct, false, contrastLevel),
+                ColorStyle.TONAL_SPOT.getPrimaryPalette(seedColorHct, false, contrastLevel),
+                ColorStyle.TONAL_SPOT.getSecondaryPalette(seedColorHct, false, contrastLevel),
+                ColorStyle.TONAL_SPOT.getTertiaryPalette(seedColorHct, false, contrastLevel),
+                ColorStyle.TONAL_SPOT.getNeutralPalette(seedColorHct, false, contrastLevel),
+                ColorStyle.TONAL_SPOT.getNeutralVariantPalette(seedColorHct, false, contrastLevel),
                 DynamicScheme.DEFAULT_ERROR_PALETTE
         );
 

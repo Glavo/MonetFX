@@ -28,16 +28,16 @@ import static java.lang.Math.max;
 
 /// The algorithm used to construct a [ColorScheme] in [ColorScheme#fromSeed].
 ///
-/// The [#TONAL_SPOT] variant builds default Material scheme colors. These colors are
+/// The [#TONAL_SPOT] style builds default Material scheme colors. These colors are
 /// mapped to light or dark tones to achieve visually accessible color
 /// pairings with sufficient contrast between foreground and background elements.
 ///
 /// In some cases, the tones can prevent colors from appearing as intended,
 /// such as when a color is too light to offer enough contrast for accessibility.
-/// Color fidelity (`DynamicSchemeVariant.FIDELITY`) is a feature that adjusts
+/// Color fidelity (`ColorStyle.FIDELITY`) is a feature that adjusts
 /// tones in these cases to produce the intended visual results without harming
 /// visual contrast.
-public enum DynamicSchemeVariant {
+public enum ColorStyle {
     /// Default for Material theme colors. Builds pastel palettes with a low chroma.
     TONAL_SPOT {
         @Override
@@ -309,7 +309,7 @@ public enum DynamicSchemeVariant {
 
     private final String displayName;
 
-    DynamicSchemeVariant() {
+    ColorStyle() {
         String[] parts = this.name().split("_");
         for (int i = 0; i < parts.length; i++) {
             parts[i] = parts[i].charAt(0) + parts[i].substring(1).toLowerCase(Locale.ROOT);

@@ -36,7 +36,7 @@ public final class ColorSchemeBuilder {
 
     private Color fallbackColor = ColorScheme.FALLBACK_COLOR;
     private Brightness brightness = Brightness.LIGHT;
-    private DynamicSchemeVariant dynamicSchemeVariant = DynamicSchemeVariant.TONAL_SPOT;
+    private ColorStyle colorStyle = ColorStyle.TONAL_SPOT;
     private Contrast contrast = Contrast.STANDARD;
 
     ColorSchemeBuilder() {
@@ -99,8 +99,8 @@ public final class ColorSchemeBuilder {
     }
 
     @Contract(value = "_ -> this", pure = true)
-    public ColorSchemeBuilder setDynamicSchemeVariant(DynamicSchemeVariant dynamicSchemeVariant) {
-        this.dynamicSchemeVariant = dynamicSchemeVariant;
+    public ColorSchemeBuilder setColorStyle(@NotNull ColorStyle colorStyle) {
+        this.colorStyle = Objects.requireNonNull(colorStyle);
         return this;
     }
 
@@ -127,30 +127,30 @@ public final class ColorSchemeBuilder {
 
         return new ColorScheme(new DynamicScheme(
                 primaryColorHct,
-                dynamicSchemeVariant,
+                colorStyle,
                 isDark,
                 contrastLevel,
-                dynamicSchemeVariant.getPrimaryPalette(primaryColorHct, isDark, contrastLevel),
+                colorStyle.getPrimaryPalette(primaryColorHct, isDark, contrastLevel),
 
                 this.secondaryColor == null
-                        ? dynamicSchemeVariant.getSecondaryPalette(primaryColorHct, isDark, contrastLevel)
-                        : dynamicSchemeVariant.getPrimaryPalette(Hct.fromFx(this.secondaryColor), isDark, contrastLevel),
+                        ? colorStyle.getSecondaryPalette(primaryColorHct, isDark, contrastLevel)
+                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.secondaryColor), isDark, contrastLevel),
 
                 this.tertiaryColor == null
-                        ? dynamicSchemeVariant.getTertiaryPalette(primaryColorHct, isDark, contrastLevel)
-                        : dynamicSchemeVariant.getPrimaryPalette(Hct.fromFx(this.tertiaryColor), isDark, contrastLevel),
+                        ? colorStyle.getTertiaryPalette(primaryColorHct, isDark, contrastLevel)
+                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.tertiaryColor), isDark, contrastLevel),
 
                 this.neutralColor == null
-                        ? dynamicSchemeVariant.getNeutralPalette(primaryColorHct, isDark, contrastLevel)
-                        : dynamicSchemeVariant.getNeutralPalette(Hct.fromFx(this.neutralColor), isDark, contrastLevel),
+                        ? colorStyle.getNeutralPalette(primaryColorHct, isDark, contrastLevel)
+                        : colorStyle.getNeutralPalette(Hct.fromFx(this.neutralColor), isDark, contrastLevel),
 
                 this.neutralVariantColor == null
-                        ? dynamicSchemeVariant.getNeutralVariantPalette(primaryColorHct, isDark, contrastLevel)
-                        : dynamicSchemeVariant.getNeutralVariantPalette(Hct.fromFx(this.neutralVariantColor), isDark, contrastLevel),
+                        ? colorStyle.getNeutralVariantPalette(primaryColorHct, isDark, contrastLevel)
+                        : colorStyle.getNeutralVariantPalette(Hct.fromFx(this.neutralVariantColor), isDark, contrastLevel),
 
                 this.errorColor == null
                         ? DynamicScheme.DEFAULT_ERROR_PALETTE
-                        : dynamicSchemeVariant.getPrimaryPalette(Hct.fromFx(this.errorColor), isDark, contrastLevel)
+                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.errorColor), isDark, contrastLevel)
         ), primaryColor, secondaryColor, tertiaryColor, neutralColor, neutralVariantColor, errorColor);
     }
 }

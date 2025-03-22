@@ -49,13 +49,13 @@ public final class ColorSchemeTest {
                 Math.round(color.getBlue() * 255));
     }
 
-    private static String toPostfix(DynamicSchemeVariant variant) {
-        return variant == DynamicSchemeVariant.TONAL_SPOT ? "" : "-" + variant.name().toLowerCase(Locale.ROOT);
+    private static String toPostfix(ColorStyle style) {
+        return style == ColorStyle.TONAL_SPOT ? "" : "-" + style.name().toLowerCase(Locale.ROOT);
     }
 
     private static Stream<Arguments> testFromSeedArguments() {
         return Stream.of("red", "green", "blue", "yellow", "custom")
-                .flatMap(name -> Arrays.stream(DynamicSchemeVariant.values())
+                .flatMap(name -> Arrays.stream(ColorStyle.values())
                         .flatMap(variant -> {
                             String fileName = "theme-" + name + toPostfix(variant) + ".json";
 
@@ -87,7 +87,7 @@ public final class ColorSchemeTest {
     @MethodSource("testFromSeedArguments")
     public void testFromSeed(Color primaryColor, Color secondaryColor, Color tertiaryColor,
                              Color neutralColor, Color neutralVariantColor, Color errorColor,
-                             Brightness brightness, DynamicSchemeVariant variant, Contrast contrast, Map<ColorRole, Color> colors) {
+                             Brightness brightness, ColorStyle variant, Contrast contrast, Map<ColorRole, Color> colors) {
         ColorScheme scheme = ColorScheme.newBuilder()
                 .setPrimaryColor(primaryColor)
                 .setSecondaryColor(secondaryColor)
@@ -96,7 +96,7 @@ public final class ColorSchemeTest {
                 .setNeutralVariantColor(neutralVariantColor)
                 .setErrorColor(errorColor)
                 .setBrightness(brightness)
-                .setDynamicSchemeVariant(variant)
+                .setColorStyle(variant)
                 .setContrast(contrast)
                 .build();
 
@@ -130,7 +130,7 @@ public final class ColorSchemeTest {
             }
         }
 
-        public static MaterialTheme load(InputStream inputStream, DynamicSchemeVariant variant) {
+        public static MaterialTheme load(InputStream inputStream, ColorStyle variant) {
             JsonObject raw;
             try (Reader reader = new InputStreamReader(inputStream)) {
                 raw = GSON.fromJson(reader, JsonObject.class);
@@ -154,10 +154,10 @@ public final class ColorSchemeTest {
         }
 
         public final Map<String, Color> coreColors;
-        public final DynamicSchemeVariant variant;
+        public final ColorStyle variant;
         public final Map<Map.Entry<Brightness, Contrast>, Map<ColorRole, Color>> schemes;
 
-        private MaterialTheme(Map<String, Color> coreColors, DynamicSchemeVariant variant, Map<Map.Entry<Brightness, Contrast>, Map<ColorRole, Color>> schemes) {
+        private MaterialTheme(Map<String, Color> coreColors, ColorStyle variant, Map<Map.Entry<Brightness, Contrast>, Map<ColorRole, Color>> schemes) {
             this.coreColors = coreColors;
             this.variant = variant;
             this.schemes = schemes;
