@@ -26,15 +26,13 @@ import java.util.Objects;
 
 public final class ColorSchemeBuilder {
 
-    private Image wallpaperImage;
-    private Color primaryColor;
-    private Color secondaryColor;
-    private Color tertiaryColor;
-    private Color neutralColor;
-    private Color neutralVariantColor;
-    private Color errorColor;
+    private Color primaryColorSeed;
+    private Color secondaryColorSeed;
+    private Color tertiaryColorSeed;
+    private Color neutralColorSeed;
+    private Color neutralVariantColorSeed;
+    private Color errorColorSeed;
 
-    private Color fallbackColor = ColorScheme.FALLBACK_COLOR;
     private Brightness brightness = Brightness.LIGHT;
     private ColorStyle colorStyle = ColorStyle.TONAL_SPOT;
     private Contrast contrast = Contrast.STANDARD;
@@ -43,52 +41,50 @@ public final class ColorSchemeBuilder {
     }
 
     @Contract(value = "_ -> this", pure = true)
-    public ColorSchemeBuilder setWallpaperImage(Image wallpaperImage) {
-        this.wallpaperImage = wallpaperImage;
-        this.primaryColor = null;
+    public ColorSchemeBuilder setPrimaryColorSeed(Color primaryColorSeed) {
+        this.primaryColorSeed = primaryColorSeed;
         return this;
     }
 
     @Contract(value = "_ -> this", pure = true)
-    public ColorSchemeBuilder setPrimaryColor(Color primaryColor) {
-        this.wallpaperImage = null;
-        this.primaryColor = primaryColor;
+    public ColorSchemeBuilder setWallpaper(@NotNull Image image) {
+        this.primaryColorSeed = ColorScheme.extractColor(image, ColorScheme.FALLBACK_COLOR);
+        return this;
+    }
+
+    @Contract(value = "_, _ -> this", pure = true)
+    public ColorSchemeBuilder setWallpaper(@NotNull Image image, Color fallbackColor) {
+        this.primaryColorSeed = ColorScheme.extractColor(image, fallbackColor);
         return this;
     }
 
     @Contract(value = "_ -> this", pure = true)
-    public ColorSchemeBuilder setSecondaryColor(Color secondaryColor) {
-        this.secondaryColor = secondaryColor;
+    public ColorSchemeBuilder setSecondaryColorSeed(Color secondaryColorSeed) {
+        this.secondaryColorSeed = secondaryColorSeed;
         return this;
     }
 
     @Contract(value = "_ -> this", pure = true)
-    public ColorSchemeBuilder setTertiaryColor(Color tertiaryColor) {
-        this.tertiaryColor = tertiaryColor;
+    public ColorSchemeBuilder setTertiaryColorSeed(Color tertiaryColorSeed) {
+        this.tertiaryColorSeed = tertiaryColorSeed;
         return this;
     }
 
     @Contract(value = "_ -> this", pure = true)
-    public ColorSchemeBuilder setNeutralColor(Color neutralColor) {
-        this.neutralColor = neutralColor;
+    public ColorSchemeBuilder setNeutralColorSeed(Color neutralColorSeed) {
+        this.neutralColorSeed = neutralColorSeed;
         return this;
     }
 
     @Contract(value = "_ -> this", pure = true)
-    public ColorSchemeBuilder setNeutralVariantColor(Color neutralVariantColor) {
-        this.neutralVariantColor = neutralVariantColor;
+    public ColorSchemeBuilder setNeutralVariantColorSeed(Color neutralVariantColorSeed) {
+        this.neutralVariantColorSeed = neutralVariantColorSeed;
         return this;
     }
 
     @Contract(value = "_ -> this", pure = true)
-    public ColorSchemeBuilder setErrorColor(Color errorColor) {
-        this.errorColor = errorColor;
-        return this;
-    }
-
-    @Contract(value = "_ -> this", pure = true)
-    public ColorSchemeBuilder setFallbackColor(@NotNull Color fallbackColor) {
-        this.fallbackColor = Objects.requireNonNull(fallbackColor);
+    public ColorSchemeBuilder setErrorColorSeed(Color errorColorSeed) {
+        this.errorColorSeed = errorColorSeed;
         return this;
     }
 
@@ -111,13 +107,9 @@ public final class ColorSchemeBuilder {
     }
 
     public ColorScheme build() {
-        Color primaryColor = this.primaryColor;
+        Color primaryColor = this.primaryColorSeed;
         if (primaryColor == null) {
-            if (wallpaperImage == null) {
-                throw new IllegalStateException("Primary color has not been set");
-            }
-
-            primaryColor = ColorScheme.extractColor(wallpaperImage, fallbackColor);
+            primaryColor = ColorScheme.FALLBACK_COLOR;
         }
 
         boolean isDark = brightness == Brightness.DARK;
@@ -132,25 +124,25 @@ public final class ColorSchemeBuilder {
                 contrastLevel,
                 colorStyle.getPrimaryPalette(primaryColorHct, isDark, contrastLevel),
 
-                this.secondaryColor == null
+                this.secondaryColorSeed == null
                         ? colorStyle.getSecondaryPalette(primaryColorHct, isDark, contrastLevel)
-                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.secondaryColor), isDark, contrastLevel),
+                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.secondaryColorSeed), isDark, contrastLevel),
 
-                this.tertiaryColor == null
+                this.tertiaryColorSeed == null
                         ? colorStyle.getTertiaryPalette(primaryColorHct, isDark, contrastLevel)
-                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.tertiaryColor), isDark, contrastLevel),
+                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.tertiaryColorSeed), isDark, contrastLevel),
 
-                this.neutralColor == null
+                this.neutralColorSeed == null
                         ? colorStyle.getNeutralPalette(primaryColorHct, isDark, contrastLevel)
-                        : colorStyle.getNeutralPalette(Hct.fromFx(this.neutralColor), isDark, contrastLevel),
+                        : colorStyle.getNeutralPalette(Hct.fromFx(this.neutralColorSeed), isDark, contrastLevel),
 
-                this.neutralVariantColor == null
+                this.neutralVariantColorSeed == null
                         ? colorStyle.getNeutralVariantPalette(primaryColorHct, isDark, contrastLevel)
-                        : colorStyle.getNeutralVariantPalette(Hct.fromFx(this.neutralVariantColor), isDark, contrastLevel),
+                        : colorStyle.getNeutralVariantPalette(Hct.fromFx(this.neutralVariantColorSeed), isDark, contrastLevel),
 
-                this.errorColor == null
+                this.errorColorSeed == null
                         ? DynamicScheme.DEFAULT_ERROR_PALETTE
-                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.errorColor), isDark, contrastLevel)
-        ), primaryColor, secondaryColor, tertiaryColor, neutralColor, neutralVariantColor, errorColor);
+                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.errorColorSeed), isDark, contrastLevel)
+        ), primaryColor, secondaryColorSeed, tertiaryColorSeed, neutralColorSeed, neutralVariantColorSeed, errorColorSeed);
     }
 }

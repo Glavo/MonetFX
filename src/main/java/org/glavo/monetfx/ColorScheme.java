@@ -179,25 +179,25 @@ public final class ColorScheme {
     }
 
     private final DynamicScheme scheme;
-    private final @NotNull Color corePrimaryColor;
-    private final @Nullable Color coreSecondaryColor;
-    private final @Nullable Color coreTertiaryColor;
-    private final @Nullable Color coreNeutralColor;
-    private final @Nullable Color coreNeutralVariantColor;
-    private final @Nullable Color coreErrorColor;
+    private final @NotNull Color primaryColorSeed;
+    private final @Nullable Color secondaryColorSeed;
+    private final @Nullable Color tertiaryColorSeed;
+    private final @Nullable Color neutralColorSeed;
+    private final @Nullable Color neutralVariantColorSeed;
+    private final @Nullable Color errorColorSeed;
 
     private final Color[] colors = new Color[ColorRole.ALL.size()];
 
     ColorScheme(DynamicScheme scheme,
-                Color corePrimaryColor, Color coreSecondaryColor, Color coreTertiaryColor,
-                Color coreNeutralColor, Color sourceNeutralVariantColor, Color coreErrorColor) {
+                Color primaryColorSeed, Color secondaryColorSeed, Color tertiaryColorSeed,
+                Color neutralColorSeed, Color neutralVariantColorSeed, Color errorColorSeed) {
         this.scheme = scheme;
-        this.corePrimaryColor = corePrimaryColor;
-        this.coreSecondaryColor = coreSecondaryColor;
-        this.coreTertiaryColor = coreTertiaryColor;
-        this.coreNeutralColor = coreNeutralColor;
-        this.coreNeutralVariantColor = sourceNeutralVariantColor;
-        this.coreErrorColor = coreErrorColor;
+        this.primaryColorSeed = primaryColorSeed;
+        this.secondaryColorSeed = secondaryColorSeed;
+        this.tertiaryColorSeed = tertiaryColorSeed;
+        this.neutralColorSeed = neutralColorSeed;
+        this.neutralVariantColorSeed = neutralVariantColorSeed;
+        this.errorColorSeed = errorColorSeed;
     }
 
     public Brightness getBrightness() {
@@ -210,6 +210,30 @@ public final class ColorScheme {
 
     public Color getSourceColor() {
         return ColorUtils.fxFromArgb(scheme.sourceColorHct.toInt());
+    }
+
+    public @NotNull Color getPrimaryColorSeed() {
+        return primaryColorSeed;
+    }
+
+    public @Nullable Color getSecondaryColorSeed() {
+        return secondaryColorSeed;
+    }
+
+    public @Nullable Color getTertiaryColorSeed() {
+        return tertiaryColorSeed;
+    }
+
+    public @Nullable Color getNeutralColorSeed() {
+        return neutralColorSeed;
+    }
+
+    public @Nullable Color getNeutralVariantColorSeed() {
+        return neutralVariantColorSeed;
+    }
+
+    public @Nullable Color getErrorColorSeed() {
+        return errorColorSeed;
     }
 
     public Color getColor(@NotNull ColorRole role) {
@@ -456,8 +480,8 @@ public final class ColorScheme {
     public int hashCode() {
         return Objects.hash(
                 this.scheme.isDark, this.scheme.contrastLevel, this.scheme.variant,
-                this.corePrimaryColor, this.coreSecondaryColor, this.coreTertiaryColor,
-                this.coreNeutralColor, this.coreNeutralVariantColor, this.coreErrorColor
+                this.primaryColorSeed, this.secondaryColorSeed, this.tertiaryColorSeed,
+                this.neutralColorSeed, this.neutralVariantColorSeed, this.errorColorSeed
         );
     }
 
@@ -475,12 +499,12 @@ public final class ColorScheme {
         return this.scheme.isDark == that.scheme.isDark
                && this.scheme.contrastLevel == that.scheme.contrastLevel
                && this.scheme.variant == that.scheme.variant
-               && this.corePrimaryColor.equals(that.corePrimaryColor)
-               && Objects.equals(this.coreSecondaryColor, that.coreSecondaryColor)
-               && Objects.equals(this.coreTertiaryColor, that.coreTertiaryColor)
-               && Objects.equals(this.coreNeutralColor, that.coreNeutralColor)
-               && Objects.equals(this.coreNeutralVariantColor, that.coreNeutralVariantColor)
-               && Objects.equals(this.coreErrorColor, that.coreErrorColor);
+               && this.primaryColorSeed.equals(that.primaryColorSeed)
+               && Objects.equals(this.secondaryColorSeed, that.secondaryColorSeed)
+               && Objects.equals(this.tertiaryColorSeed, that.tertiaryColorSeed)
+               && Objects.equals(this.neutralColorSeed, that.neutralColorSeed)
+               && Objects.equals(this.neutralVariantColorSeed, that.neutralVariantColorSeed)
+               && Objects.equals(this.errorColorSeed, that.errorColorSeed);
     }
 
     @Override

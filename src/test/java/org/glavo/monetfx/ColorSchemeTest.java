@@ -89,12 +89,12 @@ public final class ColorSchemeTest {
                              Color neutralColor, Color neutralVariantColor, Color errorColor,
                              Brightness brightness, ColorStyle variant, Contrast contrast, Map<ColorRole, Color> colors) {
         ColorScheme scheme = ColorScheme.newBuilder()
-                .setPrimaryColor(primaryColor)
-                .setSecondaryColor(secondaryColor)
-                .setTertiaryColor(tertiaryColor)
-                .setNeutralColor(neutralColor)
-                .setNeutralVariantColor(neutralVariantColor)
-                .setErrorColor(errorColor)
+                .setPrimaryColorSeed(primaryColor)
+                .setSecondaryColorSeed(secondaryColor)
+                .setTertiaryColorSeed(tertiaryColor)
+                .setNeutralColorSeed(neutralColor)
+                .setNeutralVariantColorSeed(neutralVariantColor)
+                .setErrorColorSeed(errorColor)
                 .setBrightness(brightness)
                 .setColorStyle(variant)
                 .setContrast(contrast)

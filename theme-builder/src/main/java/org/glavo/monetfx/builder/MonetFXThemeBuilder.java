@@ -155,17 +155,17 @@ public final class MonetFXThemeBuilder extends Application {
                 color = DEFAULT_COLOR;
             }
 
-            builder = ColorScheme.newBuilder().setPrimaryColor(color);
+            builder = ColorScheme.newBuilder().setPrimaryColorSeed(color);
         } else {
-            builder = ColorScheme.newBuilder().setWallpaperImage(image).setFallbackColor(DEFAULT_COLOR);
+            builder = ColorScheme.newBuilder().setWallpaper(image, DEFAULT_COLOR);
         }
 
         scheme.set(builder
-                .setSecondaryColor(secondaryColorProperty.get())
-                .setTertiaryColor(tertiaryColorProperty.get())
-                .setNeutralColor(neutralColorProperty.get())
-                .setNeutralVariantColor(neutralVariantColorProperty.get())
-                .setErrorColor(errorColorProperty.get())
+                .setSecondaryColorSeed(secondaryColorProperty.get())
+                .setTertiaryColorSeed(tertiaryColorProperty.get())
+                .setNeutralColorSeed(neutralColorProperty.get())
+                .setNeutralVariantColorSeed(neutralVariantColorProperty.get())
+                .setErrorColorSeed(errorColorProperty.get())
                 .setBrightness(brightness)
                 .setColorStyle(dynamicSchemeVariantProperty.get())
                 .setContrast(new Contrast(contrastProperty.get()))
@@ -213,7 +213,7 @@ public final class MonetFXThemeBuilder extends Application {
             backgroundImageProperty.set(image);
 
             skipUpdateScheme = true;
-            primaryColorProperty.set(scheme.get().getSourceColor());
+            primaryColorProperty.set(scheme.get().getPrimaryColorSeed());
             skipUpdateScheme = false;
         } catch (IOException e) {
             System.err.println("Failed to load background image from: " + file);
