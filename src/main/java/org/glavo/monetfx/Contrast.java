@@ -38,6 +38,6 @@ public final class Contrast {
 
     @Override
     public String toString() {
-        return "Contrast{" + value + '}';
+        return "Contrast[" + value + ']';
     }
 }
