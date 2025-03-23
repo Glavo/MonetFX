@@ -200,12 +200,16 @@ public final class ColorScheme {
         this.errorColorSeed = errorColorSeed;
     }
 
-    public Brightness getBrightness() {
+    public @NotNull Brightness getBrightness() {
         return scheme.isDark ? Brightness.DARK : Brightness.LIGHT;
     }
 
     public double getContrastLevel() {
         return scheme.contrastLevel;
+    }
+
+    public @NotNull ColorStyle getColorStyle() {
+        return scheme.variant;
     }
 
     public @NotNull Color getPrimaryColorSeed() {
