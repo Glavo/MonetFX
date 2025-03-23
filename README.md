@@ -27,7 +27,21 @@ Dynamic colors based on background image (Monet color):
 
 ## Add to your build
 
-TODO: I plan to release it to Maven Central this month (March 2025).
+Maven:
+
+```xml
+<dependency>
+  <groupId>org.glavo</groupId>
+  <artifactId>MonetFX</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
+Gradle:
+```kotlin
+implementation("org.glavo:MonetFX:0.1.0")
+```
+
 
 ## Usage
 
