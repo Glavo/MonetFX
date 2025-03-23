@@ -1,26 +1,29 @@
 # MonetFX
 
 MonetFX provides support for the [Material 3 color system](https://m3.material.io/styles/color/system/overview) for JavaFX.
+We also implemented a theme builder based on this library as an open source replacement for Material Theme Builder.
 
 MonetFX requires JavaFX 8~24 (and higher).
 
 This project is currently in beta and may undergo breaking changes in the future.
 
-## Demo
+## MonetFX Theme Builder
 
-We provide a demo that you can run with `./gradlew theme-builder:run`.
+MonetFX Theme Build is an open source alternative to Material Theme Builder based on MonetFX
+
+You can run it with `./gradlew theme-builder:run`.
 
 Light mode:
 
-![](./image/demo-light.png)
+![](./image/theme-builder-light.png)
 
 Dark mode:
 
-![](./image/demo-dark.png)
+![](./image/theme-builder-dark.png)
 
 Dynamic colors based on background image (Monet color):
 
-![](./image/demo-monet.png)
+![](./image/theme-builder-dynamic-color.png)
 
 ## Add to your build
 
@@ -52,8 +55,8 @@ If you want to customize the theme in more detail, you can use the `ColorSchemeB
 ColorScheme scheme = ColorScheme.newBuilder(Color.web("#5C6BC0"))
                 // Specify whether to use light mode or dark mode (The default value is light mode)
                 .setBrightness(Brightness.DARK)
-                // Specifies the algorithm for constructing the color scheme (The default value is `DynamicSchemeVariant.TONAL_SPOT`)
-                .setDynamicSchemeVariant(DynamicSchemeVariant.FIDELITY)
+                // Specifies the algorithm for constructing the color scheme (The default value is `ColorStyle.TONAL_SPOT`)
+                .setColorStyle(ColorStyle.FIDELITY)
                 // Specifies the contrast (The default value is `Contrast.STANDARD`)
                 .setContrast(Contrast.MEDIUM);
 ```
