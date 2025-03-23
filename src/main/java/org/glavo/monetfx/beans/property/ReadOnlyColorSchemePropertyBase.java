@@ -15,10 +15,10 @@
  */
 package org.glavo.monetfx.beans.property;
 
-import com.sun.javafx.binding.ExpressionHelper;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import org.glavo.monetfx.ColorScheme;
+import org.glavo.monetfx.internal.beans.ExpressionHelper;
 
 public abstract class ReadOnlyColorSchemePropertyBase extends ReadOnlyColorSchemeProperty {
     ExpressionHelper<ColorScheme> helper;

@@ -31,14 +31,14 @@ allprojects {
     }
 
     group = "org.glavo"
-    version = "0.1.0-SNAPSHOT"
+    version = "0.1.0" // + "-SNAPSHOT"
 
     repositories {
         mavenCentral()
     }
 }
 
-description = ""
+description = "Material 3 color system for JavaFX"
 
 dependencies {
     compileOnlyApi("org.jetbrains:annotations:26.0.2")
@@ -50,9 +50,23 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 tasks.withType<JavaCompile> {
     sourceCompatibility = "8"
     targetCompatibility = "8"
+}
+
+tasks.withType<Javadoc>() {
+    (options as StandardJavadocDocletOptions).also {
+        it.encoding("UTF-8")
+        it.addStringOption("link", "https://docs.oracle.com/en/java/javase/21/docs/api/")
+        it.addBooleanOption("html5", true)
+        it.addStringOption("Xdoclint:none", "-quiet")
+    }
 }
 
 tasks.test {
@@ -98,6 +112,28 @@ configure<PublishingExtension> {
                     url.set("https://github.com/Glavo/MonetFX")
                 }
             }
+        }
+    }
+}
+
+if (rootProject.ext.has("signing.key")) {
+    signing {
+        useInMemoryPgpKeys(
+            rootProject.ext["signing.keyId"].toString(),
+            rootProject.ext["signing.key"].toString(),
+            rootProject.ext["signing.password"].toString(),
+        )
+        sign(publishing.publications["maven"])
+    }
+}
+
+// ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
+nexusPublishing {
+    repositories {
+        sonatype {
+            stagingProfileId.set(rootProject.ext["sonatypeStagingProfileId"].toString())
+            username.set(rootProject.ext["sonatypeUsername"].toString())
+            password.set(rootProject.ext["sonatypePassword"].toString())
         }
     }
 }
