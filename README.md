@@ -9,7 +9,7 @@ This project is currently in beta and may undergo breaking changes in the future
 
 ## MonetFX Theme Builder
 
-MonetFX Theme Build is an open source alternative to Material Theme Builder based on MonetFX
+MonetFX Theme Builder is a sample application for MonetFX and an open source alternative to [Material Theme Builder](https://material-foundation.github.io/material-theme-builder/).
 
 You can run it with `./gradlew theme-builder:run`.
 
