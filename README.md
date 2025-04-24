@@ -1,5 +1,7 @@
 # MonetFX
 
+[![Maven Central Version](https://img.shields.io/maven-central/v/org.glavo/MonetFX)](https://search.maven.org/artifact/org.glavo/MonetFX)
+
 MonetFX provides support for the [Material 3 color system](https://m3.material.io/styles/color/system/overview) for JavaFX.
 We also implemented a theme builder based on this library as an open source replacement for Material Theme Builder.
 
