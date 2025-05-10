@@ -68,13 +68,15 @@ ColorScheme monetScheme = ColorScheme.fromImage(new Image("file:///.../backgroun
 If you want to customize the theme in more detail, you can use the `ColorSchemeBuilder`:
 
 ```java
-ColorScheme scheme = ColorScheme.newBuilder(Color.web("#5C6BC0"))
+ColorScheme scheme = ColorScheme.newBuilder()
+                .setPrimaryColorSeed(Color.web("#5C6BC0"))
                 // Specify whether to use light mode or dark mode (The default value is light mode)
                 .setBrightness(Brightness.DARK)
                 // Specifies the algorithm for constructing the color scheme (The default value is `ColorStyle.TONAL_SPOT`)
                 .setColorStyle(ColorStyle.FIDELITY)
                 // Specifies the contrast (The default value is `Contrast.STANDARD`)
-                .setContrast(Contrast.MEDIUM);
+                .setContrast(Contrast.MEDIUM)
+                .build();
 ```
 
 ### Use the color scheme
