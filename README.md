@@ -5,7 +5,7 @@
 MonetFX provides support for the [Material 3 color system](https://m3.material.io/styles/color/system/overview) for JavaFX.
 We also implemented a theme builder based on this library as an open source replacement for Material Theme Builder.
 
-MonetFX requires JavaFX 8~24 (and higher).
+MonetFX requires JavaFX 8~25 (and higher).
 
 This project is currently in beta and may undergo breaking changes in the future.
 
