@@ -245,10 +245,12 @@ public final class ColorScheme {
         return color;
     }
 
+    /// @see ColorRole#PRIMARY
     public Color getPrimary() {
         return getColor(ColorRole.PRIMARY);
     }
 
+    /// @see ColorRole#ON_PRIMARY
     public Color getOnPrimary() {
         return getColor(ColorRole.ON_PRIMARY);
     }
@@ -497,14 +499,14 @@ public final class ColorScheme {
 
         ColorScheme that = (ColorScheme) obj;
         return this.scheme.isDark == that.scheme.isDark
-               && this.scheme.contrastLevel == that.scheme.contrastLevel
-               && this.scheme.variant == that.scheme.variant
-               && this.primaryColorSeed.equals(that.primaryColorSeed)
-               && Objects.equals(this.secondaryColorSeed, that.secondaryColorSeed)
-               && Objects.equals(this.tertiaryColorSeed, that.tertiaryColorSeed)
-               && Objects.equals(this.neutralColorSeed, that.neutralColorSeed)
-               && Objects.equals(this.neutralVariantColorSeed, that.neutralVariantColorSeed)
-               && Objects.equals(this.errorColorSeed, that.errorColorSeed);
+                && this.scheme.contrastLevel == that.scheme.contrastLevel
+                && this.scheme.variant == that.scheme.variant
+                && this.primaryColorSeed.equals(that.primaryColorSeed)
+                && Objects.equals(this.secondaryColorSeed, that.secondaryColorSeed)
+                && Objects.equals(this.tertiaryColorSeed, that.tertiaryColorSeed)
+                && Objects.equals(this.neutralColorSeed, that.neutralColorSeed)
+                && Objects.equals(this.neutralVariantColorSeed, that.neutralVariantColorSeed)
+                && Objects.equals(this.errorColorSeed, that.errorColorSeed);
     }
 
     @Override
