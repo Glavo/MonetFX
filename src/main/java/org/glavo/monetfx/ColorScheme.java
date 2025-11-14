@@ -90,7 +90,6 @@ import java.util.Optional;
 public final class ColorScheme {
 
     static final Color FALLBACK_COLOR = Color.web("#4285f4");
-    static final Hct FALLBACK_COLOR_HCT = Hct.fromFx(FALLBACK_COLOR);
     static final int MAX_DIMENSION = 112;
 
     // Scale image size down to reduce computation time of color extraction.
@@ -153,10 +152,6 @@ public final class ColorScheme {
         return ColorUtils.fxFromArgb(scoredResults.get(0));
     }
 
-    private static Hct hct(@Nullable Color color, Hct fallback) {
-        return color != null ? Hct.fromFx(color) : fallback;
-    }
-
     public static @NotNull ColorScheme fromImage(@NotNull Image image) {
         return fromSeed(extractColor(image, ColorScheme.FALLBACK_COLOR));
     }
@@ -217,7 +212,7 @@ public final class ColorScheme {
         if (primaryColorSeed == null)
             primaryColorSeed = FALLBACK_COLOR;
         Hct primaryColorHct = Hct.fromFx(primaryColorSeed);
-        @Nullable Hct errorColorHct = hct(errorColorSeed, null);
+        @Nullable Hct errorColorHct = errorColorSeed != null ? Hct.fromFx(errorColorSeed) : null;
 
         specVersion = DynamicScheme.maybeFallbackSpecVersion(specVersion, variant);
 
