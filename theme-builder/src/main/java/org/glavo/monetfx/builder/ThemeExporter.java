@@ -56,16 +56,9 @@ enum ThemeExporter {
                     for (Map.Entry<String, Contrast> contrast : CONTRASTS.entrySet()) {
                         ZipEntry entry = new ZipEntry("css/" + brightness.getKey() + (contrast.getKey().isEmpty() ? "" : "-" + contrast.getKey()) + ".css");
 
-                        ColorScheme cs = ColorScheme.newBuilder()
-                                .setPrimaryColorSeed(scheme.getPrimaryColorSeed())
-                                .setSecondaryColorSeed(scheme.getSecondaryColorSeed())
-                                .setTertiaryColorSeed(scheme.getTertiaryColorSeed())
-                                .setNeutralColorSeed(scheme.getNeutralColorSeed())
-                                .setNeutralVariantColorSeed(scheme.getNeutralVariantColorSeed())
-                                .setErrorColorSeed(scheme.getErrorColorSeed())
+                        ColorScheme cs = ColorScheme.newBuilder(scheme)
                                 .setBrightness(brightness.getValue())
                                 .setContrast(contrast.getValue())
-                                .setColorStyle(scheme.getColorStyle())
                                 .build();
 
                         StringBuilder className = new StringBuilder();
@@ -107,7 +100,7 @@ enum ThemeExporter {
     private static final Map<String, Contrast> CONTRASTS = new LinkedHashMap<>();
 
     static {
-        CONTRASTS.put("", Contrast.STANDARD);
+        CONTRASTS.put("", Contrast.DEFAULT);
         CONTRASTS.put("mc", Contrast.MEDIUM);
         CONTRASTS.put("hc", Contrast.HIGH);
     }

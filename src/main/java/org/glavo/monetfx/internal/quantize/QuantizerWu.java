@@ -190,13 +190,13 @@ public final class QuantizerWu implements Quantizer {
         int db = volume(cube, momentsB);
         double xx =
                 moments[getIndex(cube.r1, cube.g1, cube.b1)]
-                - moments[getIndex(cube.r1, cube.g1, cube.b0)]
-                - moments[getIndex(cube.r1, cube.g0, cube.b1)]
-                + moments[getIndex(cube.r1, cube.g0, cube.b0)]
-                - moments[getIndex(cube.r0, cube.g1, cube.b1)]
-                + moments[getIndex(cube.r0, cube.g1, cube.b0)]
-                + moments[getIndex(cube.r0, cube.g0, cube.b1)]
-                - moments[getIndex(cube.r0, cube.g0, cube.b0)];
+                        - moments[getIndex(cube.r1, cube.g1, cube.b0)]
+                        - moments[getIndex(cube.r1, cube.g0, cube.b1)]
+                        + moments[getIndex(cube.r1, cube.g0, cube.b0)]
+                        - moments[getIndex(cube.r0, cube.g1, cube.b1)]
+                        + moments[getIndex(cube.r0, cube.g1, cube.b0)]
+                        + moments[getIndex(cube.r0, cube.g0, cube.b1)]
+                        - moments[getIndex(cube.r0, cube.g0, cube.b0)];
 
         int hypotenuse = dr * dr + dg * dg + db * db;
         int volume = volume(cube, weights);
@@ -330,19 +330,19 @@ public final class QuantizerWu implements Quantizer {
         switch (direction) {
             case RED:
                 return -moment[getIndex(cube.r0, cube.g1, cube.b1)]
-                       + moment[getIndex(cube.r0, cube.g1, cube.b0)]
-                       + moment[getIndex(cube.r0, cube.g0, cube.b1)]
-                       - moment[getIndex(cube.r0, cube.g0, cube.b0)];
+                        + moment[getIndex(cube.r0, cube.g1, cube.b0)]
+                        + moment[getIndex(cube.r0, cube.g0, cube.b1)]
+                        - moment[getIndex(cube.r0, cube.g0, cube.b0)];
             case GREEN:
                 return -moment[getIndex(cube.r1, cube.g0, cube.b1)]
-                       + moment[getIndex(cube.r1, cube.g0, cube.b0)]
-                       + moment[getIndex(cube.r0, cube.g0, cube.b1)]
-                       - moment[getIndex(cube.r0, cube.g0, cube.b0)];
+                        + moment[getIndex(cube.r1, cube.g0, cube.b0)]
+                        + moment[getIndex(cube.r0, cube.g0, cube.b1)]
+                        - moment[getIndex(cube.r0, cube.g0, cube.b0)];
             case BLUE:
                 return -moment[getIndex(cube.r1, cube.g1, cube.b0)]
-                       + moment[getIndex(cube.r1, cube.g0, cube.b0)]
-                       + moment[getIndex(cube.r0, cube.g1, cube.b0)]
-                       - moment[getIndex(cube.r0, cube.g0, cube.b0)];
+                        + moment[getIndex(cube.r1, cube.g0, cube.b0)]
+                        + moment[getIndex(cube.r0, cube.g1, cube.b0)]
+                        - moment[getIndex(cube.r0, cube.g0, cube.b0)];
         }
         throw new IllegalArgumentException("unexpected direction " + direction);
     }

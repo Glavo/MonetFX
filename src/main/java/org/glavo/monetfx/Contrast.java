@@ -15,6 +15,8 @@
  */
 package org.glavo.monetfx;
 
+import org.jetbrains.annotations.NotNull;
+
 public final class Contrast {
 
     public static final Contrast LOW = new Contrast(-1.0);
@@ -22,14 +24,30 @@ public final class Contrast {
     public static final Contrast MEDIUM = new Contrast(0.5);
     public static final Contrast HIGH = new Contrast(1.0);
 
-    private final double value;
+    public static final Contrast DEFAULT = STANDARD;
 
-    public Contrast(double value) {
-        if (value >= -1.0 && value <= 1.0) {
-            this.value = value;
-        } else {
+    public static @NotNull Contrast of(double value) {
+        if (value < -1.0 || value > 1.0 || Double.isNaN(value)) {
             throw new IllegalArgumentException("Contrast value must be between -1.0 and 1.0.");
         }
+
+        if (value == LOW.value) {
+            return LOW;
+        } else if (value == STANDARD.value) {
+            return STANDARD;
+        } else if (value == MEDIUM.value) {
+            return MEDIUM;
+        } else if (value == HIGH.value) {
+            return HIGH;
+        } else {
+            return new Contrast(value);
+        }
+    }
+
+    private final double value;
+
+    private Contrast(double value) {
+        this.value = value;
     }
 
     public double getValue() {

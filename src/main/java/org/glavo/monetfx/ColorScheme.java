@@ -19,6 +19,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
+import org.glavo.monetfx.internal.dynamiccolor.ColorSpec;
+import org.glavo.monetfx.internal.dynamiccolor.ColorSpecs;
 import org.glavo.monetfx.internal.dynamiccolor.DynamicScheme;
 import org.glavo.monetfx.internal.hct.Hct;
 import org.glavo.monetfx.internal.quantize.QuantizerCelebi;
@@ -30,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 // See https://github.com/flutter/flutter/blob/5491c8c146441d3126aff91beaa3fb5df6d710d0/packages/flutter/lib/src/material/color_scheme.dart
 
@@ -87,6 +90,7 @@ import java.util.Objects;
 public final class ColorScheme {
 
     static final Color FALLBACK_COLOR = Color.web("#4285f4");
+    static final Hct FALLBACK_COLOR_HCT = Hct.fromFx(FALLBACK_COLOR);
     static final int MAX_DIMENSION = 112;
 
     // Scale image size down to reduce computation time of color extraction.
@@ -121,7 +125,6 @@ public final class ColorScheme {
             return result;
         }
 
-
         int targetWidth = Math.min(sourceWidth, MAX_DIMENSION);
         int targetHeight = Math.min(sourceHeight, MAX_DIMENSION);
 
@@ -150,35 +153,46 @@ public final class ColorScheme {
         return ColorUtils.fxFromArgb(scoredResults.get(0));
     }
 
+    private static Hct hct(@Nullable Color color, Hct fallback) {
+        return color != null ? Hct.fromFx(color) : fallback;
+    }
+
     public static @NotNull ColorScheme fromImage(@NotNull Image image) {
         return fromSeed(extractColor(image, ColorScheme.FALLBACK_COLOR));
     }
 
     public static ColorScheme fromSeed(@NotNull Color seedColor) {
-        final Hct seedColorHct = Hct.fromInt(ColorUtils.argbFromFx(seedColor));
-        double contrastLevel = Contrast.STANDARD.getValue();
-
-        final DynamicScheme scheme = new DynamicScheme(
-                seedColorHct,
+        return new ColorScheme(
                 ColorStyle.TONAL_SPOT,
                 false,
-                Contrast.STANDARD.getValue(),
-                ColorStyle.TONAL_SPOT.getPrimaryPalette(seedColorHct, false, contrastLevel),
-                ColorStyle.TONAL_SPOT.getSecondaryPalette(seedColorHct, false, contrastLevel),
-                ColorStyle.TONAL_SPOT.getTertiaryPalette(seedColorHct, false, contrastLevel),
-                ColorStyle.TONAL_SPOT.getNeutralPalette(seedColorHct, false, contrastLevel),
-                ColorStyle.TONAL_SPOT.getNeutralVariantPalette(seedColorHct, false, contrastLevel),
-                DynamicScheme.DEFAULT_ERROR_PALETTE
+                Contrast.DEFAULT.getValue(),
+                ColorPlatform.DEFAULT,
+                ColorSpecVersion.DEFAULT,
+                Objects.requireNonNull(seedColor), null, null, null, null, null
         );
-
-        return new ColorScheme(scheme, seedColor, null, null, null, null, null);
     }
 
     public static ColorSchemeBuilder newBuilder() {
         return new ColorSchemeBuilder();
     }
 
-    private final DynamicScheme scheme;
+    public static ColorSchemeBuilder newBuilder(ColorScheme oldScheme) {
+        return newBuilder()
+                .setColorStyle(oldScheme.getColorStyle())
+                .setBrightness(oldScheme.getBrightness())
+                .setContrast(Contrast.of(oldScheme.getContrastLevel()))
+                .setPlatform(oldScheme.getPlatform())
+                .setSpecVersion(oldScheme.getSpecVersion())
+                .setPrimaryColorSeed(oldScheme.getPrimaryColorSeed())
+                .setSecondaryColorSeed(oldScheme.getSecondaryColorSeed())
+                .setTertiaryColorSeed(oldScheme.getTertiaryColorSeed())
+                .setNeutralColorSeed(oldScheme.getNeutralColorSeed())
+                .setNeutralVariantColorSeed(oldScheme.getNeutralVariantColorSeed())
+                .setErrorColorSeed(oldScheme.getErrorColorSeed());
+    }
+
+    private final @NotNull DynamicScheme scheme;
+
     private final @NotNull Color primaryColorSeed;
     private final @Nullable Color secondaryColorSeed;
     private final @Nullable Color tertiaryColorSeed;
@@ -188,10 +202,43 @@ public final class ColorScheme {
 
     private final Color[] colors = new Color[ColorRole.ALL.size()];
 
-    ColorScheme(DynamicScheme scheme,
-                Color primaryColorSeed, Color secondaryColorSeed, Color tertiaryColorSeed,
-                Color neutralColorSeed, Color neutralVariantColorSeed, Color errorColorSeed) {
-        this.scheme = scheme;
+    ColorScheme(
+            @NotNull ColorStyle variant,
+            boolean isDark,
+            double contrastLevel,
+            @NotNull ColorPlatform platform,
+            @NotNull ColorSpecVersion specVersion,
+            @NotNull Color primaryColorSeed,
+            @Nullable Color secondaryColorSeed,
+            @Nullable Color tertiaryColorSeed,
+            @Nullable Color neutralColorSeed,
+            @Nullable Color neutralVariantColorSeed,
+            @Nullable Color errorColorSeed) {
+        Hct primaryColorHct = hct(primaryColorSeed, FALLBACK_COLOR_HCT);
+        Hct secondaryColorHct = hct(secondaryColorSeed, primaryColorHct);
+        Hct tertiaryColorHct = hct(tertiaryColorSeed, primaryColorHct);
+        Hct neutralColorHct = hct(neutralColorSeed, primaryColorHct);
+        Hct neutralVariantColorHct = hct(neutralVariantColorSeed, primaryColorHct);
+        @Nullable Hct errorColorHct = hct(errorColorSeed, null);
+
+        ColorSpec colorSpec = ColorSpecs.get(specVersion);
+        this.scheme = new DynamicScheme(
+                primaryColorHct,
+                variant,
+                isDark,
+                contrastLevel,
+                platform,
+                specVersion,
+                colorSpec.getPrimaryPalette(variant, primaryColorHct, isDark, platform, contrastLevel),
+                colorSpec.getSecondaryPalette(variant, secondaryColorHct, isDark, platform, contrastLevel),
+                colorSpec.getTertiaryPalette(variant, tertiaryColorHct, isDark, platform, contrastLevel),
+                colorSpec.getNeutralPalette(variant, neutralColorHct, isDark, platform, contrastLevel),
+                colorSpec.getNeutralVariantPalette(variant, neutralVariantColorHct, isDark, platform, contrastLevel),
+                errorColorHct != null ?
+                        Optional.of(colorSpec.getErrorPalette(variant, errorColorHct, isDark, platform, contrastLevel)
+                                .orElseGet(() -> colorSpec.getPrimaryPalette(variant, errorColorHct, isDark, platform, contrastLevel)))
+                        : Optional.empty()
+        );
         this.primaryColorSeed = primaryColorSeed;
         this.secondaryColorSeed = secondaryColorSeed;
         this.tertiaryColorSeed = tertiaryColorSeed;
@@ -210,6 +257,14 @@ public final class ColorScheme {
 
     public @NotNull ColorStyle getColorStyle() {
         return scheme.variant;
+    }
+
+    public @NotNull ColorPlatform getPlatform() {
+        return scheme.platform;
+    }
+
+    public @NotNull ColorSpecVersion getSpecVersion() {
+        return scheme.specVersion;
     }
 
     public @NotNull Color getPrimaryColorSeed() {
@@ -479,9 +534,13 @@ public final class ColorScheme {
     @Override
     public int hashCode() {
         return Objects.hash(
-                this.scheme.isDark, this.scheme.contrastLevel, this.scheme.variant,
-                this.primaryColorSeed, this.secondaryColorSeed, this.tertiaryColorSeed,
-                this.neutralColorSeed, this.neutralVariantColorSeed, this.errorColorSeed
+                this.scheme.variant, this.scheme.isDark, this.scheme.platform, this.scheme.contrastLevel, this.scheme.specVersion,
+                this.primaryColorSeed,
+                this.secondaryColorSeed,
+                this.tertiaryColorSeed,
+                this.neutralColorSeed,
+                this.neutralVariantColorSeed,
+                this.errorColorSeed
         );
     }
 
@@ -496,15 +555,17 @@ public final class ColorScheme {
         }
 
         ColorScheme that = (ColorScheme) obj;
-        return this.scheme.isDark == that.scheme.isDark
-               && this.scheme.contrastLevel == that.scheme.contrastLevel
-               && this.scheme.variant == that.scheme.variant
-               && this.primaryColorSeed.equals(that.primaryColorSeed)
-               && Objects.equals(this.secondaryColorSeed, that.secondaryColorSeed)
-               && Objects.equals(this.tertiaryColorSeed, that.tertiaryColorSeed)
-               && Objects.equals(this.neutralColorSeed, that.neutralColorSeed)
-               && Objects.equals(this.neutralVariantColorSeed, that.neutralVariantColorSeed)
-               && Objects.equals(this.errorColorSeed, that.errorColorSeed);
+        return this.scheme.variant == that.scheme.variant
+                && this.scheme.isDark == that.scheme.isDark
+                && this.scheme.platform == that.scheme.platform
+                && this.scheme.contrastLevel == that.scheme.contrastLevel
+                && this.scheme.specVersion == that.scheme.specVersion
+                && this.primaryColorSeed.equals(that.primaryColorSeed)
+                && Objects.equals(this.secondaryColorSeed, that.secondaryColorSeed)
+                && Objects.equals(this.tertiaryColorSeed, that.tertiaryColorSeed)
+                && Objects.equals(this.neutralColorSeed, that.neutralColorSeed)
+                && Objects.equals(this.neutralVariantColorSeed, that.neutralVariantColorSeed)
+                && Objects.equals(this.errorColorSeed, that.errorColorSeed);
     }
 
     @Override

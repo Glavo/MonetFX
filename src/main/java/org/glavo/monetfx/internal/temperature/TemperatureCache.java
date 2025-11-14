@@ -84,14 +84,12 @@ public final class TemperatureCache {
         // Find the color in the other section, closest to the inverse percentile
         // of the input color. This is the complement.
         for (double hueAddend = 0.; hueAddend <= 360.; hueAddend += 1.) {
-            double hue = MathUtils.sanitizeDegreesDouble(
-                    startHue + directionOfRotation * hueAddend);
+            double hue = MathUtils.sanitizeDegreesDouble(startHue + directionOfRotation * hueAddend);
             if (!isBetween(hue, startHue, endHue)) {
                 continue;
             }
             Hct possibleAnswer = getHctsByHue().get((int) Math.round(hue));
-            double relativeTemp =
-                    (getTempsByHct().get(possibleAnswer) - coldestTemp) / range;
+            double relativeTemp = (getTempsByHct().get(possibleAnswer) - coldestTemp) / range;
             double error = Math.abs(complementRelativeTemp - relativeTemp);
             if (error < smallestError) {
                 smallestError = error;
@@ -218,8 +216,7 @@ public final class TemperatureCache {
      */
     public double getRelativeTemperature(Hct hct) {
         double range = getTempsByHct().get(getWarmest()) - getTempsByHct().get(getColdest());
-        double differenceFromColdest =
-                getTempsByHct().get(hct) - getTempsByHct().get(getColdest());
+        double differenceFromColdest = getTempsByHct().get(hct) - getTempsByHct().get(getColdest());
         // Handle when there's no difference in temperature between warmest and
         // coldest: for example, at T100, only one color is available, white.
         if (range == 0.) {
@@ -247,9 +244,9 @@ public final class TemperatureCache {
         double hue = MathUtils.sanitizeDegreesDouble(Math.toDegrees(Math.atan2(lab[2], lab[1])));
         double chroma = Math.hypot(lab[1], lab[2]);
         return -0.5
-               + 0.02
-                 * Math.pow(chroma, 1.07)
-                 * Math.cos(Math.toRadians(MathUtils.sanitizeDegreesDouble(hue - 50.)));
+                + 0.02
+                * Math.pow(chroma, 1.07)
+                * Math.cos(Math.toRadians(MathUtils.sanitizeDegreesDouble(hue - 50.)));
     }
 
     /**
@@ -282,12 +279,6 @@ public final class TemperatureCache {
      *
      * <p>Sorted from coldest first to warmest last.
      */
-    // Prevent lint for Comparator not being available on Android before API level 24, 7.0, 2016.
-    // "AndroidJdkLibsChecker" for one linter, "NewApi" for another.
-    // A java_library Bazel rule with an Android constraint cannot skip these warnings without this
-    // annotation; another solution would be to create an android_library rule and supply
-    // AndroidManifest with an SDK set higher than 23.
-    @SuppressWarnings({"AndroidJdkLibsChecker", "NewApi"})
     private List<Hct> getHctsByTemp() {
         if (precomputedHctsByTemp != null) {
             return precomputedHctsByTemp;
