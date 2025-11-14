@@ -238,10 +238,10 @@ public final class ColorScheme {
                         : colorSpec.getPrimaryPalette(variant, Hct.fromFx(tertiaryColorSeed), isDark, platform, contrastLevel),
                 neutralColorSeed == null
                         ? colorSpec.getNeutralPalette(variant, primaryColorHct, isDark, platform, contrastLevel)
-                        : colorSpec.getPrimaryPalette(variant, Hct.fromFx(neutralColorSeed), isDark, platform, contrastLevel),
+                        : colorSpec.getNeutralPalette(variant, Hct.fromFx(neutralColorSeed), isDark, platform, contrastLevel),
                 neutralVariantColorSeed == null
                         ? colorSpec.getNeutralVariantPalette(variant, primaryColorHct, isDark, platform, contrastLevel)
-                        : colorSpec.getPrimaryPalette(variant, Hct.fromFx(neutralVariantColorSeed), isDark, platform, contrastLevel),
+                        : colorSpec.getNeutralVariantPalette(variant, Hct.fromFx(neutralVariantColorSeed), isDark, platform, contrastLevel),
                 errorColorSeed == null
                         ? Optional.empty()
                         : Optional.of(colorSpec.getErrorPalette(variant, errorColorHct, isDark, platform, contrastLevel)
