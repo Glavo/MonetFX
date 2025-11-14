@@ -37,11 +37,14 @@ public final class Contrast {
     /// The default contrast level.
     ///
     /// It is equivalent to [#STANDARD].
+    ///
+    /// @since 0.2.0
     public static final Contrast DEFAULT = STANDARD;
 
     /// Creates a [Contrast] instance with the specified contrast value.
     ///
     /// @param value The contrast value, ranging from -1.0 (lowest contrast) to 1.0 (highest contrast).
+    /// @since 0.2.0
     public static @NotNull Contrast of(double value) {
         if (value < -1.0 || value > 1.0 || Double.isNaN(value)) {
             throw new IllegalArgumentException("Contrast value must be between -1.0 and 1.0.");

@@ -17,8 +17,6 @@ package org.glavo.monetfx;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import org.glavo.monetfx.internal.dynamiccolor.DynamicScheme;
-import org.glavo.monetfx.internal.hct.Hct;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,9 +31,11 @@ public final class ColorSchemeBuilder {
     private Color neutralVariantColorSeed;
     private Color errorColorSeed;
 
-    private Brightness brightness = Brightness.LIGHT;
-    private ColorStyle colorStyle = ColorStyle.TONAL_SPOT;
-    private Contrast contrast = Contrast.STANDARD;
+    private Brightness brightness = Brightness.DEFAULT;
+    private ColorStyle colorStyle = ColorStyle.DEFAULT;
+    private Contrast contrast = Contrast.DEFAULT;
+    private ColorSpecVersion specVersion = ColorSpecVersion.DEFAULT;
+    private TargetPlatform platform = TargetPlatform.DEFAULT;
 
     ColorSchemeBuilder() {
     }
@@ -106,43 +106,27 @@ public final class ColorSchemeBuilder {
         return this;
     }
 
+    /// @since 0.2.0
+    @Contract(value = "_ -> this", pure = true)
+    public ColorSchemeBuilder setPlatform(@NotNull TargetPlatform platform) {
+        this.platform = Objects.requireNonNull(platform);
+        return this;
+    }
+
+    /// @since 0.2.0
+    @Contract(value = "_ -> this", pure = true)
+    public ColorSchemeBuilder setSpecVersion(@NotNull ColorSpecVersion specVersion) {
+        this.specVersion = Objects.requireNonNull(specVersion);
+        return this;
+    }
+
     public ColorScheme build() {
-        Color primaryColor = this.primaryColorSeed;
-        if (primaryColor == null) {
-            primaryColor = ColorScheme.FALLBACK_COLOR;
-        }
-
-        boolean isDark = brightness == Brightness.DARK;
-        double contrastLevel = contrast.getValue();
-
-        Hct primaryColorHct = Hct.fromFx(primaryColor);
-
-        return new ColorScheme(new DynamicScheme(
-                primaryColorHct,
+        return new ColorScheme(
                 colorStyle,
-                isDark,
-                contrastLevel,
-                colorStyle.getPrimaryPalette(primaryColorHct, isDark, contrastLevel),
-
-                this.secondaryColorSeed == null
-                        ? colorStyle.getSecondaryPalette(primaryColorHct, isDark, contrastLevel)
-                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.secondaryColorSeed), isDark, contrastLevel),
-
-                this.tertiaryColorSeed == null
-                        ? colorStyle.getTertiaryPalette(primaryColorHct, isDark, contrastLevel)
-                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.tertiaryColorSeed), isDark, contrastLevel),
-
-                this.neutralColorSeed == null
-                        ? colorStyle.getNeutralPalette(primaryColorHct, isDark, contrastLevel)
-                        : colorStyle.getNeutralPalette(Hct.fromFx(this.neutralColorSeed), isDark, contrastLevel),
-
-                this.neutralVariantColorSeed == null
-                        ? colorStyle.getNeutralVariantPalette(primaryColorHct, isDark, contrastLevel)
-                        : colorStyle.getNeutralVariantPalette(Hct.fromFx(this.neutralVariantColorSeed), isDark, contrastLevel),
-
-                this.errorColorSeed == null
-                        ? DynamicScheme.DEFAULT_ERROR_PALETTE
-                        : colorStyle.getPrimaryPalette(Hct.fromFx(this.errorColorSeed), isDark, contrastLevel)
-        ), primaryColor, secondaryColorSeed, tertiaryColorSeed, neutralColorSeed, neutralVariantColorSeed, errorColorSeed);
+                brightness == Brightness.DARK,
+                contrast.getValue(),
+                this.platform,
+                specVersion,
+                primaryColorSeed, secondaryColorSeed, tertiaryColorSeed, neutralColorSeed, neutralVariantColorSeed, errorColorSeed);
     }
 }

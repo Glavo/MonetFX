@@ -64,12 +64,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.glavo.monetfx.Brightness;
-import org.glavo.monetfx.ColorRole;
-import org.glavo.monetfx.ColorScheme;
-import org.glavo.monetfx.ColorSchemeBuilder;
-import org.glavo.monetfx.Contrast;
-import org.glavo.monetfx.ColorStyle;
+import javafx.util.StringConverter;
+import org.glavo.monetfx.*;
 import org.glavo.monetfx.beans.property.ColorSchemeProperty;
 import org.glavo.monetfx.beans.property.SimpleColorSchemeProperty;
 
@@ -82,6 +78,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import static org.glavo.monetfx.ColorRole.*;
 
@@ -120,6 +117,8 @@ public final class MonetFXThemeBuilder extends Application {
     private final ObjectProperty<Image> backgroundImageProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<ColorStyle> dynamicSchemeVariantProperty = new SimpleObjectProperty<>(ColorStyle.TONAL_SPOT);
     private final DoubleProperty contrastProperty = new SimpleDoubleProperty(0.0);
+    private final ObjectProperty<TargetPlatform> platformProperty = new SimpleObjectProperty<>(TargetPlatform.PHONE);
+    private final ObjectProperty<ColorSpecVersion> specVersionProperty = new SimpleObjectProperty<>(ColorSpecVersion.SPEC_2021);
 
     private final ColorSchemeProperty scheme = new SimpleColorSchemeProperty();
 
@@ -148,16 +147,16 @@ public final class MonetFXThemeBuilder extends Application {
         Brightness brightness = darkModeProperty.get() ? Brightness.DARK : Brightness.LIGHT;
         Image image = backgroundImageProperty.get();
 
-        ColorSchemeBuilder builder;
+        ColorSchemeBuilder builder = ColorScheme.newBuilder();
         if (image == null || observable == primaryColorProperty) {
             Color color = primaryColorProperty.get();
             if (color == null) {
                 color = DEFAULT_COLOR;
             }
 
-            builder = ColorScheme.newBuilder().setPrimaryColorSeed(color);
+            builder.setPrimaryColorSeed(color);
         } else {
-            builder = ColorScheme.newBuilder().setWallpaper(image, DEFAULT_COLOR);
+            builder.setWallpaper(image, DEFAULT_COLOR);
         }
 
         scheme.set(builder
@@ -169,6 +168,8 @@ public final class MonetFXThemeBuilder extends Application {
                 .setBrightness(brightness)
                 .setColorStyle(dynamicSchemeVariantProperty.get())
                 .setContrast(Contrast.of(contrastProperty.get()))
+                .setPlatform(platformProperty.get())
+                .setSpecVersion(specVersionProperty.get())
                 .build());
     };
 
@@ -183,6 +184,8 @@ public final class MonetFXThemeBuilder extends Application {
         backgroundImageProperty.addListener(listener);
         darkModeProperty.addListener(listener);
         dynamicSchemeVariantProperty.addListener(listener);
+        platformProperty.addListener(listener);
+        specVersionProperty.addListener(listener);
         contrastProperty.addListener(listener);
     }
 
@@ -298,7 +301,6 @@ public final class MonetFXThemeBuilder extends Application {
             colorPicker.getCustomColors().setAll(customColors);
         }
 
-
         return colorPane;
     }
 
@@ -402,6 +404,61 @@ public final class MonetFXThemeBuilder extends Application {
                         contrastPane.setRight(slider);
                     }
 
+                    BorderPane platformPane = new BorderPane();
+                    {
+                        Label label = new Label("Platform");
+                        BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+                        label.setStyle("-fx-text-fill: -monet-on-surface");
+                        platformPane.setLeft(label);
+
+                        ComboBox<TargetPlatform> comboBox = new ComboBox<>();
+                        comboBox.getItems().addAll(TargetPlatform.values());
+                        comboBox.getSelectionModel().select(TargetPlatform.PHONE);
+                        comboBox.getSelectionModel().selectedItemProperty().addListener(
+                                (observable, oldValue, newValue) ->
+                                        this.platformProperty.set(newValue));
+                        comboBox.setConverter(new StringConverter<TargetPlatform>() {
+                            @Override
+                            public String toString(TargetPlatform platform) {
+                                String name = platform.name();
+                                return Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase(Locale.ROOT);
+                            }
+
+                            @Override
+                            public TargetPlatform fromString(String string) {
+                                return TargetPlatform.valueOf(string);
+                            }
+                        });
+                        platformPane.setRight(comboBox);
+                    }
+
+                    BorderPane specVersionPane = new BorderPane();
+                    {
+                        Label label = new Label("Spec Version");
+                        BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+                        label.setStyle("-fx-text-fill: -monet-on-surface");
+                        specVersionPane.setLeft(label);
+
+                        ComboBox<ColorSpecVersion> comboBox = new ComboBox<>();
+                        comboBox.getItems().addAll(ColorSpecVersion.values());
+                        comboBox.getSelectionModel().select(ColorSpecVersion.SPEC_2021);
+                        comboBox.getSelectionModel().selectedItemProperty().addListener(
+                                (observable, oldValue, newValue) ->
+                                        this.specVersionProperty.set(newValue));
+                        comboBox.setConverter(new StringConverter<ColorSpecVersion>() {
+                            @Override
+                            public String toString(ColorSpecVersion object) {
+                                return object.toString().substring("SPEC_".length());
+                            }
+
+                            @Override
+                            public ColorSpecVersion fromString(String string) {
+                                return ColorSpecVersion.valueOf("SPEC_" + string);
+                            }
+                        });
+                        specVersionPane.setRight(comboBox);
+                    }
+
                     BorderPane exportPane = new BorderPane();
                     {
                         HBox buttonsBar = new HBox();
@@ -438,7 +495,7 @@ public final class MonetFXThemeBuilder extends Application {
                     content.getChildren().setAll(darkModePane, backgroundChooserPane,
                             primaryColorPane, secondaryColorPane, tertiaryColorPane,
                             neutralColorPane, neutralVariantColorPane, errorColorPane,
-                            variantPane, contrastPane,
+                            variantPane, contrastPane, platformPane, specVersionPane,
                             exportPane);
                 }
             }
@@ -459,10 +516,7 @@ public final class MonetFXThemeBuilder extends Application {
                 TextFlow content = new TextFlow();
                 aboutPane.setCenter(content);
 
-                content.getChildren().setAll(
-
-
-                );
+                // TODO
             }
 
             leftPane.getChildren().setAll(settingsPane);

@@ -15,22 +15,18 @@
  */
 package org.glavo.monetfx;
 
-/// Describes the contrast of a theme or color palette.
-public enum Brightness {
-    /// The color is dark and will require a light text color to achieve readable contrast.
-    ///
-    /// For example, the color might be dark grey, requiring white text.
-    DARK,
+/// The platform on which this scheme is intended to be used.
+/// 
+/// @since 0.2.0
+public enum TargetPlatform {
+    /// Standard platform (e.g., desktop, tablet).
+    PHONE,
 
-    /// The color is light and will require a dark text color to achieve readable contrast.
-    ///
-    /// For example, the color might be bright white, requiring black text.
-    LIGHT;
+    /// Wear OS platform (e.g., smartwatches).
+    WATCH;
 
-    /// The default brightness.
+    /// The default target platform.
     ///
-    /// It is equivalent to [LIGHT][#LIGHT].
-    ///
-    /// @since 0.2.0
-    public static final Brightness DEFAULT = LIGHT;
+    ///  It is equivalent to [PHONE][#PHONE].
+    public static final TargetPlatform DEFAULT = TargetPlatform.PHONE;
 }

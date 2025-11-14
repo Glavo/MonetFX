@@ -16,10 +16,7 @@
 
 package org.glavo.monetfx.internal.hct;
 
-import javafx.scene.paint.Color;
-import org.glavo.monetfx.internal.utils.ColorUtils;
-
-/*
+/**
  * A color system built using CAM16 hue and chroma, and L* from L*a*b*.
  *
  * <p>Using L* creates a link between the color system, contrast, and thus accessibility. Contrast
@@ -33,16 +30,19 @@ import org.glavo.monetfx.internal.utils.ColorUtils;
  * guarantees a contrast ratio >= 4.5.
  */
 
+import javafx.scene.paint.Color;
+import org.glavo.monetfx.internal.utils.ColorUtils;
+
 /**
  * HCT, hue, chroma, and tone. A color system that provides a perceptually accurate color
  * measurement system that can also accurately render what colors will appear as in different
  * lighting environments.
  */
 public final class Hct {
-    private final double hue;
-    private final double chroma;
-    private final double tone;
-    private final int argb;
+    private double hue;
+    private double chroma;
+    private double tone;
+    private int argb;
 
     /**
      * Create an HCT color from hue, chroma, and tone.
@@ -73,11 +73,7 @@ public final class Hct {
     }
 
     private Hct(int argb) {
-        this.argb = argb;
-        Cam16 cam = Cam16.fromInt(argb);
-        hue = cam.getHue();
-        chroma = cam.getChroma();
-        this.tone = ColorUtils.lstarFromArgb(argb);
+        setInternalState(argb);
     }
 
     public double getHue() {
@@ -94,6 +90,59 @@ public final class Hct {
 
     public int toInt() {
         return argb;
+    }
+
+    /**
+     * Set the hue of this color. Chroma may decrease because chroma has a different maximum for any
+     * given hue and tone.
+     *
+     * @param newHue 0 <= newHue < 360; invalid values are corrected.
+     */
+    public void setHue(double newHue) {
+        setInternalState(HctSolver.solveToInt(newHue, chroma, tone));
+    }
+
+    /**
+     * Set the chroma of this color. Chroma may decrease because chroma has a different maximum for
+     * any given hue and tone.
+     *
+     * @param newChroma 0 <= newChroma < ?
+     */
+    public void setChroma(double newChroma) {
+        setInternalState(HctSolver.solveToInt(hue, newChroma, tone));
+    }
+
+    /**
+     * Set the tone of this color. Chroma may decrease because chroma has a different maximum for any
+     * given hue and tone.
+     *
+     * @param newTone 0 <= newTone <= 100; invalid valids are corrected.
+     */
+    public void setTone(double newTone) {
+        setInternalState(HctSolver.solveToInt(hue, chroma, newTone));
+    }
+
+    @Override
+    public String toString() {
+        return "HCT("
+                + (int) Math.round(hue)
+                + ", "
+                + (int) Math.round(chroma)
+                + ", "
+                + (int) Math.round(tone)
+                + ")";
+    }
+
+    public static boolean isBlue(double hue) {
+        return hue >= 250 && hue < 270;
+    }
+
+    public static boolean isYellow(double hue) {
+        return hue >= 105 && hue < 125;
+    }
+
+    public static boolean isCyan(double hue) {
+        return hue >= 170 && hue < 207;
     }
 
     /**
@@ -126,13 +175,11 @@ public final class Hct {
                 recastInVc.getHue(), recastInVc.getChroma(), ColorUtils.lstarFromY(viewedInVc[1]));
     }
 
-    @Override
-    public String toString() {
-        return "Hct{" +
-               "hue=" + hue +
-               ", chroma=" + chroma +
-               ", tone=" + tone +
-               ", argb=" + Integer.toHexString(argb) +
-               '}';
+    private void setInternalState(int argb) {
+        this.argb = argb;
+        Cam16 cam = Cam16.fromInt(argb);
+        hue = cam.getHue();
+        chroma = cam.getChroma();
+        this.tone = ColorUtils.lstarFromArgb(argb);
     }
 }
