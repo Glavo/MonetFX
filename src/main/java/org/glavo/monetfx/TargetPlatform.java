@@ -16,9 +16,15 @@
 package org.glavo.monetfx;
 
 /// The platform on which this scheme is intended to be used.
-public enum ColorPlatform {
+public enum TargetPlatform {
+    /// Standard platform (e.g., desktop, tablet).
     PHONE,
+
+    /// Wear OS platform (e.g., smartwatches).
     WATCH;
 
-    public static final ColorPlatform DEFAULT = ColorPlatform.PHONE;
+    /// The default target platform.
+    ///
+    ///  It is equivalent to [PHONE][#PHONE].
+    public static final TargetPlatform DEFAULT = TargetPlatform.PHONE;
 }

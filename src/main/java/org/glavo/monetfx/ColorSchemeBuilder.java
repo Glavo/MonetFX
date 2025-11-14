@@ -35,7 +35,7 @@ public final class ColorSchemeBuilder {
     private ColorStyle colorStyle = ColorStyle.TONAL_SPOT;
     private Contrast contrast = Contrast.DEFAULT;
     private ColorSpecVersion specVersion = ColorSpecVersion.DEFAULT;
-    private ColorPlatform platform = ColorPlatform.DEFAULT;
+    private TargetPlatform platform = TargetPlatform.DEFAULT;
 
     ColorSchemeBuilder() {
     }
@@ -107,7 +107,7 @@ public final class ColorSchemeBuilder {
     }
 
     @Contract(value = "_ -> this", pure = true)
-    public ColorSchemeBuilder setPlatform(@NotNull ColorPlatform platform) {
+    public ColorSchemeBuilder setPlatform(@NotNull TargetPlatform platform) {
         this.platform = Objects.requireNonNull(platform);
         return this;
     }

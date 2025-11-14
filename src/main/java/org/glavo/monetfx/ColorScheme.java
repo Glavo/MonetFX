@@ -161,7 +161,7 @@ public final class ColorScheme {
                 ColorStyle.TONAL_SPOT,
                 false,
                 Contrast.DEFAULT.getValue(),
-                ColorPlatform.DEFAULT,
+                TargetPlatform.DEFAULT,
                 ColorSpecVersion.DEFAULT,
                 Objects.requireNonNull(seedColor), null, null, null, null, null
         );
@@ -201,7 +201,7 @@ public final class ColorScheme {
             @NotNull ColorStyle variant,
             boolean isDark,
             double contrastLevel,
-            @NotNull ColorPlatform platform,
+            @NotNull TargetPlatform platform,
             @NotNull ColorSpecVersion specVersion,
             @Nullable Color primaryColorSeed,
             @Nullable Color secondaryColorSeed,
@@ -262,7 +262,7 @@ public final class ColorScheme {
         return scheme.variant;
     }
 
-    public @NotNull ColorPlatform getPlatform() {
+    public @NotNull TargetPlatform getPlatform() {
         return scheme.platform;
     }
 

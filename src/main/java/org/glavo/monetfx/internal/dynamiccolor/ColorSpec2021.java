@@ -20,7 +20,7 @@ package org.glavo.monetfx.internal.dynamiccolor;
 import org.glavo.monetfx.ColorStyle;
 import org.glavo.monetfx.internal.contrast.Contrast;
 import org.glavo.monetfx.internal.dislike.DislikeAnalyzer;
-import org.glavo.monetfx.ColorPlatform;
+import org.glavo.monetfx.TargetPlatform;
 import org.glavo.monetfx.internal.hct.Hct;
 import org.glavo.monetfx.internal.palettes.TonalPalette;
 import org.glavo.monetfx.internal.temperature.TemperatureCache;
@@ -1300,7 +1300,7 @@ class ColorSpec2021 implements ColorSpec {
             ColorStyle variant,
             Hct sourceColorHct,
             boolean isDark,
-            ColorPlatform platform,
+            TargetPlatform platform,
             double contrastLevel) {
         switch (variant) {
             case CONTENT:
@@ -1333,7 +1333,7 @@ class ColorSpec2021 implements ColorSpec {
             ColorStyle variant,
             Hct sourceColorHct,
             boolean isDark,
-            ColorPlatform platform,
+            TargetPlatform platform,
             double contrastLevel) {
         switch (variant) {
             case CONTENT:
@@ -1377,7 +1377,7 @@ class ColorSpec2021 implements ColorSpec {
             ColorStyle variant,
             Hct sourceColorHct,
             boolean isDark,
-            ColorPlatform platform,
+            TargetPlatform platform,
             double contrastLevel) {
         switch (variant) {
             case CONTENT:
@@ -1424,7 +1424,7 @@ class ColorSpec2021 implements ColorSpec {
             ColorStyle variant,
             Hct sourceColorHct,
             boolean isDark,
-            ColorPlatform platform,
+            TargetPlatform platform,
             double contrastLevel) {
         switch (variant) {
             case CONTENT:
@@ -1456,7 +1456,7 @@ class ColorSpec2021 implements ColorSpec {
             ColorStyle variant,
             Hct sourceColorHct,
             boolean isDark,
-            ColorPlatform platform,
+            TargetPlatform platform,
             double contrastLevel) {
         switch (variant) {
             case CONTENT:
@@ -1491,7 +1491,7 @@ class ColorSpec2021 implements ColorSpec {
             ColorStyle variant,
             Hct sourceColorHct,
             boolean isDark,
-            ColorPlatform platform,
+            TargetPlatform platform,
             double contrastLevel) {
         switch (variant) {
             case CONTENT:

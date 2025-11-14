@@ -19,7 +19,7 @@ package org.glavo.monetfx.internal.dynamiccolor;
 import org.glavo.monetfx.ColorSpecVersion;
 import org.glavo.monetfx.ColorStyle;
 import org.glavo.monetfx.internal.contrast.Contrast;
-import org.glavo.monetfx.ColorPlatform;
+import org.glavo.monetfx.TargetPlatform;
 import org.glavo.monetfx.internal.hct.Hct;
 import org.glavo.monetfx.internal.palettes.TonalPalette;
 import org.glavo.monetfx.internal.utils.MathUtils;
@@ -29,8 +29,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.glavo.monetfx.ColorPlatform.PHONE;
-import static org.glavo.monetfx.ColorPlatform.WATCH;
+import static org.glavo.monetfx.TargetPlatform.PHONE;
+import static org.glavo.monetfx.TargetPlatform.WATCH;
 import static org.glavo.monetfx.internal.dynamiccolor.ToneDeltaPair.DeltaConstraint.EXACT;
 import static org.glavo.monetfx.internal.dynamiccolor.ToneDeltaPair.DeltaConstraint.FARTHER;
 import static org.glavo.monetfx.internal.dynamiccolor.TonePolarity.DARKER;
@@ -1745,7 +1745,7 @@ final class ColorSpec2025 extends ColorSpec2021 {
       ColorStyle variant,
       Hct sourceColorHct,
       boolean isDark,
-      ColorPlatform platform,
+      TargetPlatform platform,
       double contrastLevel) {
       switch (variant) {
           case NEUTRAL:
@@ -1773,7 +1773,7 @@ final class ColorSpec2025 extends ColorSpec2021 {
           ColorStyle variant,
       Hct sourceColorHct,
       boolean isDark,
-      ColorPlatform platform,
+      TargetPlatform platform,
       double contrastLevel) {
       switch (variant) {
           case NEUTRAL:
@@ -1809,7 +1809,7 @@ final class ColorSpec2025 extends ColorSpec2021 {
       ColorStyle variant,
       Hct sourceColorHct,
       boolean isDark,
-      ColorPlatform platform,
+      TargetPlatform platform,
       double contrastLevel) {
       switch (variant) {
           case NEUTRAL:
@@ -1851,7 +1851,7 @@ final class ColorSpec2025 extends ColorSpec2021 {
           ColorStyle variant,
       Hct sourceColorHct,
       boolean isDark,
-      ColorPlatform platform,
+      TargetPlatform platform,
       double contrastLevel) {
       switch (variant) {
           case NEUTRAL:
@@ -1877,7 +1877,7 @@ final class ColorSpec2025 extends ColorSpec2021 {
           ColorStyle variant,
       Hct sourceColorHct,
       boolean isDark,
-      ColorPlatform platform,
+      TargetPlatform platform,
       double contrastLevel) {
       switch (variant) {
           case NEUTRAL:
@@ -1910,7 +1910,7 @@ final class ColorSpec2025 extends ColorSpec2021 {
           ColorStyle variant,
       Hct sourceColorHct,
       boolean isDark,
-      ColorPlatform platform,
+      TargetPlatform platform,
       double contrastLevel) {
     double errorHue =
         DynamicScheme.getPiecewiseValue(
@@ -1939,7 +1939,7 @@ final class ColorSpec2025 extends ColorSpec2021 {
   }
 
   private static double getExpressiveNeutralChroma(
-      Hct sourceColorHct, boolean isDark, ColorPlatform platform) {
+      Hct sourceColorHct, boolean isDark, TargetPlatform platform) {
     double neutralHue = getExpressiveNeutralHue(sourceColorHct);
     return platform == PHONE ? (isDark ? (Hct.isYellow(neutralHue) ? 6 : 14) : 18) : 12;
   }
@@ -1951,7 +1951,7 @@ final class ColorSpec2025 extends ColorSpec2021 {
         new double[] {-14, 10, -14, 10, -14});
   }
 
-  private static double getVibrantNeutralChroma(Hct sourceColorHct, ColorPlatform platform) {
+  private static double getVibrantNeutralChroma(Hct sourceColorHct, TargetPlatform platform) {
     double neutralHue = getVibrantNeutralHue(sourceColorHct);
     return platform == PHONE ? 28 : (Hct.isBlue(neutralHue) ? 28 : 20);
   }

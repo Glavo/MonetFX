@@ -17,7 +17,7 @@
 package org.glavo.monetfx.internal.dynamiccolor;
 
 import org.glavo.monetfx.ColorStyle;
-import org.glavo.monetfx.ColorPlatform;
+import org.glavo.monetfx.TargetPlatform;
 import org.glavo.monetfx.internal.hct.Hct;
 import org.glavo.monetfx.internal.palettes.TonalPalette;
 import org.jetbrains.annotations.NotNull;
@@ -225,20 +225,20 @@ public interface ColorSpec {
   //////////////////////////////////////////////////////////////////
 
   @NotNull TonalPalette getPrimaryPalette(
-          ColorStyle variant, Hct sourceColorHct, boolean isDark, ColorPlatform platform, double contrastLevel);
+          ColorStyle variant, Hct sourceColorHct, boolean isDark, TargetPlatform platform, double contrastLevel);
 
   @NotNull TonalPalette getSecondaryPalette(
-          ColorStyle variant, Hct sourceColorHct, boolean isDark, ColorPlatform platform, double contrastLevel);
+          ColorStyle variant, Hct sourceColorHct, boolean isDark, TargetPlatform platform, double contrastLevel);
 
   @NotNull TonalPalette getTertiaryPalette(
-          ColorStyle variant, Hct sourceColorHct, boolean isDark, ColorPlatform platform, double contrastLevel);
+          ColorStyle variant, Hct sourceColorHct, boolean isDark, TargetPlatform platform, double contrastLevel);
 
   @NotNull TonalPalette getNeutralPalette(
-          ColorStyle variant, Hct sourceColorHct, boolean isDark, ColorPlatform platform, double contrastLevel);
+          ColorStyle variant, Hct sourceColorHct, boolean isDark, TargetPlatform platform, double contrastLevel);
 
   @NotNull TonalPalette getNeutralVariantPalette(
-          ColorStyle variant, Hct sourceColorHct, boolean isDark, ColorPlatform platform, double contrastLevel);
+          ColorStyle variant, Hct sourceColorHct, boolean isDark, TargetPlatform platform, double contrastLevel);
 
   @NotNull Optional<TonalPalette> getErrorPalette(
-          ColorStyle variant, Hct sourceColorHct, boolean isDark, ColorPlatform platform, double contrastLevel);
+          ColorStyle variant, Hct sourceColorHct, boolean isDark, TargetPlatform platform, double contrastLevel);
 }

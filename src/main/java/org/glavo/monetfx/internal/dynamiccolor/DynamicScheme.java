@@ -16,7 +16,7 @@
 
 package org.glavo.monetfx.internal.dynamiccolor;
 
-import org.glavo.monetfx.ColorPlatform;
+import org.glavo.monetfx.TargetPlatform;
 import org.glavo.monetfx.ColorStyle;
 import org.glavo.monetfx.ColorSpecVersion;
 import org.glavo.monetfx.internal.hct.Hct;
@@ -59,7 +59,7 @@ public class DynamicScheme {
     /**
      * The platform on which this scheme is intended to be used.
      */
-    public final ColorPlatform platform;
+    public final TargetPlatform platform;
 
     /**
      * Value from -1 to 1. -1 represents minimum contrast. 0 represents standard (i.e. the design as
@@ -84,7 +84,7 @@ public class DynamicScheme {
             ColorStyle variant,
             boolean isDark,
             double contrastLevel,
-            ColorPlatform platform,
+            TargetPlatform platform,
             ColorSpecVersion specVersion,
             TonalPalette primaryPalette,
             TonalPalette secondaryPalette,

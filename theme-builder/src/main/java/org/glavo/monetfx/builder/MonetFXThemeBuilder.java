@@ -117,7 +117,7 @@ public final class MonetFXThemeBuilder extends Application {
     private final ObjectProperty<Image> backgroundImageProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<ColorStyle> dynamicSchemeVariantProperty = new SimpleObjectProperty<>(ColorStyle.TONAL_SPOT);
     private final DoubleProperty contrastProperty = new SimpleDoubleProperty(0.0);
-    private final ObjectProperty<ColorPlatform> platformProperty = new SimpleObjectProperty<>(ColorPlatform.PHONE);
+    private final ObjectProperty<TargetPlatform> platformProperty = new SimpleObjectProperty<>(TargetPlatform.PHONE);
     private final ObjectProperty<ColorSpecVersion> specVersionProperty = new SimpleObjectProperty<>(ColorSpecVersion.SPEC_2021);
 
     private final ColorSchemeProperty scheme = new SimpleColorSchemeProperty();
@@ -411,22 +411,22 @@ public final class MonetFXThemeBuilder extends Application {
                         label.setStyle("-fx-text-fill: -monet-on-surface");
                         platformPane.setLeft(label);
 
-                        ComboBox<ColorPlatform> comboBox = new ComboBox<>();
-                        comboBox.getItems().addAll(ColorPlatform.values());
-                        comboBox.getSelectionModel().select(ColorPlatform.PHONE);
+                        ComboBox<TargetPlatform> comboBox = new ComboBox<>();
+                        comboBox.getItems().addAll(TargetPlatform.values());
+                        comboBox.getSelectionModel().select(TargetPlatform.PHONE);
                         comboBox.getSelectionModel().selectedItemProperty().addListener(
                                 (observable, oldValue, newValue) ->
                                         this.platformProperty.set(newValue));
-                        comboBox.setConverter(new StringConverter<ColorPlatform>() {
+                        comboBox.setConverter(new StringConverter<TargetPlatform>() {
                             @Override
-                            public String toString(ColorPlatform platform) {
+                            public String toString(TargetPlatform platform) {
                                 String name = platform.name();
                                 return Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase(Locale.ROOT);
                             }
 
                             @Override
-                            public ColorPlatform fromString(String string) {
-                                return ColorPlatform.valueOf(string);
+                            public TargetPlatform fromString(String string) {
+                                return TargetPlatform.valueOf(string);
                             }
                         });
                         platformPane.setRight(comboBox);
