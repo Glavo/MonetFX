@@ -255,190 +255,237 @@ public final class ColorScheme {
         return getColor(ColorRole.ON_PRIMARY);
     }
 
+    /// @see ColorRole#PRIMARY_CONTAINER
     public Color getPrimaryContainer() {
         return getColor(ColorRole.PRIMARY_CONTAINER);
     }
 
+    /// @see ColorRole#ON_PRIMARY_CONTAINER
     public Color getOnPrimaryContainer() {
         return getColor(ColorRole.ON_PRIMARY_CONTAINER);
     }
 
+    /// @see ColorRole#PRIMARY_FIXED
     public Color getPrimaryFixed() {
         return getColor(ColorRole.PRIMARY_FIXED);
     }
 
+    /// @see ColorRole#PRIMARY_FIXED_DIM
     public Color getPrimaryFixedDim() {
         return getColor(ColorRole.PRIMARY_FIXED_DIM);
     }
 
+    /// @see ColorRole#ON_PRIMARY_FIXED
     public Color getOnPrimaryFixed() {
         return getColor(ColorRole.ON_PRIMARY_FIXED);
     }
 
+    /// @see ColorRole#ON_PRIMARY_FIXED_VARIANT
     public Color getOnPrimaryFixedVariant() {
         return getColor(ColorRole.ON_PRIMARY_FIXED_VARIANT);
     }
 
+    /// @see ColorRole#SECONDARY
     public Color getSecondary() {
         return getColor(ColorRole.SECONDARY);
     }
 
+    /// @see ColorRole#ON_SECONDARY
     public Color getOnSecondary() {
         return getColor(ColorRole.ON_SECONDARY);
     }
 
+    /// @see ColorRole#SECONDARY_CONTAINER
     public Color getSecondaryContainer() {
         return getColor(ColorRole.SECONDARY_CONTAINER);
     }
 
+    /// @see ColorRole#ON_SECONDARY_CONTAINER
     public Color getOnSecondaryContainer() {
         return getColor(ColorRole.ON_SECONDARY_CONTAINER);
     }
 
+    /// @see ColorRole#SECONDARY_FIXED
     public Color getSecondaryFixed() {
         return getColor(ColorRole.SECONDARY_FIXED);
     }
 
+    /// @see ColorRole#SECONDARY_FIXED_DIM
     public Color getSecondaryFixedDim() {
         return getColor(ColorRole.SECONDARY_FIXED_DIM);
     }
 
+    /// @see ColorRole#ON_SECONDARY_FIXED
     public Color getOnSecondaryFixed() {
         return getColor(ColorRole.ON_SECONDARY_FIXED);
     }
 
+    /// @see ColorRole#ON_SECONDARY_FIXED_VARIANT
     public Color getOnSecondaryFixedVariant() {
         return getColor(ColorRole.ON_SECONDARY_FIXED_VARIANT);
     }
 
+    /// @see ColorRole#TERTIARY
     public Color getTertiary() {
         return getColor(ColorRole.TERTIARY);
     }
 
+    /// @see ColorRole#ON_TERTIARY
     public Color getOnTertiary() {
         return getColor(ColorRole.ON_TERTIARY);
     }
 
+    /// @see ColorRole#TERTIARY_CONTAINER
     public Color getTertiaryContainer() {
         return getColor(ColorRole.TERTIARY_CONTAINER);
     }
 
+    /// @see ColorRole#ON_TERTIARY_CONTAINER
     public Color getOnTertiaryContainer() {
         return getColor(ColorRole.ON_TERTIARY_CONTAINER);
     }
 
+    /// @see ColorRole#TERTIARY_FIXED
     public Color getTertiaryFixed() {
         return getColor(ColorRole.TERTIARY_FIXED);
     }
 
+    /// @see ColorRole#TERTIARY_FIXED_DIM
     public Color getTertiaryFixedDim() {
         return getColor(ColorRole.TERTIARY_FIXED_DIM);
     }
 
+    /// @see ColorRole#ON_TERTIARY_FIXED
     public Color getOnTertiaryFixed() {
         return getColor(ColorRole.ON_TERTIARY_FIXED);
     }
 
+    /// @see ColorRole#ON_TERTIARY_FIXED_VARIANT
     public Color getOnTertiaryFixedVariant() {
         return getColor(ColorRole.ON_TERTIARY_FIXED_VARIANT);
     }
 
+    /// @see ColorRole#ERROR
     public Color getError() {
         return getColor(ColorRole.ERROR);
     }
 
+    /// @see ColorRole#ON_ERROR
     public Color getOnError() {
         return getColor(ColorRole.ON_ERROR);
     }
 
+    /// @see ColorRole#ERROR_CONTAINER
     public Color getErrorContainer() {
         return getColor(ColorRole.ERROR_CONTAINER);
     }
 
+    /// @see ColorRole#ON_ERROR_CONTAINER
     public Color getOnErrorContainer() {
         return getColor(ColorRole.ON_ERROR_CONTAINER);
     }
 
+    /// @see ColorRole#SURFACE
     public Color getSurface() {
         return getColor(ColorRole.SURFACE);
     }
 
+    /// @see ColorRole#ON_SURFACE
     public Color getOnSurface() {
         return getColor(ColorRole.ON_SURFACE);
     }
 
+    /// @see ColorRole#SURFACE_DIM
     public Color getSurfaceDim() {
         return getColor(ColorRole.SURFACE_DIM);
     }
 
+    /// @see ColorRole#SURFACE_BRIGHT
     public Color getSurfaceBright() {
         return getColor(ColorRole.SURFACE_BRIGHT);
     }
 
+    /// @see ColorRole#SURFACE_CONTAINER_LOWEST
     public Color getSurfaceContainerLowest() {
         return getColor(ColorRole.SURFACE_CONTAINER_LOWEST);
     }
 
+    /// @see ColorRole#SURFACE_CONTAINER_LOW
     public Color getSurfaceContainerLow() {
         return getColor(ColorRole.SURFACE_CONTAINER_LOW);
     }
 
+    /// @see ColorRole#SURFACE_CONTAINER
     public Color getSurfaceContainer() {
         return getColor(ColorRole.SURFACE_CONTAINER);
     }
 
+    /// @see ColorRole#SURFACE_CONTAINER_HIGH
     public Color getSurfaceContainerHigh() {
         return getColor(ColorRole.SURFACE_CONTAINER_HIGH);
     }
 
+    /// @see ColorRole#SURFACE_CONTAINER_HIGHEST
     public Color getSurfaceContainerHighest() {
         return getColor(ColorRole.SURFACE_CONTAINER_HIGHEST);
     }
 
+    /// @see ColorRole#SURFACE_VARIANT
     public Color getSurfaceVariant() {
         return getColor(ColorRole.SURFACE_VARIANT);
     }
 
+    /// @see ColorRole#ON_SURFACE_VARIANT
     public Color getOnSurfaceVariant() {
         return getColor(ColorRole.ON_SURFACE_VARIANT);
     }
 
+    /// @see ColorRole#BACKGROUND
     public Color getBackground() {
         return getColor(ColorRole.BACKGROUND);
     }
 
+    /// @see ColorRole#ON_BACKGROUND
     public Color getOnBackground() {
         return getColor(ColorRole.ON_BACKGROUND);
     }
 
+    /// @see ColorRole#OUTLINE
     public Color getOutline() {
         return getColor(ColorRole.OUTLINE);
     }
 
+    /// @see ColorRole#OUTLINE_VARIANT
     public Color getOutlineVariant() {
         return getColor(ColorRole.OUTLINE_VARIANT);
     }
 
+    /// @see ColorRole#SHADOW
     public Color getShadow() {
         return getColor(ColorRole.SHADOW);
     }
 
+    /// @see ColorRole#SCRIM
     public Color getScrim() {
         return getColor(ColorRole.SCRIM);
     }
 
+    /// @see ColorRole#INVERSE_SURFACE
     public Color getInverseSurface() {
         return getColor(ColorRole.INVERSE_SURFACE);
     }
 
+    /// @see ColorRole#INVERSE_ON_SURFACE
     public Color getInverseOnSurface() {
         return getColor(ColorRole.INVERSE_ON_SURFACE);
     }
 
+    /// @see ColorRole#INVERSE_PRIMARY
     public Color getInversePrimary() {
         return getColor(ColorRole.INVERSE_PRIMARY);
     }
 
+    /// @see ColorRole#SURFACE_TINT
     public Color getSurfaceTint() {
         return getColor(ColorRole.SURFACE_TINT);
     }

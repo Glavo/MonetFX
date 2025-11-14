@@ -202,6 +202,7 @@ public enum ColorRole {
     /// a component using [SURFACE][#SURFACE].
     ///
     /// @deprecated Use [SURFACE_CONTAINER_HIGHEST][#SURFACE_CONTAINER_HIGHEST] instead.
+    @Deprecated
     SURFACE_VARIANT,
 
     /// A color that's clearly legible when drawn on [SURFACE_VARIANT][#SURFACE_VARIANT].
@@ -216,6 +217,7 @@ public enum ColorRole {
     /// A color that typically appears behind scrollable content.
     ///
     /// @deprecated Use [SURFACE][#SURFACE] instead.
+    @Deprecated
     BACKGROUND,
 
     /// A color that's clearly legible when drawn on [BACKGROUND][#BACKGROUND].
@@ -225,6 +227,7 @@ public enum ColorRole {
     ///
     /// @see <a href="https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html">Understanding WCAG 2.0</a>
     /// @deprecated Use [ON_SURFACE][#ON_SURFACE] instead.
+    @Deprecated
     ON_BACKGROUND,
 
     /// A utility color that creates boundaries and emphasis to improve usability.
