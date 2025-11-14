@@ -15,7 +15,20 @@
  */
 package org.glavo.monetfx;
 
+/// Describes the contrast of a theme or color palette.
 public enum Brightness {
+    /// The color is dark and will require a light text color to achieve readable contrast.
+    ///
+    /// For example, the color might be dark grey, requiring white text.
     DARK,
-    LIGHT
+
+    /// The color is light and will require a dark text color to achieve readable contrast.
+    ///
+    /// For example, the color might be bright white, requiring black text.
+    LIGHT;
+
+    /// The default brightness.
+    ///
+    /// It is equivalent to [#LIGHT].
+    public static final Brightness DEFAULT = LIGHT;
 }
