@@ -62,7 +62,7 @@ public final class ColorSchemeTest {
                             URL url = ColorSchemeTest.class.getResource(fileName);
                             if (url != null) {
                                 try {
-                                    return Stream.of(MaterialTheme.load(url.openStream(), variant));
+                                    return Stream.of(MaterialTheme.load(url.openStream(), fileName, variant));
                                 } catch (IOException e) {
                                     throw new UncheckedIOException(e);
                                 }
@@ -77,6 +77,7 @@ public final class ColorSchemeTest {
                     Map<ColorRole, Color> colors = pair.getValue();
 
                     return Arguments.of(
+                            theme.fileName,
                             coreColors.get("primary"), coreColors.get("secondary"), coreColors.get("tertiary"),
                             coreColors.get("neutral"), coreColors.get("neutralVariant"), coreColors.get("error"),
                             brightness, theme.variant, contrast, colors);
@@ -85,7 +86,7 @@ public final class ColorSchemeTest {
 
     @ParameterizedTest
     @MethodSource("testFromSeedArguments")
-    public void testFromSeed(Color primaryColor, Color secondaryColor, Color tertiaryColor,
+    public void testFromSeed(String fileName, Color primaryColor, Color secondaryColor, Color tertiaryColor,
                              Color neutralColor, Color neutralVariantColor, Color errorColor,
                              Brightness brightness, ColorStyle variant, Contrast contrast, Map<ColorRole, Color> colors) {
         ColorScheme scheme = ColorScheme.newBuilder()
@@ -130,7 +131,7 @@ public final class ColorSchemeTest {
             }
         }
 
-        public static MaterialTheme load(InputStream inputStream, ColorStyle variant) {
+        public static MaterialTheme load(InputStream inputStream, String fileName, ColorStyle variant) {
             JsonObject raw;
             try (Reader reader = new InputStreamReader(inputStream)) {
                 raw = GSON.fromJson(reader, JsonObject.class);
@@ -150,14 +151,16 @@ public final class ColorSchemeTest {
                 schemes.put(parseSchemeName(schemeName), colors);
             });
 
-            return new MaterialTheme(colorColors, variant, schemes);
+            return new MaterialTheme(fileName, colorColors, variant, schemes);
         }
 
+        public final String fileName;
         public final Map<String, Color> coreColors;
         public final ColorStyle variant;
         public final Map<Map.Entry<Brightness, Contrast>, Map<ColorRole, Color>> schemes;
 
-        private MaterialTheme(Map<String, Color> coreColors, ColorStyle variant, Map<Map.Entry<Brightness, Contrast>, Map<ColorRole, Color>> schemes) {
+        private MaterialTheme(String fileName, Map<String, Color> coreColors, ColorStyle variant, Map<Map.Entry<Brightness, Contrast>, Map<ColorRole, Color>> schemes) {
+            this.fileName = fileName;
             this.coreColors = coreColors;
             this.variant = variant;
             this.schemes = schemes;
