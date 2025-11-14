@@ -171,6 +171,7 @@ public final class ColorScheme {
         return new ColorSchemeBuilder();
     }
 
+    /// @since 0.2.0
     public static ColorSchemeBuilder newBuilder(ColorScheme oldScheme) {
         return newBuilder()
                 .setColorStyle(oldScheme.getColorStyle())
@@ -262,10 +263,12 @@ public final class ColorScheme {
         return scheme.variant;
     }
 
+    /// @since 0.2.0
     public @NotNull TargetPlatform getPlatform() {
         return scheme.platform;
     }
 
+    /// @since 0.2.0
     public @NotNull ColorSpecVersion getSpecVersion() {
         return scheme.specVersion;
     }

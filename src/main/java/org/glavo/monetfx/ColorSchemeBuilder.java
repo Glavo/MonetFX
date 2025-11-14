@@ -31,8 +31,8 @@ public final class ColorSchemeBuilder {
     private Color neutralVariantColorSeed;
     private Color errorColorSeed;
 
-    private Brightness brightness = Brightness.LIGHT;
-    private ColorStyle colorStyle = ColorStyle.TONAL_SPOT;
+    private Brightness brightness = Brightness.DEFAULT;
+    private ColorStyle colorStyle = ColorStyle.DEFAULT;
     private Contrast contrast = Contrast.DEFAULT;
     private ColorSpecVersion specVersion = ColorSpecVersion.DEFAULT;
     private TargetPlatform platform = TargetPlatform.DEFAULT;
@@ -106,12 +106,14 @@ public final class ColorSchemeBuilder {
         return this;
     }
 
+    /// @since 0.2.0
     @Contract(value = "_ -> this", pure = true)
     public ColorSchemeBuilder setPlatform(@NotNull TargetPlatform platform) {
         this.platform = Objects.requireNonNull(platform);
         return this;
     }
 
+    /// @since 0.2.0
     @Contract(value = "_ -> this", pure = true)
     public ColorSchemeBuilder setSpecVersion(@NotNull ColorSpecVersion specVersion) {
         this.specVersion = Objects.requireNonNull(specVersion);

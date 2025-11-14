@@ -29,6 +29,8 @@ public enum Brightness {
 
     /// The default brightness.
     ///
-    /// It is equivalent to [#LIGHT].
+    /// It is equivalent to [LIGHT][#LIGHT].
+    ///
+    /// @since 0.2.0
     public static final Brightness DEFAULT = LIGHT;
 }

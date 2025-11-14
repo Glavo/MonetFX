@@ -16,6 +16,8 @@
 package org.glavo.monetfx;
 
 /// All available spec versions.
+///
+/// @since 0.2.0
 public enum ColorSpecVersion {
     SPEC_2021,
     SPEC_2025;

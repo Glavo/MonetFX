@@ -278,6 +278,7 @@ public enum ColorRole {
 
         return name.toLowerCase(Locale.ROOT);
     }
+
     private static final Map<String, ColorRole> searchTable = new HashMap<>();
 
     static {

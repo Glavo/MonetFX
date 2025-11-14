@@ -62,6 +62,13 @@ public enum ColorStyle {
     /// A playful theme - the seed color's hue does not appear in the theme.
     FRUIT_SALAD;
 
+    /// The default [ColorStyle].
+    ///
+    /// It equivalent to [TONAL_SPOT][#TONAL_SPOT].
+    ///
+    /// @since 0.2.0
+    public static final ColorStyle DEFAULT = TONAL_SPOT;
+
     private final String displayName;
 
     ColorStyle() {

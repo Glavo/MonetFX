@@ -16,6 +16,8 @@
 package org.glavo.monetfx;
 
 /// The platform on which this scheme is intended to be used.
+/// 
+/// @since 0.2.0
 public enum TargetPlatform {
     /// Standard platform (e.g., desktop, tablet).
     PHONE,
