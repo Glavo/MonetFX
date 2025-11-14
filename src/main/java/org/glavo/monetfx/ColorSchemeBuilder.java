@@ -125,6 +125,6 @@ public final class ColorSchemeBuilder {
                 contrast.getValue(),
                 this.platform,
                 specVersion,
-                this.primaryColorSeed, secondaryColorSeed, tertiaryColorSeed, neutralColorSeed, neutralVariantColorSeed, errorColorSeed);
+                primaryColorSeed, secondaryColorSeed, tertiaryColorSeed, neutralColorSeed, neutralVariantColorSeed, errorColorSeed);
     }
 }
