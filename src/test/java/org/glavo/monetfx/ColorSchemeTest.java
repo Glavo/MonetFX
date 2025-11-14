@@ -77,7 +77,7 @@ public final class ColorSchemeTest {
                     Map<ColorRole, Color> colors = pair.getValue();
 
                     return Arguments.of(
-                            theme.fileName,
+                            String.format("%s (%s, %s, %s)", theme.fileName, theme.variant, brightness, contrast),
                             coreColors.get("primary"), coreColors.get("secondary"), coreColors.get("tertiary"),
                             coreColors.get("neutral"), coreColors.get("neutralVariant"), coreColors.get("error"),
                             brightness, theme.variant, contrast, colors);
@@ -86,7 +86,7 @@ public final class ColorSchemeTest {
 
     @ParameterizedTest
     @MethodSource("testFromSeedArguments")
-    public void testFromSeed(String fileName, Color primaryColor, Color secondaryColor, Color tertiaryColor,
+    public void testFromSeed(String name, Color primaryColor, Color secondaryColor, Color tertiaryColor,
                              Color neutralColor, Color neutralVariantColor, Color errorColor,
                              Brightness brightness, ColorStyle variant, Contrast contrast, Map<ColorRole, Color> colors) {
         ColorScheme scheme = ColorScheme.newBuilder()
@@ -116,13 +116,6 @@ public final class ColorSchemeTest {
             return Stream.of(() -> assertEquals(expected, actual,
                     () -> String.format("Role: %s, Excepted: %s, Actual: %s", role, toWeb(expected), toWeb(actual))));
         }));
-
-        assertAll(colors.keySet().stream().map(role ->
-                () -> {
-                    Color expected = colors.get(role);
-                    Color actual = scheme.getColor(role);
-
-                }));
     }
 
     private static final class MaterialTheme {
