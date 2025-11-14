@@ -208,7 +208,7 @@ public final class ColorScheme {
             double contrastLevel,
             @NotNull ColorPlatform platform,
             @NotNull ColorSpecVersion specVersion,
-            @NotNull Color primaryColorSeed,
+            @Nullable Color primaryColorSeed,
             @Nullable Color secondaryColorSeed,
             @Nullable Color tertiaryColorSeed,
             @Nullable Color neutralColorSeed,
@@ -239,7 +239,7 @@ public final class ColorScheme {
                                 .orElseGet(() -> colorSpec.getPrimaryPalette(variant, errorColorHct, isDark, platform, contrastLevel)))
                         : Optional.empty()
         );
-        this.primaryColorSeed = primaryColorSeed;
+        this.primaryColorSeed = primaryColorSeed != null ? primaryColorSeed : FALLBACK_COLOR;
         this.secondaryColorSeed = secondaryColorSeed;
         this.tertiaryColorSeed = tertiaryColorSeed;
         this.neutralColorSeed = neutralColorSeed;
