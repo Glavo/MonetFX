@@ -15,7 +15,8 @@
  */
 package org.glavo.monetfx;
 
-import org.glavo.monetfx.internal.dynamiccolor.DynamicScheme;
+import org.glavo.monetfx.internal.dynamiccolor.ColorSpec;
+import org.glavo.monetfx.internal.dynamiccolor.DynamicColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,57 +26,58 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
 
 public enum ColorRole {
-    PRIMARY,
-    ON_PRIMARY,
-    PRIMARY_CONTAINER,
-    ON_PRIMARY_CONTAINER,
-    PRIMARY_FIXED,
-    PRIMARY_FIXED_DIM,
-    ON_PRIMARY_FIXED,
-    ON_PRIMARY_FIXED_VARIANT,
-    SECONDARY,
-    ON_SECONDARY,
-    SECONDARY_CONTAINER,
-    ON_SECONDARY_CONTAINER,
-    SECONDARY_FIXED,
-    SECONDARY_FIXED_DIM,
-    ON_SECONDARY_FIXED,
-    ON_SECONDARY_FIXED_VARIANT,
-    TERTIARY,
-    ON_TERTIARY,
-    TERTIARY_CONTAINER,
-    ON_TERTIARY_CONTAINER,
-    TERTIARY_FIXED,
-    TERTIARY_FIXED_DIM,
-    ON_TERTIARY_FIXED,
-    ON_TERTIARY_FIXED_VARIANT,
-    ERROR,
-    ON_ERROR,
-    ERROR_CONTAINER,
-    ON_ERROR_CONTAINER,
-    SURFACE,
-    ON_SURFACE,
-    SURFACE_DIM,
-    SURFACE_BRIGHT,
-    SURFACE_CONTAINER_LOWEST,
-    SURFACE_CONTAINER_LOW,
-    SURFACE_CONTAINER,
-    SURFACE_CONTAINER_HIGH,
-    SURFACE_CONTAINER_HIGHEST,
-    SURFACE_VARIANT,
-    ON_SURFACE_VARIANT,
-    BACKGROUND,
-    ON_BACKGROUND,
-    OUTLINE,
-    OUTLINE_VARIANT,
-    SHADOW,
-    SCRIM,
-    INVERSE_SURFACE,
-    INVERSE_ON_SURFACE,
-    INVERSE_PRIMARY,
-    SURFACE_TINT;
+    PRIMARY(ColorSpec::primary),
+    ON_PRIMARY(ColorSpec::onPrimary),
+    PRIMARY_CONTAINER(ColorSpec::primaryContainer),
+    ON_PRIMARY_CONTAINER(ColorSpec::onPrimaryContainer),
+    PRIMARY_FIXED(ColorSpec::primaryFixed),
+    PRIMARY_FIXED_DIM(ColorSpec::primaryFixedDim),
+    ON_PRIMARY_FIXED(ColorSpec::onPrimaryFixed),
+    ON_PRIMARY_FIXED_VARIANT(ColorSpec::onPrimaryFixedVariant),
+    SECONDARY(ColorSpec::secondary),
+    ON_SECONDARY(ColorSpec::onSecondary),
+    SECONDARY_CONTAINER(ColorSpec::secondaryContainer),
+    ON_SECONDARY_CONTAINER(ColorSpec::onSecondaryContainer),
+    SECONDARY_FIXED(ColorSpec::secondaryFixed),
+    SECONDARY_FIXED_DIM(ColorSpec::secondaryFixedDim),
+    ON_SECONDARY_FIXED(ColorSpec::onSecondaryFixed),
+    ON_SECONDARY_FIXED_VARIANT(ColorSpec::onSecondaryFixedVariant),
+    TERTIARY(ColorSpec::tertiary),
+    ON_TERTIARY(ColorSpec::onTertiary),
+    TERTIARY_CONTAINER(ColorSpec::tertiaryContainer),
+    ON_TERTIARY_CONTAINER(ColorSpec::onTertiaryContainer),
+    TERTIARY_FIXED(ColorSpec::tertiaryFixed),
+    TERTIARY_FIXED_DIM(ColorSpec::tertiaryFixedDim),
+    ON_TERTIARY_FIXED(ColorSpec::onTertiaryFixed),
+    ON_TERTIARY_FIXED_VARIANT(ColorSpec::onTertiaryFixedVariant),
+    ERROR(ColorSpec::error),
+    ON_ERROR(ColorSpec::onError),
+    ERROR_CONTAINER(ColorSpec::errorContainer),
+    ON_ERROR_CONTAINER(ColorSpec::onErrorContainer),
+    SURFACE(ColorSpec::surface),
+    ON_SURFACE(ColorSpec::onSurface),
+    SURFACE_DIM(ColorSpec::surfaceDim),
+    SURFACE_BRIGHT(ColorSpec::surfaceBright),
+    SURFACE_CONTAINER_LOWEST(ColorSpec::surfaceContainerLowest),
+    SURFACE_CONTAINER_LOW(ColorSpec::surfaceContainerLow),
+    SURFACE_CONTAINER(ColorSpec::surfaceContainer),
+    SURFACE_CONTAINER_HIGH(ColorSpec::surfaceContainerHigh),
+    SURFACE_CONTAINER_HIGHEST(ColorSpec::surfaceContainerHighest),
+    SURFACE_VARIANT(ColorSpec::surfaceVariant),
+    ON_SURFACE_VARIANT(ColorSpec::onSurfaceVariant),
+    BACKGROUND(ColorSpec::background),
+    ON_BACKGROUND(ColorSpec::onBackground),
+    OUTLINE(ColorSpec::outline),
+    OUTLINE_VARIANT(ColorSpec::outlineVariant),
+    SHADOW(ColorSpec::shadow),
+    SCRIM(ColorSpec::scrim),
+    INVERSE_SURFACE(ColorSpec::inverseSurface),
+    INVERSE_ON_SURFACE(ColorSpec::inverseOnSurface),
+    INVERSE_PRIMARY(ColorSpec::inversePrimary),
+    SURFACE_TINT(ColorSpec::surfaceTint);
 
     static final String DEFAULT_VARIABLE_NAME_PREFIX = "-monet";
 
@@ -106,8 +108,11 @@ public enum ColorRole {
     }
 
     final String displayName;
+    final Function<ColorSpec, DynamicColor> accessor;
 
-    {
+    ColorRole(Function<ColorSpec, DynamicColor> accessor) {
+        this.accessor = accessor;
+
         String[] parts = this.name().split("_");
         for (int i = 0; i < parts.length; i++) {
             parts[i] = parts[i].charAt(0) + parts[i].substring(1).toLowerCase(Locale.ROOT);
@@ -117,111 +122,6 @@ public enum ColorRole {
 
     final String variableNameBase = name().toLowerCase(Locale.ROOT).replace("_", "-");
     final String defaultVariableName = DEFAULT_VARIABLE_NAME_PREFIX + "-" + variableNameBase;
-
-    int getArgb(DynamicScheme scheme) {
-        switch (this) {
-            case PRIMARY:
-                return scheme.getPrimary();
-            case ON_PRIMARY:
-                return scheme.getOnPrimary();
-            case PRIMARY_CONTAINER:
-                return scheme.getPrimaryContainer();
-            case ON_PRIMARY_CONTAINER:
-                return scheme.getOnPrimaryContainer();
-            case PRIMARY_FIXED:
-                return scheme.getPrimaryFixed();
-            case PRIMARY_FIXED_DIM:
-                return scheme.getPrimaryFixedDim();
-            case ON_PRIMARY_FIXED:
-                return scheme.getOnPrimaryFixed();
-            case ON_PRIMARY_FIXED_VARIANT:
-                return scheme.getOnPrimaryFixedVariant();
-            case SECONDARY:
-                return scheme.getSecondary();
-            case ON_SECONDARY:
-                return scheme.getOnSecondary();
-            case SECONDARY_CONTAINER:
-                return scheme.getSecondaryContainer();
-            case ON_SECONDARY_CONTAINER:
-                return scheme.getOnSecondaryContainer();
-            case SECONDARY_FIXED:
-                return scheme.getSecondaryFixed();
-            case SECONDARY_FIXED_DIM:
-                return scheme.getSecondaryFixedDim();
-            case ON_SECONDARY_FIXED:
-                return scheme.getOnSecondaryFixed();
-            case ON_SECONDARY_FIXED_VARIANT:
-                return scheme.getOnSecondaryFixedVariant();
-            case TERTIARY:
-                return scheme.getTertiary();
-            case ON_TERTIARY:
-                return scheme.getOnTertiary();
-            case TERTIARY_CONTAINER:
-                return scheme.getTertiaryContainer();
-            case ON_TERTIARY_CONTAINER:
-                return scheme.getOnTertiaryContainer();
-            case TERTIARY_FIXED:
-                return scheme.getTertiaryFixed();
-            case TERTIARY_FIXED_DIM:
-                return scheme.getTertiaryFixedDim();
-            case ON_TERTIARY_FIXED:
-                return scheme.getOnTertiaryFixed();
-            case ON_TERTIARY_FIXED_VARIANT:
-                return scheme.getOnTertiaryFixedVariant();
-            case ERROR:
-                return scheme.getError();
-            case ON_ERROR:
-                return scheme.getOnError();
-            case ERROR_CONTAINER:
-                return scheme.getErrorContainer();
-            case ON_ERROR_CONTAINER:
-                return scheme.getOnErrorContainer();
-            case SURFACE:
-                return scheme.getSurface();
-            case ON_SURFACE:
-                return scheme.getOnSurface();
-            case SURFACE_DIM:
-                return scheme.getSurfaceDim();
-            case SURFACE_BRIGHT:
-                return scheme.getSurfaceBright();
-            case SURFACE_CONTAINER_LOWEST:
-                return scheme.getSurfaceContainerLowest();
-            case SURFACE_CONTAINER_LOW:
-                return scheme.getSurfaceContainerLow();
-            case SURFACE_CONTAINER:
-                return scheme.getSurfaceContainer();
-            case SURFACE_CONTAINER_HIGH:
-                return scheme.getSurfaceContainerHigh();
-            case SURFACE_CONTAINER_HIGHEST:
-                return scheme.getSurfaceContainerHighest();
-            case SURFACE_VARIANT:
-                return scheme.getSurfaceVariant();
-            case ON_SURFACE_VARIANT:
-                return scheme.getOnSurfaceVariant();
-            case BACKGROUND:
-                return scheme.getBackground();
-            case ON_BACKGROUND:
-                return scheme.getOnBackground();
-            case OUTLINE:
-                return scheme.getOutline();
-            case OUTLINE_VARIANT:
-                return scheme.getOutlineVariant();
-            case SHADOW:
-                return scheme.getShadow();
-            case SCRIM:
-                return scheme.getScrim();
-            case INVERSE_SURFACE:
-                return scheme.getInverseSurface();
-            case INVERSE_ON_SURFACE:
-                return scheme.getInverseOnSurface();
-            case INVERSE_PRIMARY:
-                return scheme.getInversePrimary();
-            case SURFACE_TINT:
-                return scheme.getSurfaceTint();
-            default:
-                throw new AssertionError("Unknown color role: " + this);
-        }
-    }
 
     public String getVariableName(String prefix) {
         return prefix + "-" + variableNameBase;

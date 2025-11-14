@@ -132,7 +132,7 @@ public class DynamicScheme {
      * Returns the spec version to use for the given variant. If the variant is not supported by the
      * given spec version, the fallback spec version is returned.
      */
-    private static ColorSpecVersion maybeFallbackSpecVersion(ColorSpecVersion specVersion, ColorStyle variant) {
+    public static ColorSpecVersion maybeFallbackSpecVersion(ColorSpecVersion specVersion, ColorStyle variant) {
         switch (variant) {
             case EXPRESSIVE:
             case VIBRANT:

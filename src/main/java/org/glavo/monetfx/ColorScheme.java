@@ -220,7 +220,7 @@ public final class ColorScheme {
 
         @Nullable Hct errorColorHct = hct(errorColorSeed, null);
 
-        ColorSpec colorSpec = ColorSpecs.get(specVersion);
+        ColorSpec colorSpec = ColorSpecs.get(DynamicScheme.maybeFallbackSpecVersion(specVersion, variant));
         this.scheme = new DynamicScheme(
                 primaryColorHct,
                 variant,
@@ -301,7 +301,7 @@ public final class ColorScheme {
     public Color getColor(@NotNull ColorRole role) {
         Color color = colors[role.ordinal()];
         if (color == null) {
-            color = ColorUtils.fxFromArgb(role.getArgb(scheme));
+            color = ColorUtils.fxFromArgb(scheme.getArgb(role.accessor.apply(ColorSpecs.get(getSpecVersion()))));
             colors[role.ordinal()] = color;
         }
         return color;
