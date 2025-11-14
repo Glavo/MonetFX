@@ -168,7 +168,7 @@ public final class MonetFXThemeBuilder extends Application {
                 .setErrorColorSeed(errorColorProperty.get())
                 .setBrightness(brightness)
                 .setColorStyle(dynamicSchemeVariantProperty.get())
-                .setContrast(new Contrast(contrastProperty.get()))
+                .setContrast(Contrast.of(contrastProperty.get()))
                 .build());
     };
 
