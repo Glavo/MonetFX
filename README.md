@@ -76,6 +76,8 @@ ColorScheme scheme = ColorScheme.newBuilder()
                 .setColorStyle(ColorStyle.FIDELITY)
                 // Specifies the contrast (The default value is `Contrast.STANDARD`)
                 .setContrast(Contrast.MEDIUM)
+                // Specifies the Material Color Specification version (The default value is `ColorSpecVersion.SPEC_2021`)
+                .setSpecVersion(ColorSpecVersion.SPEC_2025)
                 .build();
 ```
 
