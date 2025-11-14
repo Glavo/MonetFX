@@ -60,10 +60,10 @@ tasks.withType<JavaCompile> {
     targetCompatibility = "8"
 }
 
-tasks.withType<Javadoc>() {
+tasks.withType<Javadoc> {
     (options as StandardJavadocDocletOptions).also {
         it.encoding("UTF-8")
-        it.addStringOption("link", "https://docs.oracle.com/en/java/javase/21/docs/api/")
+        it.addStringOption("link", "https://docs.oracle.com/en/java/javase/25/docs/api/")
         it.addBooleanOption("html5", true)
         it.addStringOption("Xdoclint:none", "-quiet")
     }
