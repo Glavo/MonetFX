@@ -217,10 +217,11 @@ public final class ColorScheme {
         if (primaryColorSeed == null)
             primaryColorSeed = FALLBACK_COLOR;
         Hct primaryColorHct = Hct.fromFx(primaryColorSeed);
+        specVersion = DynamicScheme.maybeFallbackSpecVersion(specVersion, variant);
 
         @Nullable Hct errorColorHct = hct(errorColorSeed, null);
 
-        ColorSpec colorSpec = ColorSpecs.get(DynamicScheme.maybeFallbackSpecVersion(specVersion, variant));
+        ColorSpec colorSpec = ColorSpecs.get(specVersion);
         this.scheme = new DynamicScheme(
                 primaryColorHct,
                 variant,
