@@ -214,11 +214,10 @@ public final class ColorScheme {
             @Nullable Color neutralColorSeed,
             @Nullable Color neutralVariantColorSeed,
             @Nullable Color errorColorSeed) {
-        Hct primaryColorHct = hct(primaryColorSeed, FALLBACK_COLOR_HCT);
-        Hct secondaryColorHct = hct(secondaryColorSeed, primaryColorHct);
-        Hct tertiaryColorHct = hct(tertiaryColorSeed, primaryColorHct);
-        Hct neutralColorHct = hct(neutralColorSeed, primaryColorHct);
-        Hct neutralVariantColorHct = hct(neutralVariantColorSeed, primaryColorHct);
+        if (primaryColorSeed == null)
+            primaryColorSeed = FALLBACK_COLOR;
+        Hct primaryColorHct = Hct.fromFx(primaryColorSeed);
+
         @Nullable Hct errorColorHct = hct(errorColorSeed, null);
 
         ColorSpec colorSpec = ColorSpecs.get(specVersion);
@@ -230,16 +229,24 @@ public final class ColorScheme {
                 platform,
                 specVersion,
                 colorSpec.getPrimaryPalette(variant, primaryColorHct, isDark, platform, contrastLevel),
-                colorSpec.getSecondaryPalette(variant, secondaryColorHct, isDark, platform, contrastLevel),
-                colorSpec.getTertiaryPalette(variant, tertiaryColorHct, isDark, platform, contrastLevel),
-                colorSpec.getNeutralPalette(variant, neutralColorHct, isDark, platform, contrastLevel),
-                colorSpec.getNeutralVariantPalette(variant, neutralVariantColorHct, isDark, platform, contrastLevel),
-                errorColorHct != null ?
-                        Optional.of(colorSpec.getErrorPalette(variant, errorColorHct, isDark, platform, contrastLevel)
-                                .orElseGet(() -> colorSpec.getPrimaryPalette(variant, errorColorHct, isDark, platform, contrastLevel)))
-                        : Optional.empty()
+                secondaryColorSeed == null
+                        ? colorSpec.getSecondaryPalette(variant, primaryColorHct, isDark, platform, contrastLevel)
+                        : colorSpec.getPrimaryPalette(variant, Hct.fromFx(secondaryColorSeed), isDark, platform, contrastLevel),
+                tertiaryColorSeed == null
+                        ? colorSpec.getTertiaryPalette(variant, primaryColorHct, isDark, platform, contrastLevel)
+                        : colorSpec.getPrimaryPalette(variant, Hct.fromFx(tertiaryColorSeed), isDark, platform, contrastLevel),
+                neutralColorSeed == null
+                        ? colorSpec.getNeutralPalette(variant, primaryColorHct, isDark, platform, contrastLevel)
+                        : colorSpec.getPrimaryPalette(variant, Hct.fromFx(neutralColorSeed), isDark, platform, contrastLevel),
+                neutralVariantColorSeed == null
+                        ? colorSpec.getNeutralVariantPalette(variant, primaryColorHct, isDark, platform, contrastLevel)
+                        : colorSpec.getPrimaryPalette(variant, Hct.fromFx(neutralVariantColorSeed), isDark, platform, contrastLevel),
+                errorColorSeed == null
+                        ? Optional.empty()
+                        : Optional.of(colorSpec.getErrorPalette(variant, errorColorHct, isDark, platform, contrastLevel)
+                        .orElseGet(() -> colorSpec.getPrimaryPalette(variant, errorColorHct, isDark, platform, contrastLevel)))
         );
-        this.primaryColorSeed = primaryColorSeed != null ? primaryColorSeed : FALLBACK_COLOR;
+        this.primaryColorSeed = primaryColorSeed;
         this.secondaryColorSeed = secondaryColorSeed;
         this.tertiaryColorSeed = tertiaryColorSeed;
         this.neutralColorSeed = neutralColorSeed;
