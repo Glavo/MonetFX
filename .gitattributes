@@ -1,0 +1,5 @@
+*.java  text eol=lf
+*.kts   text eol=lf
+*.css   text eol=lf
+*.md    text eol=lf
+*.json  text eol=lf
