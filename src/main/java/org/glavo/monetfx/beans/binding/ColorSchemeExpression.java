@@ -225,6 +225,7 @@ public abstract class ColorSchemeExpression implements ObservableColorSchemeValu
         return getColor(ColorRole.SURFACE_CONTAINER_HIGHEST);
     }
 
+    @Deprecated
     public ObjectBinding<Color> getSurfaceVariant() {
         return getColor(ColorRole.SURFACE_VARIANT);
     }
@@ -233,10 +234,12 @@ public abstract class ColorSchemeExpression implements ObservableColorSchemeValu
         return getColor(ColorRole.ON_SURFACE_VARIANT);
     }
 
+    @Deprecated
     public ObjectBinding<Color> getBackground() {
         return getColor(ColorRole.BACKGROUND);
     }
 
+    @Deprecated
     public ObjectBinding<Color> getOnBackground() {
         return getColor(ColorRole.ON_BACKGROUND);
     }

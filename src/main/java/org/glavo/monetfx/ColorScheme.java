@@ -492,6 +492,7 @@ public final class ColorScheme {
     }
 
     /// @see ColorRole#SURFACE_VARIANT
+    @Deprecated
     public Color getSurfaceVariant() {
         return getColor(ColorRole.SURFACE_VARIANT);
     }
@@ -502,11 +503,13 @@ public final class ColorScheme {
     }
 
     /// @see ColorRole#BACKGROUND
+    @Deprecated
     public Color getBackground() {
         return getColor(ColorRole.BACKGROUND);
     }
 
     /// @see ColorRole#ON_BACKGROUND
+    @Deprecated
     public Color getOnBackground() {
         return getColor(ColorRole.ON_BACKGROUND);
     }
