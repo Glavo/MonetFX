@@ -492,6 +492,7 @@ public final class ColorScheme {
     }
 
     /// @see ColorRole#SURFACE_VARIANT
+    /// @deprecated Use [getSurfaceContainerHighest][#getSurfaceContainerHighest()] instead.
     @Deprecated
     public Color getSurfaceVariant() {
         return getColor(ColorRole.SURFACE_VARIANT);
@@ -503,12 +504,14 @@ public final class ColorScheme {
     }
 
     /// @see ColorRole#BACKGROUND
+    /// @deprecated Use [getSurface][#getSurface()] instead.
     @Deprecated
     public Color getBackground() {
         return getColor(ColorRole.BACKGROUND);
     }
 
     /// @see ColorRole#ON_BACKGROUND
+    /// @deprecated Use [getOnSurface][#getOnSurface()] instead.
     @Deprecated
     public Color getOnBackground() {
         return getColor(ColorRole.ON_BACKGROUND);
