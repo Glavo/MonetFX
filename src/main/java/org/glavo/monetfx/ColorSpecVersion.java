@@ -19,8 +19,14 @@ package org.glavo.monetfx;
 ///
 /// @since 0.2.0
 public enum ColorSpecVersion {
+    /// The 2021 version of the Material 3 color system specification.
     SPEC_2021,
+
+    /// The 2025 version of the Material 3 color system specification.
     SPEC_2025;
 
+    /// The default spec version.
+    ///
+    /// Currently, it is equivalent to [SPEC_2021][#SPEC_2021], but we may change it in the future.
     public static final ColorSpecVersion DEFAULT = SPEC_2021;
 }

@@ -16,7 +16,12 @@
 package org.glavo.monetfx.beans.value;
 
 import javafx.beans.value.WritableObjectValue;
+import javafx.beans.value.WritableValue;
 import org.glavo.monetfx.ColorScheme;
 
+/// A writable [ColorScheme] value.
+///
+/// @see WritableValue
+/// @see WritableObjectValue
 public interface WritableColorSchemeValue extends WritableObjectValue<ColorScheme> {
 }

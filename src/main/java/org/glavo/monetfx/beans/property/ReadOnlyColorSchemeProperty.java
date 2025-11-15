@@ -19,6 +19,11 @@ import javafx.beans.property.ReadOnlyProperty;
 import org.glavo.monetfx.ColorScheme;
 import org.glavo.monetfx.beans.binding.ColorSchemeExpression;
 
+/// Superclass for all readonly properties wrapping an [ColorScheme].
+///
+/// @see org.glavo.monetfx.beans.value.ObservableColorSchemeValue
+/// @see ColorSchemeExpression
+/// @see ReadOnlyProperty
 public abstract class ReadOnlyColorSchemeProperty extends ColorSchemeExpression implements ReadOnlyProperty<ColorScheme> {
 
     public ReadOnlyColorSchemeProperty() {

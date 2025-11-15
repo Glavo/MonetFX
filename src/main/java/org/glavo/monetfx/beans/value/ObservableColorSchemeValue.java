@@ -16,7 +16,12 @@
 package org.glavo.monetfx.beans.value;
 
 import javafx.beans.value.ObservableObjectValue;
+import javafx.beans.value.ObservableValue;
 import org.glavo.monetfx.ColorScheme;
 
+/// An observable [ColorScheme] value.
+///
+/// @see ObservableObjectValue
+/// @see ObservableValue
 public interface ObservableColorSchemeValue extends ObservableObjectValue<ColorScheme> {
 }

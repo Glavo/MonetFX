@@ -17,9 +17,30 @@ package org.glavo.monetfx.beans.property;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
+import javafx.beans.value.ObservableValue;
 import org.glavo.monetfx.ColorScheme;
+import org.glavo.monetfx.beans.value.ObservableColorSchemeValue;
 import org.glavo.monetfx.beans.value.WritableColorSchemeValue;
 
+/// This class provides a full implementation of a [Property] wrapping a
+/// `ColorScheme` value.
+///
+/// The value of a `ColorSchemeProperty` can be got and set with [#get()],
+/// [#getValue()], [#set(Object)], and [#setValue(String)].
+///
+/// A property can be bound and unbound unidirectional with
+/// [#bind(ObservableValue)] and [#unbind()]. Bidirectional bindings
+/// can be created and removed with [#bindBidirectional(Property)] and
+/// [#unbindBidirectional(Property)].
+///
+/// The context of a `ColorSchemeProperty` can be read with [#getBean()]
+/// and [#getName()].
+///
+/// @see ObservableColorSchemeValue
+/// @see WritableColorSchemeValue
+/// @see ReadOnlyColorSchemeProperty
+/// @see Property
+/// @since JavaFX 2.0
 public abstract class ColorSchemeProperty extends ReadOnlyColorSchemeProperty implements Property<ColorScheme>, WritableColorSchemeValue {
     @Override
     public void setValue(ColorScheme v) {

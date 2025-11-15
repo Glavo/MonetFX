@@ -15,8 +15,12 @@
  */
 package org.glavo.monetfx.beans.property;
 
+import javafx.beans.property.Property;
 import org.glavo.monetfx.ColorScheme;
 
+/// This class provides a full implementation of a [Property] wrapping a [ColorScheme] value.
+///
+/// @see ColorSchemePropertyBase
 public class SimpleColorSchemeProperty extends ColorSchemePropertyBase {
 
     private static final Object DEFAULT_BEAN = null;
@@ -25,19 +29,33 @@ public class SimpleColorSchemeProperty extends ColorSchemePropertyBase {
     private final Object bean;
     private final String name;
 
+    /// The constructor of `ColorSchemeProperty`.
     public SimpleColorSchemeProperty() {
         this(DEFAULT_BEAN, DEFAULT_NAME);
     }
 
+    /// The constructor of `ColorSchemeProperty`.
+    ///
+    /// @param initialValue the initial value of the wrapped value
     public SimpleColorSchemeProperty(ColorScheme initialValue) {
         this(DEFAULT_BEAN, DEFAULT_NAME, initialValue);
     }
 
+
+    /// The constructor of `ColorSchemeProperty`.
+    ///
+    /// @param bean the bean of this `ColorSchemeProperty`
+    /// @param name the name of this `ColorSchemeProperty`
     public SimpleColorSchemeProperty(Object bean, String name) {
         this.bean = bean;
         this.name = (name == null) ? DEFAULT_NAME : name;
     }
 
+    /// The constructor of `ColorSchemeProperty`
+    ///
+    /// @param bean         the bean of this `ColorSchemeProperty`
+    /// @param name         the name of this `ColorSchemeProperty`
+    /// @param initialValue the initial value of the wrapped value
     public SimpleColorSchemeProperty(Object bean, String name, ColorScheme initialValue) {
         super(initialValue);
         this.bean = bean;

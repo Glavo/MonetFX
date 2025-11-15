@@ -18,6 +18,7 @@ package org.glavo.monetfx.beans.binding;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Binding;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +28,24 @@ import org.glavo.monetfx.internal.beans.ExpressionHelper;
 
 import java.util.function.Supplier;
 
+/// Base class that provides most of the functionality needed to implement a
+/// [Binding] of a [ColorScheme].
+///
+/// `ColorSchemeBinding` provides a simple invalidation-scheme. An extending
+/// class can register dependencies by calling [#bind(Observable...)].
+/// If One of the registered dependencies becomes invalid, this
+/// `ColorSchemeBinding` is marked as invalid. With
+/// [#unbind(Observable...)] listening to dependencies can be stopped.
+///
+/// To provide a concrete implementation of this class, the method
+/// [#computeValue()] has to be implemented to calculate the value of this
+/// binding based on the current state of the dependencies. It is called when
+/// [#get()] is called for an invalid binding.
+///
+/// See [DoubleBinding] for an example how this base class can be extended.
+///
+/// @see Binding
+/// @see ColorSchemeExpression
 public abstract class ColorSchemeBinding extends ColorSchemeExpression implements Binding<ColorScheme> {
 
     public static ColorSchemeBinding createColorSchemeBinding(Supplier<? extends ColorScheme> func, Observable... dependencies) {

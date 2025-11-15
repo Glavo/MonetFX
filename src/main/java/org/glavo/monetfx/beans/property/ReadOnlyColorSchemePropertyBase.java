@@ -16,10 +16,15 @@
 package org.glavo.monetfx.beans.property;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.value.ChangeListener;
 import org.glavo.monetfx.ColorScheme;
 import org.glavo.monetfx.internal.beans.ExpressionHelper;
 
+/// Base class for all readonly properties wrapping a [ColorScheme]. This class provides a default
+/// implementation to attach listener.
+///
+/// @see ReadOnlyColorSchemeProperty
 public abstract class ReadOnlyColorSchemePropertyBase extends ReadOnlyColorSchemeProperty {
     ExpressionHelper<ColorScheme> helper;
 
