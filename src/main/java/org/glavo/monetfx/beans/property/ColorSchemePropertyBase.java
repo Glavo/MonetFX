@@ -18,6 +18,7 @@ package org.glavo.monetfx.beans.property;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.WeakListener;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import org.glavo.monetfx.ColorScheme;
@@ -26,6 +27,14 @@ import org.glavo.monetfx.internal.beans.ExpressionHelper;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
+/// The class `ColorSchemePropertyBase` is the base class for a property
+/// wrapping an arbitrary [ColorScheme].
+///
+/// It provides all the functionality required for a property except for the
+/// [#getBean()] and [#getName()] methods, which must be implemented
+/// by extending classes.
+///
+/// @see ColorSchemeProperty
 public abstract class ColorSchemePropertyBase extends ColorSchemeProperty {
     private ColorScheme value;
     private ObservableValue<? extends ColorScheme> observable = null;
