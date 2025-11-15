@@ -289,12 +289,15 @@ public enum ColorRole {
         }
     }
 
+    /// Gets the color role by its name.
+    ///
+    /// @param role the name of the color role (case-insensitive, and the `_` in names can be replaced with `-`).
+    /// @return the color role, or `null` if no such role exists.
     public static @Nullable ColorRole of(@NotNull String role) {
         return searchTable.get(normalizeName(role));
     }
 
     final String displayName;
-
     final Function<ColorSpec, DynamicColor> accessor;
 
     ColorRole(Function<ColorSpec, DynamicColor> accessor) {
