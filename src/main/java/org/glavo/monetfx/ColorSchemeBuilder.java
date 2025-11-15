@@ -58,7 +58,7 @@ public final class ColorSchemeBuilder {
     /// the newly built scheme will use `#4285f4` (Google Blue) as the primary color seed.
     ///
     /// @see #setWallpaper(Image)
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setPrimaryColorSeed(@Nullable Color primaryColorSeed) {
         this.primaryColorSeed = primaryColorSeed;
         return this;
@@ -75,7 +75,7 @@ public final class ColorSchemeBuilder {
     /// @throws IllegalArgumentException If the `image` has not yet been loaded or has failed to load.
     /// @see #setPrimaryColorSeed(Color)
     /// @see <a href="https://m3.material.io/styles/color/dynamic/choosing-a-source">Dynamic color schemes</a>
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setWallpaper(@NotNull Image image) {
         this.primaryColorSeed = ColorScheme.extractColor(image, ColorScheme.FALLBACK_COLOR);
         return this;
@@ -92,7 +92,7 @@ public final class ColorSchemeBuilder {
     /// @throws IllegalArgumentException If the `image` has not yet been loaded or has failed to load.
     /// @see #setPrimaryColorSeed(Color)
     /// @see <a href="https://m3.material.io/styles/color/dynamic/choosing-a-source">Dynamic color schemes</a>
-    @Contract(value = "_, _ -> this", pure = true)
+    @Contract(value = "_, _ -> this")
     public ColorSchemeBuilder setWallpaper(@NotNull Image image, Color fallbackColor) {
         this.primaryColorSeed = ColorScheme.extractColor(image, fallbackColor);
         return this;
@@ -102,7 +102,7 @@ public final class ColorSchemeBuilder {
     ///
     /// If the seed is not set or the seed is `null`,
     /// the secondary palette will be derived from [the primary color seed][#setPrimaryColorSeed(Color)].
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setSecondaryColorSeed(@Nullable Color secondaryColorSeed) {
         this.secondaryColorSeed = secondaryColorSeed;
         return this;
@@ -112,7 +112,7 @@ public final class ColorSchemeBuilder {
     ///
     /// If the seed is not set or the seed is `null`,
     /// the tertiary palette will be derived from [the primary color seed][#setPrimaryColorSeed(Color)].
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setTertiaryColorSeed(@Nullable Color tertiaryColorSeed) {
         this.tertiaryColorSeed = tertiaryColorSeed;
         return this;
@@ -122,7 +122,7 @@ public final class ColorSchemeBuilder {
     ///
     /// If the seed is not set or the seed is `null`,
     /// the neutral palette will be derived from [the primary color seed][#setPrimaryColorSeed(Color)].
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setNeutralColorSeed(@Nullable Color neutralColorSeed) {
         this.neutralColorSeed = neutralColorSeed;
         return this;
@@ -132,7 +132,7 @@ public final class ColorSchemeBuilder {
     ///
     /// If the seed is not set or the seed is `null`,
     /// the neutral variant palette will be derived from [the primary color seed][#setPrimaryColorSeed(Color)].
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setNeutralVariantColorSeed(@Nullable Color neutralVariantColorSeed) {
         this.neutralVariantColorSeed = neutralVariantColorSeed;
         return this;
@@ -141,7 +141,7 @@ public final class ColorSchemeBuilder {
     /// Sets the error color seed for this scheme.
     ///
     /// If the seed is not set or the seed is `null`, the default error palette will be used.
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setErrorColorSeed(@Nullable Color errorColorSeed) {
         this.errorColorSeed = errorColorSeed;
         return this;
@@ -150,7 +150,7 @@ public final class ColorSchemeBuilder {
     /// Sets the [brightness][Brightness] for this scheme.
     ///
     /// If not set, [the default brightness][Brightness#DEFAULT] will be used.
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setBrightness(@NotNull Brightness brightness) {
         this.brightness = Objects.requireNonNull(brightness);
         return this;
@@ -159,7 +159,7 @@ public final class ColorSchemeBuilder {
     /// Sets the [color style][ColorStyle] for this scheme.
     ///
     /// If not set, [the default color style][ColorStyle#DEFAULT] will be used.
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setColorStyle(@NotNull ColorStyle colorStyle) {
         this.colorStyle = Objects.requireNonNull(colorStyle);
         return this;
@@ -168,7 +168,7 @@ public final class ColorSchemeBuilder {
     /// Sets the [contrast][Contrast] for this scheme.
     ///
     /// If not set, [the default contrast][Contrast#DEFAULT] will be used.
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setContrast(@NotNull Contrast contrast) {
         this.contrast = Objects.requireNonNull(contrast);
         return this;
@@ -179,7 +179,7 @@ public final class ColorSchemeBuilder {
     /// If not set, [the target platform][TargetPlatform#DEFAULT] will be used.
     ///
     /// @since 0.2.0
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setPlatform(@NotNull TargetPlatform platform) {
         this.platform = Objects.requireNonNull(platform);
         return this;
@@ -193,7 +193,7 @@ public final class ColorSchemeBuilder {
     /// If [ColorSpecVersion#SPEC_2025] is set but the color scheme used does not support this version,
     /// it will fall back to [ColorSpecVersion#SPEC_2021].
     /// @since 0.2.0
-    @Contract(value = "_ -> this", pure = true)
+    @Contract(value = "_ -> this")
     public ColorSchemeBuilder setSpecVersion(@NotNull ColorSpecVersion specVersion) {
         this.specVersion = Objects.requireNonNull(specVersion);
         return this;
