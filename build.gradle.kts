@@ -65,6 +65,7 @@ tasks.withType<Javadoc> {
         it.encoding("UTF-8")
         it.addStringOption("link", "https://docs.oracle.com/en/java/javase/25/docs/api/")
         it.addStringOption("link", "https://openjfx.io/javadoc/25/")
+        it.addStringOption("link", "https://javadoc.io/doc/org.jetbrains/annotations/26.0.2/")
         it.addBooleanOption("html5", true)
         it.addStringOption("Xdoclint:none", "-quiet")
     }
