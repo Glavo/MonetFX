@@ -593,7 +593,7 @@ public final class MonetFXThemeBuilder extends Application {
         root.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
             Image image = backgroundImageProperty.get();
             if (image != null) {
-                return new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+                return new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(-1, -1, true, true, false, true)));
             } else {
                 return new Background(new BackgroundFill(scheme.get().getSurface(), null, null));
             }
