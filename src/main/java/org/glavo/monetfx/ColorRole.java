@@ -266,8 +266,8 @@ public enum ColorRole {
 
     static final String DEFAULT_VARIABLE_NAME_PREFIX = "-monet";
 
+    /// An unmodifiable list of all color roles.
     public static final List<ColorRole> ALL = Collections.unmodifiableList(Arrays.asList(ColorRole.values()));
-
 
     private static String normalizeName(String name) {
         if (name.indexOf('_') >= 0) {
@@ -312,10 +312,14 @@ public enum ColorRole {
     final String variableNameBase = name().toLowerCase(Locale.ROOT).replace("_", "-");
     final String defaultVariableName = DEFAULT_VARIABLE_NAME_PREFIX + "-" + variableNameBase;
 
+    /// Gets the CSS variable name for this color role with the given prefix.
     public String getVariableName(String prefix) {
         return prefix + "-" + variableNameBase;
     }
 
+    /// Gets the CSS variable name for this color role with the default prefix `-monet`.
+    ///
+    /// For example, the variable name for [PRIMARY][#PRIMARY] is `-monet-primary`.
     public String getVariableName() {
         return defaultVariableName;
     }

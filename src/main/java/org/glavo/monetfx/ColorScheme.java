@@ -27,6 +27,7 @@ import org.glavo.monetfx.internal.hct.Hct;
 import org.glavo.monetfx.internal.quantize.QuantizerCelebi;
 import org.glavo.monetfx.internal.score.Score;
 import org.glavo.monetfx.internal.utils.ColorUtils;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -599,27 +600,27 @@ public final class ColorScheme {
     ///   -monet-primary-container: rgb(222, 224, 255);
     ///   -monet-on-primary-container: rgb(57, 67, 121);
     ///
-    ///   /* More color roles... */
+    ////* More color roles... */
     ///
     ///   -monet-inverse-surface: rgb(48, 48, 54);
     ///   -monet-inverse-on-surface: rgb(242, 239, 247);
     ///   -monet-inverse-primary: rgb(186, 195, 255);
     ///   -monet-surface-tint: rgb(81, 91, 146);
-    /// }
-    /// ```
+    ///}
+    ///```
     ///
     /// You can save it to a `.css` file and load it into the scene using [Scene#getStylesheets()]. For example:
     ///
     /// ```java
     /// ColorScheme scheme = ColorScheme.fromSeed(Color.web("#5C6BC0"));
     ///
-    /// // Write the stylesheet to a file
+    ///// Write the stylesheet to a file
     /// Path cssFile = Files.createTempFile("monetfx-", ".css");
     /// Files.writeString(cssFile, scheme.toStyleSheet());
     ///
-    /// // Load the stylesheet
+    ///// Load the stylesheet
     /// scene.getStylesheets().add(tempFile.toUri().toString());
-    /// ```
+    ///```
     ///
     /// Then, you can reference these color variables in your CSS styles.
     ///
@@ -627,9 +628,9 @@ public final class ColorScheme {
     ///
     /// ```java
     /// Label label = new Label();
-    /// // Reference the "on primary" color in CSS
+    ///// Reference the "on primary" color in CSS
     /// label.setStyle("-fx-background-color: -monet-on-primary");
-    /// ```
+    ///```
     ///
     /// Or reference it in another external CSS stylesheet:
     ///
@@ -637,12 +638,16 @@ public final class ColorScheme {
     /// .button {
     ///   -fx-background-color: -monet-primary;
     ///   -fx-text-fill: -monet-on-primary;
-    /// }
-    /// ```
+    ///}
+    ///```
     public String toStyleSheet() {
         return toStyleSheet(null, null, null);
     }
 
+    /// Generate a CSS stylesheet string based on this scheme.
+    ///
+    /// @apiNote This is an internal API and may change or be removed in future versions.
+    @ApiStatus.Internal
     public String toStyleSheet(@Nullable String cssClass, @Nullable String prefix, @Nullable Iterable<ColorRole> colorRoles) {
         StringBuilder builder = new StringBuilder();
 

@@ -33,7 +33,6 @@ import java.util.Objects;
 /// used concurrently from multiple threads without external synchronization.
 ///
 /// @see ColorScheme#newBuilder()
-/// @see ColorScheme#newBuilder(ColorScheme)
 public final class ColorSchemeBuilder {
 
     private Color primaryColorSeed;
