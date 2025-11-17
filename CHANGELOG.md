@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+
+(In development)
+
 ## 0.3.0
 
 Release Date: 2025-11-17
