@@ -2,7 +2,7 @@
 
 ## 0.3.0
 
-(In development)
+Release Date: 2025-11-17
 
 ### New Features
 
@@ -20,7 +20,7 @@
 
 ## 0.2.0
 
-Release Date: 2025-11-25
+Release Date: 2025-11-15
 
 ### New Features
 
