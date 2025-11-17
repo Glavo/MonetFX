@@ -48,6 +48,11 @@ import java.util.function.Supplier;
 /// @see ColorSchemeExpression
 public abstract class ColorSchemeBinding extends ColorSchemeExpression implements Binding<ColorScheme> {
 
+    /// Helper function to create a custom [ColorSchemeBinding].
+    ///
+    /// @param func         The function that calculates the value of this binding
+    /// @param dependencies The dependencies of this binding
+    /// @return The generated binding
     public static ColorSchemeBinding createColorSchemeBinding(Supplier<? extends ColorScheme> func, Observable... dependencies) {
         return new ColorSchemeBinding() {
             {
@@ -76,6 +81,10 @@ public abstract class ColorSchemeBinding extends ColorSchemeExpression implement
     private BindingHelperObserver observer;
     private ExpressionHelper<ColorScheme> helper = null;
 
+    /// Start observing the dependencies for changes. If the value of one of the
+    /// dependencies changes, the binding is marked as invalid.
+    ///
+    /// @param dependencies the dependencies to observe
     protected final void bind(Observable... dependencies) {
         if ((dependencies != null) && (dependencies.length > 0)) {
             if (observer == null) {
@@ -87,6 +96,9 @@ public abstract class ColorSchemeBinding extends ColorSchemeExpression implement
         }
     }
 
+    /// Stop observing the dependencies for changes.
+    ///
+    /// @param dependencies the dependencies to stop observing
     protected final void unbind(Observable... dependencies) {
         if (observer != null) {
             for (final Observable dep : dependencies) {
@@ -129,6 +141,10 @@ public abstract class ColorSchemeBinding extends ColorSchemeExpression implement
     public void dispose() {
     }
 
+    /// The method `onInvalidating()` can be overridden by extending classes to
+    /// react, if this binding becomes invalid.
+    ///
+    /// The default implementation is empty.
     protected void onInvalidating() {
     }
 
@@ -146,6 +162,12 @@ public abstract class ColorSchemeBinding extends ColorSchemeExpression implement
         return valid;
     }
 
+    /// Calculates the current value of this binding.
+    ///
+    /// Classes extending [ColorSchemeBinding] have to provide an implementation
+    /// of `computeValue`.
+    ///
+    /// @return the current value
     protected abstract ColorScheme computeValue();
 
     @Override

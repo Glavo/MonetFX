@@ -16,7 +16,6 @@
 package org.glavo.monetfx.beans.property;
 
 import javafx.beans.InvalidationListener;
-import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.value.ChangeListener;
 import org.glavo.monetfx.ColorScheme;
 import org.glavo.monetfx.internal.beans.ExpressionHelper;
@@ -48,6 +47,11 @@ public abstract class ReadOnlyColorSchemePropertyBase extends ReadOnlyColorSchem
         helper = ExpressionHelper.removeListener(helper, listener);
     }
 
+    /// Sends notifications to all attached
+    /// [InvalidationListeners][javafx.beans.InvalidationListener] and
+    /// [ChangeListeners][javafx.beans.value.ChangeListener].
+    ///
+    /// This method needs to be called, if the value of this property changes.
     protected void fireValueChangedEvent() {
         ExpressionHelper.fireValueChangedEvent(helper);
     }

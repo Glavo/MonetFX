@@ -69,6 +69,13 @@ public abstract class ColorSchemePropertyBase extends ColorSchemeProperty {
         helper = ExpressionHelper.removeListener(helper, listener);
     }
 
+    /// Sends notifications to all attached
+    /// [InvalidationListeners][javafx.beans.InvalidationListener] and
+    /// [ChangeListeners][javafx.beans.value.ChangeListener].
+    ///
+    /// This method is called when the value is changed, either manually by
+    /// calling [#set] or in case of a bound property, if the
+    /// binding becomes invalid.
     protected void fireValueChangedEvent() {
         ExpressionHelper.fireValueChangedEvent(helper);
     }
@@ -81,6 +88,11 @@ public abstract class ColorSchemePropertyBase extends ColorSchemeProperty {
         }
     }
 
+    /// The method `invalidated()` can be overridden to receive
+    /// invalidation notifications. This is the preferred option in
+    /// `Objects` defining the property, because it requires less memory.
+    ///
+    /// The default implementation is empty.
     protected void invalidated() {
     }
 

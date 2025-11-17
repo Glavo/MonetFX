@@ -15,4 +15,6 @@
  */
 
 /// Provides binding classes for color scheme values.
+///
+/// @see org.glavo.monetfx.beans.binding.ColorSchemeBinding
 package org.glavo.monetfx.beans.binding;
