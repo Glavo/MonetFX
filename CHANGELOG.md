@@ -4,13 +4,27 @@
 
 (In development)
 
+### New Features
+
+- More Javadoc. 
+  
+  In this release, we've essentially added documentation for all API.
+
+- New API `ColorScheme#getContrast()`, which returns a `Contrast` instance representing the contrast of the current `ColorScheme`.
+
+  It replaces the old `ColorScheme#getContrastLevel()` method, which returned a `double`.
+
+### Breaking changes
+
+- In this version, we have removed `ColorScheme#getContrastLevel()`. Users should use `ColorScheme#getContrast()` to obtain the contrast.
+
 ## 0.2.0
 
 Release Date: 2025-11-25
 
 ### New Features
 
-- More comprehensive Javadoc.
+- More Javadoc.
 
 - Support for the 2025 color specification.
 

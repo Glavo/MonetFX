@@ -15,6 +15,7 @@
  */
 package org.glavo.monetfx;
 
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelReader;
@@ -152,31 +153,44 @@ public final class ColorScheme {
         return ColorUtils.fxFromArgb(scoredResults.get(0));
     }
 
+    /// Creates a [ColorScheme] from the given image by extracting the primary color seed.
+    ///
+    /// @param image the image to extract the primary color seed from
     public static @NotNull ColorScheme fromImage(@NotNull Image image) {
         return fromSeed(extractColor(image, ColorScheme.FALLBACK_COLOR));
     }
 
-    public static ColorScheme fromSeed(@NotNull Color seedColor) {
+    /// Creates a [ColorScheme] from the primary color seed.
+    ///
+    /// @param primaryColorSeed the primary color seed
+    public static ColorScheme fromSeed(@NotNull Color primaryColorSeed) {
         return new ColorScheme(
                 ColorStyle.TONAL_SPOT,
                 false,
                 Contrast.DEFAULT.getValue(),
                 TargetPlatform.DEFAULT,
                 ColorSpecVersion.DEFAULT,
-                Objects.requireNonNull(seedColor), null, null, null, null, null
+                Objects.requireNonNull(primaryColorSeed), null, null, null, null, null
         );
     }
 
+    /// Creates a new `ColorScheme` builder.
+    ///
+    /// Builders returned by this method create instances of the default `ColorScheme` implementation.
+    ///
+    /// @return an [ColorSchemeBuilder]
     public static ColorSchemeBuilder newBuilder() {
         return new ColorSchemeBuilder();
     }
 
+    /// Creates a new `ColorScheme` builder initialized with the values from the given old scheme.
+    ///
     /// @since 0.2.0
     public static ColorSchemeBuilder newBuilder(ColorScheme oldScheme) {
         return newBuilder()
                 .setColorStyle(oldScheme.getColorStyle())
                 .setBrightness(oldScheme.getBrightness())
-                .setContrast(Contrast.of(oldScheme.getContrastLevel()))
+                .setContrast(oldScheme.getContrast())
                 .setPlatform(oldScheme.getPlatform())
                 .setSpecVersion(oldScheme.getSpecVersion())
                 .setPrimaryColorSeed(oldScheme.getPrimaryColorSeed())
@@ -255,48 +269,63 @@ public final class ColorScheme {
         return scheme.isDark ? Brightness.DARK : Brightness.LIGHT;
     }
 
-    public double getContrastLevel() {
-        return scheme.contrastLevel;
+    /// Get the [contrast][Contrast] of this scheme.
+    ///
+    /// @since 0.3.0
+    public Contrast getContrast() {
+        return Contrast.of(scheme.contrastLevel);
     }
 
+    /// Get the [color style][ColorStyle] of this scheme.
     public @NotNull ColorStyle getColorStyle() {
         return scheme.variant;
     }
 
+    /// Get the [target platform][TargetPlatform] of this scheme.
+    ///
     /// @since 0.2.0
     public @NotNull TargetPlatform getPlatform() {
         return scheme.platform;
     }
 
+    /// Get the color scheme specification version of this scheme.
+    ///
     /// @since 0.2.0
     public @NotNull ColorSpecVersion getSpecVersion() {
         return scheme.specVersion;
     }
 
+    /// Get the primary color seed of this scheme.
     public @NotNull Color getPrimaryColorSeed() {
         return primaryColorSeed;
     }
 
+    /// Get the secondary color seed of this scheme.
     public @Nullable Color getSecondaryColorSeed() {
         return secondaryColorSeed;
     }
 
+    /// Get the tertiary color seed of this scheme.
     public @Nullable Color getTertiaryColorSeed() {
         return tertiaryColorSeed;
     }
 
+    /// Get the neutral color seed of this scheme.
     public @Nullable Color getNeutralColorSeed() {
         return neutralColorSeed;
     }
 
+    /// Get the neutral variant color seed of this scheme.
     public @Nullable Color getNeutralVariantColorSeed() {
         return neutralVariantColorSeed;
     }
 
+    /// Get the error color seed of this scheme.
     public @Nullable Color getErrorColorSeed() {
         return errorColorSeed;
     }
 
+    /// Get the color for the given [ColorRole].
     public Color getColor(@NotNull ColorRole role) {
         Color color = colors[role.ordinal()];
         if (color == null) {
@@ -557,6 +586,59 @@ public final class ColorScheme {
         return getColor(ColorRole.SURFACE_TINT);
     }
 
+    /// Generate a CSS stylesheet string based on this scheme.
+    ///
+    /// The generated stylesheet defines CSS variables for all color roles, with the variable name prefix `-monet`.
+    ///
+    /// Its content is similar to:
+    ///
+    /// ```css
+    /// * {
+    ///   -monet-primary: rgb(81, 91, 146);
+    ///   -monet-on-primary: rgb(255, 255, 255);
+    ///   -monet-primary-container: rgb(222, 224, 255);
+    ///   -monet-on-primary-container: rgb(57, 67, 121);
+    ///
+    ///   /* More color roles... */
+    ///
+    ///   -monet-inverse-surface: rgb(48, 48, 54);
+    ///   -monet-inverse-on-surface: rgb(242, 239, 247);
+    ///   -monet-inverse-primary: rgb(186, 195, 255);
+    ///   -monet-surface-tint: rgb(81, 91, 146);
+    /// }
+    /// ```
+    ///
+    /// You can save it to a `.css` file and load it into the scene using [Scene#getStylesheets()]. For example:
+    ///
+    /// ```java
+    /// ColorScheme scheme = ColorScheme.fromSeed(Color.web("#5C6BC0"));
+    ///
+    /// // Write the stylesheet to a file
+    /// Path cssFile = Files.createTempFile("monetfx-", ".css");
+    /// Files.writeString(cssFile, scheme.toStyleSheet());
+    ///
+    /// // Load the stylesheet
+    /// scene.getStylesheets().add(tempFile.toUri().toString());
+    /// ```
+    ///
+    /// Then, you can reference these color variables in your CSS styles.
+    ///
+    /// For example, using inline styles:
+    ///
+    /// ```java
+    /// Label label = new Label();
+    /// // Reference the "on primary" color in CSS
+    /// label.setStyle("-fx-background-color: -monet-on-primary");
+    /// ```
+    ///
+    /// Or reference it in another external CSS stylesheet:
+    ///
+    /// ```css
+    /// .button {
+    ///   -fx-background-color: -monet-primary;
+    ///   -fx-text-fill: -monet-on-primary;
+    /// }
+    /// ```
     public String toStyleSheet() {
         return toStyleSheet(null, null, null);
     }
