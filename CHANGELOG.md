@@ -16,7 +16,9 @@
 
   When switching the color style to one that does not support the 2025 specification, it will automatically switch to the 2021 specification.
 
-- Added a reset button to the right of all seed color pickers.
+- Added a reset button to the right of all color seed pickers.
+
+- When setting the primary color seed, other color seeds will no longer be automatically reset.
 
 ## 0.3.0
 

@@ -139,14 +139,6 @@ public final class MonetFXThemeBuilder extends Application {
             backgroundImageProperty.set(null);
         }
 
-        if (observable == primaryColorProperty || observable == backgroundImageProperty) {
-            secondaryColorProperty.set(null);
-            tertiaryColorProperty.set(null);
-            neutralColorProperty.set(null);
-            neutralVariantColorProperty.set(null);
-            errorColorProperty.set(null);
-        }
-
         if (observable == colorStyleProperty && !SPEC_2025_STYLES.contains(colorStyleProperty.get())) {
             platformProperty.set(TargetPlatform.PHONE);
             specVersionProperty.set(ColorSpecVersion.SPEC_2021);
@@ -314,18 +306,23 @@ public final class MonetFXThemeBuilder extends Application {
         colorPane.setCenter(colorPicker);
 
         SVGPath resetIcon = new SVGPath();
-        BorderPane.setAlignment(resetIcon, Pos.BOTTOM_CENTER);
         resetIcon.setContent(RESET_SVG);
+        resetIcon.getStyleClass().add("icon");
+        resetIcon.fillProperty().bind(scheme.getOnSurface());
         Button resetButton = new Button(null, resetIcon);
+        BorderPane.setAlignment(resetButton, Pos.BOTTOM_CENTER);
         resetButton.getStyleClass().add("reset-button");
         colorPane.setRight(resetButton);
 
+        Color defaultColor;
         if (customColors.length > 0) {
             colorPicker.getCustomColors().setAll(customColors);
-            resetButton.setOnAction(event -> colorPicker.setValue(customColors[0]));
+            defaultColor = customColors[0];
         } else {
-            resetButton.setOnAction(event -> colorPicker.setValue(null));
+            defaultColor = null;
         }
+        resetButton.disableProperty().bind(property.isEqualTo(defaultColor));
+        resetButton.setOnAction(event -> colorPicker.setValue(defaultColor));
 
         return colorPane;
     }
