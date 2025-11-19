@@ -115,7 +115,7 @@ public final class MonetFXThemeBuilder extends Application {
     private final ObjectProperty<Color> errorColorProperty = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Image> backgroundImageProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<ColorStyle> dynamicSchemeVariantProperty = new SimpleObjectProperty<>(ColorStyle.TONAL_SPOT);
+    private final ObjectProperty<ColorStyle> colorStyleProperty = new SimpleObjectProperty<>(ColorStyle.TONAL_SPOT);
     private final DoubleProperty contrastProperty = new SimpleDoubleProperty(0.0);
     private final ObjectProperty<TargetPlatform> platformProperty = new SimpleObjectProperty<>(TargetPlatform.PHONE);
     private final ObjectProperty<ColorSpecVersion> specVersionProperty = new SimpleObjectProperty<>(ColorSpecVersion.SPEC_2021);
@@ -172,7 +172,7 @@ public final class MonetFXThemeBuilder extends Application {
                 .setNeutralVariantColorSeed(neutralVariantColorProperty.get())
                 .setErrorColorSeed(errorColorProperty.get())
                 .setBrightness(brightness)
-                .setColorStyle(dynamicSchemeVariantProperty.get())
+                .setColorStyle(colorStyleProperty.get())
                 .setContrast(Contrast.of(contrastProperty.get()))
                 .setPlatform(platformProperty.get())
                 .setSpecVersion(specVersionProperty.get())
@@ -189,7 +189,7 @@ public final class MonetFXThemeBuilder extends Application {
         errorColorProperty.addListener(listener);
         backgroundImageProperty.addListener(listener);
         darkModeProperty.addListener(listener);
-        dynamicSchemeVariantProperty.addListener(listener);
+        colorStyleProperty.addListener(listener);
         platformProperty.addListener(listener);
         specVersionProperty.addListener(listener);
         contrastProperty.addListener(listener);
@@ -377,20 +377,17 @@ public final class MonetFXThemeBuilder extends Application {
                     BorderPane neutralVariantColorPane = createColorSettingsPane("Neutral Variant Color", neutralVariantColorProperty);
                     BorderPane errorColorPane = createColorSettingsPane("Error Color", errorColorProperty);
 
-                    BorderPane variantPane = new BorderPane();
+                    BorderPane colorStylePane = new BorderPane();
                     {
-                        Label label = new Label("Variant");
+                        Label label = new Label("Color Style");
                         BorderPane.setAlignment(label, Pos.CENTER_LEFT);
                         label.setStyle("-fx-text-fill: -monet-on-surface");
-                        variantPane.setLeft(label);
+                        colorStylePane.setLeft(label);
 
                         ComboBox<ColorStyle> comboBox = new ComboBox<>();
                         comboBox.getItems().addAll(ColorStyle.values());
-                        comboBox.getSelectionModel().select(ColorStyle.TONAL_SPOT);
-                        comboBox.getSelectionModel().selectedItemProperty().addListener(
-                                (observable, oldValue, newValue) ->
-                                        this.dynamicSchemeVariantProperty.set(newValue));
-                        variantPane.setRight(comboBox);
+                        comboBox.valueProperty().bindBidirectional(this.colorStyleProperty);
+                        colorStylePane.setRight(comboBox);
                     }
 
                     BorderPane contrastPane = new BorderPane();
@@ -502,7 +499,7 @@ public final class MonetFXThemeBuilder extends Application {
                     content.getChildren().setAll(darkModePane, backgroundChooserPane,
                             primaryColorPane, secondaryColorPane, tertiaryColorPane,
                             neutralColorPane, neutralVariantColorPane, errorColorPane,
-                            variantPane, contrastPane, platformPane, specVersionPane,
+                            colorStylePane, contrastPane, platformPane, specVersionPane,
                             exportPane);
                 }
             }
