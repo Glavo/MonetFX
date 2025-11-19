@@ -8,6 +8,14 @@
 
 - New API `ReadOnlyColorSchemeWrapper`. It just like `ReadOnlyXxxWrapper` classes in JavaFX.
 
+### Theme Builder
+
+- Improved support for the 2023 version of the Material 3 color system specification and the watch platform in MonetFX Theme Builder.
+
+  Now, when switching the target platform to watch, the 2025 specification will be automatically selected and dark mode enabled;
+
+  When switching the color style to one that does not support the 2025 specification, it will automatically switch to the 2021 specification.
+
 ## 0.3.0
 
 Release Date: 2025-11-17
