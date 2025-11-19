@@ -435,10 +435,7 @@ public final class MonetFXThemeBuilder extends Application {
 
                         ComboBox<TargetPlatform> comboBox = new ComboBox<>();
                         comboBox.getItems().addAll(TargetPlatform.values());
-                        comboBox.getSelectionModel().select(TargetPlatform.PHONE);
-                        comboBox.getSelectionModel().selectedItemProperty().addListener(
-                                (observable, oldValue, newValue) ->
-                                        this.platformProperty.set(newValue));
+                        comboBox.valueProperty().bindBidirectional(platformProperty);
                         comboBox.setConverter(new StringConverter<TargetPlatform>() {
                             @Override
                             public String toString(TargetPlatform platform) {
