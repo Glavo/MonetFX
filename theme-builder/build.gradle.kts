@@ -1,5 +1,3 @@
-import org.gradle.internal.declarativedsl.parsing.main
-
 /*
  * Copyright 2025 Glavo
  *
@@ -18,7 +16,7 @@ import org.gradle.internal.declarativedsl.parsing.main
 
 plugins {
     id("application")
-    id("com.gradleup.shadow") version "8.3.5"
+    id("com.gradleup.shadow") version "9.2.2"
 }
 
 dependencies {
