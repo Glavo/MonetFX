@@ -142,16 +142,50 @@ The reason for this difference is that JavaFX does not support CSS variables pre
 
 For ease of use, we provide convenience classes such as `ColorSchemeBinding` and `ColorSchemeProperty`.
 
-They provide methods for getting colors similar to `ColorScheme`, but these methods return a `Binding<Color>`:
+They provide methods for getting colors similar to `ColorScheme`, but these methods return a `Binding<Color>`.
+
+Here is an example of `ColorSchemeProperty`:
 
 ```java
+// We provide a series of classes related to `ColorSchemeProperty`, just like `XxxProperty` in the standard library
 ColorSchemeProperty scheme = new SimpleColorSchemeProperty(ColorScheme.fromSeed(Color.web("#5C6BC0")));
 
 Label label = new Label();
+// Bind the text fill property of the label to the "on primary" color of the color scheme
 label.textFillProperty().bind(scheme.getOnPrimary());
 
 // The color of the label above will change accordingly
 scheme.set(ColorScheme.fromSeed(Color.RED));
+```
+
+Here is an example of `ColorSchemeBinding`:
+
+```java
+ObjectPropety<Color> seedProperty = new SimpleObjectProperty<>(Color.web("#5C6BC0"));
+
+// `ColorSchemeBinding.createColorSchemeBinding` works just like the `createXxxBinding` methods in the `Bindings` utility class
+ColorSchemeBinding schemeBinding = ColorSchemeBinding.createColorSchemeBinding(
+        () -> ColorScheme.fromSeed(seedProperty.get()),
+        seedProperty,
+);
+
+// You can also create your own binding class by extending `ColorSchemeBinding`, just like creating `XxxBinding` in the standard library
+ColorSchemeBinding schemeBinding2 = new ColorSchemeBinding() {
+    {
+        bind(seedProperty);
+    }
+
+    protected ColorScheme computeValue() {
+        return ColorScheme.fromSeed(seedProperty.get());
+    }
+};
+
+Label label = new Label();
+// Bind the text fill property of the label to the "on primary" color of the color scheme
+label.textFillProperty().bind(schemeBinding.getOnPrimary());
+
+// Both schemeBinding and schemeBinding2 will change, so the color of the label will also change accordingly
+seedProperty.set(Color.RED);
 ```
 
 ### About the Material Design 3 color system
