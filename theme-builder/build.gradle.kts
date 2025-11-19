@@ -32,8 +32,15 @@ val mainClassName = "org.glavo.monetfx.builder.MonetFXThemeBuilder"
 
 application {
     mainClass.set(mainClassName)
+
+    if (JavaVersion.current() > JavaVersion.VERSION_21) {
+        applicationDefaultJvmArgs = listOf("--enable-native-access=javafx.graphics")
+    }
 }
 
 tasks.withType<Jar> {
-    manifest.attributes("Main-Class" to mainClassName)
+    manifest.attributes(
+        "Main-Class" to mainClassName,
+        "Enable-Native-Access" to "ALL-UNNAMED"
+    )
 }
