@@ -145,7 +145,12 @@ public final class MonetFXThemeBuilder extends Application {
             errorColorProperty.set(null);
         }
 
-        if (observable == platformProperty && specVersionProperty.get() == ColorSpecVersion.SPEC_2021) {
+        if (observable == colorStyleProperty && !SPEC_2025_STYLES.contains(colorStyleProperty.get())) {
+            platformProperty.set(TargetPlatform.PHONE);
+            specVersionProperty.set(ColorSpecVersion.SPEC_2021);
+        }
+
+        if (observable == platformProperty) {
             darkModeProperty.set(true);
             specVersionProperty.set(ColorSpecVersion.SPEC_2025);
         }
@@ -389,19 +394,9 @@ public final class MonetFXThemeBuilder extends Application {
                         colorStylePane.setLeft(label);
 
                         ComboBox<ColorStyle> comboBox = new ComboBox<>();
+                        comboBox.getItems().setAll(ColorStyle.values());
                         comboBox.valueProperty().bindBidirectional(this.colorStyleProperty);
                         colorStylePane.setRight(comboBox);
-
-                        InvalidationListener updateColorStylesListener = observable -> {
-                            ColorSpecVersion specVersion = specVersionProperty.get();
-                            if (specVersion == ColorSpecVersion.SPEC_2025) {
-                                comboBox.getItems().setAll(SPEC_2025_STYLES);
-                            } else {
-                                comboBox.getItems().setAll(ColorStyle.values());
-                            }
-                        };
-                        updateColorStylesListener.invalidated(null);
-                        specVersionProperty.addListener(updateColorStylesListener);
                     }
 
                     BorderPane contrastPane = new BorderPane();
