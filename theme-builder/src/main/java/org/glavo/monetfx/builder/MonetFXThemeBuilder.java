@@ -144,6 +144,12 @@ public final class MonetFXThemeBuilder extends Application {
             skipUpdateScheme = false;
         }
 
+        if (observable == platformProperty && specVersionProperty.get() == ColorSpecVersion.SPEC_2021) {
+            skipUpdateScheme = true;
+            specVersionProperty.set(ColorSpecVersion.SPEC_2025);
+            skipUpdateScheme = false;
+        }
+
         Brightness brightness = darkModeProperty.get() ? Brightness.DARK : Brightness.LIGHT;
         Image image = backgroundImageProperty.get();
 
@@ -441,10 +447,7 @@ public final class MonetFXThemeBuilder extends Application {
 
                         ComboBox<ColorSpecVersion> comboBox = new ComboBox<>();
                         comboBox.getItems().addAll(ColorSpecVersion.values());
-                        comboBox.getSelectionModel().select(ColorSpecVersion.SPEC_2021);
-                        comboBox.getSelectionModel().selectedItemProperty().addListener(
-                                (observable, oldValue, newValue) ->
-                                        this.specVersionProperty.set(newValue));
+                        comboBox.valueProperty().bindBidirectional(this.specVersionProperty);
                         comboBox.setConverter(new StringConverter<ColorSpecVersion>() {
                             @Override
                             public String toString(ColorSpecVersion object) {
@@ -456,6 +459,10 @@ public final class MonetFXThemeBuilder extends Application {
                                 return ColorSpecVersion.valueOf("SPEC_" + string);
                             }
                         });
+                        comboBox.disableProperty().bind(Bindings.createObjectBinding(
+                                () -> platformProperty.get() == TargetPlatform.WATCH,
+                                platformProperty
+                        ));
                         specVersionPane.setRight(comboBox);
                     }
 
