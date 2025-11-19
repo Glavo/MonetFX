@@ -159,7 +159,7 @@ scheme.set(ColorScheme.fromSeed(Color.RED));
 If you want to learn more about the Material Design 3 color system,
 you can refer to the following resources:
 
-- [Official Material Design 3 documentation on the color system](https://m3.material.io/styles/color/system/overview)
+- [Official documentation of the Material Design 3 color system](https://m3.material.io/styles/color/system/overview)
 - [Introduction to the color system in the Android design guide](https://developer.android.com/design/ui/mobile/guides/styles/color#color-space-on-android)
 - [Introduction to the color system in the Wear OS UI design guide](https://developer.android.com/design/ui/wear/guides/styles/color)
 
