@@ -111,3 +111,7 @@
     -fx-text-fill: -monet-on-surface;
 }
 
+.reset-button {
+    -fx-background-color: transparent;
+}
+

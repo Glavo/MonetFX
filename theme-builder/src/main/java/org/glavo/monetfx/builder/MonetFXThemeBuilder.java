@@ -61,6 +61,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -89,6 +90,7 @@ public final class MonetFXThemeBuilder extends Application {
     private static final String STYLESHEET_PATH = MonetFXThemeBuilder.class.getResource("style.css").toExternalForm();
     private static final EnumSet<ColorStyle> SPEC_2025_STYLES = EnumSet.of(
             ColorStyle.EXPRESSIVE, ColorStyle.VIBRANT, ColorStyle.TONAL_SPOT, ColorStyle.NEUTRAL);
+    private static final String RESET_SVG = "M12 20q-3.35 0-5.675-2.325T4 12Q4 8.65 6.325 6.325T12 4q1.725 0 3.3.7125T18 6.75V4h2v7H13V9h4.2q-.8-1.4-2.1875-2.2T12 6Q9.5 6 7.75 7.75T6 12t1.75 4.25T12 18q1.925 0 3.475-1.1T17.65 14h2.1q-.7 2.65-2.85 4.325T12 20Z";
 
     private static String toWeb(Color color) {
         return String.format("#%02X%02X%02X",
@@ -295,6 +297,7 @@ public final class MonetFXThemeBuilder extends Application {
         colorPane.setLeft(label);
 
         ColorPicker colorPicker = new ColorPicker();
+        BorderPane.setAlignment(colorPicker, Pos.CENTER_RIGHT);
         colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
         colorPicker.setPrefSize(90, 25);
         if (property != primaryColorProperty) {
@@ -308,10 +311,20 @@ public final class MonetFXThemeBuilder extends Application {
             colorPicker.valueProperty().addListener(changeListener);
         }
         colorPicker.valueProperty().bindBidirectional(property);
-        colorPane.setRight(colorPicker);
+        colorPane.setCenter(colorPicker);
+
+        SVGPath resetIcon = new SVGPath();
+        BorderPane.setAlignment(resetIcon, Pos.BOTTOM_CENTER);
+        resetIcon.setContent(RESET_SVG);
+        Button resetButton = new Button(null, resetIcon);
+        resetButton.getStyleClass().add("reset-button");
+        colorPane.setRight(resetButton);
 
         if (customColors.length > 0) {
             colorPicker.getCustomColors().setAll(customColors);
+            resetButton.setOnAction(event -> colorPicker.setValue(customColors[0]));
+        } else {
+            resetButton.setOnAction(event -> colorPicker.setValue(null));
         }
 
         return colorPane;
