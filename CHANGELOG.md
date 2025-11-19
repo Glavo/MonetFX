@@ -4,6 +4,10 @@
 
 (In development)
 
+### New Features
+
+- New API `ReadOnlyColorSchemeWrapper`. It just like `ReadOnlyXxxWrapper` classes in JavaFX.
+
 ## 0.3.0
 
 Release Date: 2025-11-17
