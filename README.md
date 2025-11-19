@@ -6,6 +6,13 @@
 MonetFX provides support for the [Material 3 color system](https://m3.material.io/styles/color/system/overview) for JavaFX.
 We also implemented a theme builder based on this library as an open source replacement for Material Theme Builder.
 
+The Material 3 color system provides a method to generate a series of harmonious colors based on a seed color or seed wallpaper.
+These colors can be used for UI design in applications, making it easy to assign appropriate, coordinated,
+and accessible colors to all controls, and can automatically adjust according to light and dark themes.
+
+If you want to learn more about the Material 3 color system and how to use it, 
+please refer to the resources I listed in [this section](#about-the-material-design-3-color-system).
+
 MonetFX requires JavaFX 8~25 (and higher).
 
 This project is currently in beta and may undergo breaking changes in the future.
@@ -44,7 +51,6 @@ Gradle:
 ```kotlin
 implementation("org.glavo:MonetFX:0.3.0")
 ```
-
 
 ## Usage
 
@@ -147,6 +153,15 @@ label.textFillProperty().bind(scheme.getOnPrimary());
 // The color of the label above will change accordingly
 scheme.set(ColorScheme.fromSeed(Color.RED));
 ```
+
+### About the Material Design 3 color system
+
+If you want to learn more about the Material Design 3 color system,
+you can refer to the following resources:
+
+- [Official Material Design 3 documentation on the color system](https://m3.material.io/styles/color/system/overview)
+- [Introduction to the color system in the Android design guide](https://developer.android.com/design/ui/mobile/guides/styles/color#color-space-on-android)
+- [Introduction to the color system in the Wear OS UI design guide](https://developer.android.com/design/ui/wear/guides/styles/color)
 
 ## License
 
