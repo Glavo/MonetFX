@@ -33,8 +33,8 @@
 }
 
 .check-box > .box {
-    -fx-background-color: null;
-    -fx-border-color: -monet-on-surface;
+    -fx-background-color: transparent;
+    -fx-border-color: -monet-on-surface-variant;
     -fx-border-radius: 2;
     -fx-border-width: 2;
 }
