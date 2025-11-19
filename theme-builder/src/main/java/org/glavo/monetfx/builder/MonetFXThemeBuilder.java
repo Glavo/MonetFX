@@ -77,6 +77,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -85,8 +86,9 @@ import static org.glavo.monetfx.ColorRole.*;
 public final class MonetFXThemeBuilder extends Application {
 
     private static final Color DEFAULT_COLOR = Color.web("#5C6BC0");
-
     private static final String STYLESHEET_PATH = MonetFXThemeBuilder.class.getResource("style.css").toExternalForm();
+    private static final EnumSet<ColorStyle> SPEC_2025_STYLES = EnumSet.of(
+            ColorStyle.EXPRESSIVE, ColorStyle.VIBRANT, ColorStyle.TONAL_SPOT, ColorStyle.NEUTRAL);
 
     private static String toWeb(Color color) {
         return String.format("#%02X%02X%02X",
@@ -122,33 +124,33 @@ public final class MonetFXThemeBuilder extends Application {
 
     private final ColorSchemeProperty scheme = new SimpleColorSchemeProperty();
 
+    /// Flag to skip updating scheme in listener to avoid infinite recursion.
     private boolean skipUpdateScheme = false;
     private final InvalidationListener listener = observable -> {
         if (skipUpdateScheme) {
             return;
         }
 
+        skipUpdateScheme = true;
+
         if (observable == primaryColorProperty) {
-            skipUpdateScheme = true;
             backgroundImageProperty.set(null);
-            skipUpdateScheme = false;
         }
 
         if (observable == primaryColorProperty || observable == backgroundImageProperty) {
-            skipUpdateScheme = true;
             secondaryColorProperty.set(null);
             tertiaryColorProperty.set(null);
             neutralColorProperty.set(null);
             neutralVariantColorProperty.set(null);
             errorColorProperty.set(null);
-            skipUpdateScheme = false;
         }
 
         if (observable == platformProperty && specVersionProperty.get() == ColorSpecVersion.SPEC_2021) {
-            skipUpdateScheme = true;
+            darkModeProperty.set(true);
             specVersionProperty.set(ColorSpecVersion.SPEC_2025);
-            skipUpdateScheme = false;
         }
+
+        skipUpdateScheme = false;
 
         Brightness brightness = darkModeProperty.get() ? Brightness.DARK : Brightness.LIGHT;
         Image image = backgroundImageProperty.get();
@@ -345,6 +347,8 @@ public final class MonetFXThemeBuilder extends Application {
                         CheckBox checkBox = new CheckBox();
                         checkBox.selectedProperty().bindBidirectional(darkModeProperty);
                         darkModePane.setRight(checkBox);
+
+                        checkBox.disableProperty().bind(platformProperty.isEqualTo(TargetPlatform.WATCH));
                     }
 
                     BorderPane backgroundChooserPane = new BorderPane();
@@ -385,9 +389,19 @@ public final class MonetFXThemeBuilder extends Application {
                         colorStylePane.setLeft(label);
 
                         ComboBox<ColorStyle> comboBox = new ComboBox<>();
-                        comboBox.getItems().addAll(ColorStyle.values());
                         comboBox.valueProperty().bindBidirectional(this.colorStyleProperty);
                         colorStylePane.setRight(comboBox);
+
+                        InvalidationListener updateColorStylesListener = observable -> {
+                            ColorSpecVersion specVersion = specVersionProperty.get();
+                            if (specVersion == ColorSpecVersion.SPEC_2025) {
+                                comboBox.getItems().setAll(SPEC_2025_STYLES);
+                            } else {
+                                comboBox.getItems().setAll(ColorStyle.values());
+                            }
+                        };
+                        updateColorStylesListener.invalidated(null);
+                        specVersionProperty.addListener(updateColorStylesListener);
                     }
 
                     BorderPane contrastPane = new BorderPane();
@@ -433,6 +447,11 @@ public final class MonetFXThemeBuilder extends Application {
                             }
                         });
                         platformPane.setRight(comboBox);
+
+                        comboBox.disableProperty().bind(Bindings.createObjectBinding(
+                                () -> !SPEC_2025_STYLES.contains(colorStyleProperty.get()),
+                                colorStyleProperty
+                        ));
                     }
 
                     BorderPane specVersionPane = new BorderPane();
@@ -456,11 +475,12 @@ public final class MonetFXThemeBuilder extends Application {
                                 return ColorSpecVersion.valueOf("SPEC_" + string);
                             }
                         });
-                        comboBox.disableProperty().bind(Bindings.createObjectBinding(
-                                () -> platformProperty.get() == TargetPlatform.WATCH,
-                                platformProperty
-                        ));
                         specVersionPane.setRight(comboBox);
+
+                        comboBox.disableProperty().bind(Bindings.createObjectBinding(
+                                () -> platformProperty.get() == TargetPlatform.WATCH || !SPEC_2025_STYLES.contains(colorStyleProperty.get()),
+                                platformProperty, colorStyleProperty
+                        ));
                     }
 
                     BorderPane exportPane = new BorderPane();
