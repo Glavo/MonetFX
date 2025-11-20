@@ -1,8 +1,12 @@
 # Changelog
 
-## 0.4.0
+## 0.5.0
 
 (In development)
+
+## 0.4.0
+
+Release Date: 2025-11-20
 
 ### New Features
 

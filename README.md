@@ -43,13 +43,13 @@ Maven:
 <dependency>
   <groupId>org.glavo</groupId>
   <artifactId>MonetFX</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
 </dependency>
 ```
 
 Gradle:
 ```kotlin
-implementation("org.glavo:MonetFX:0.3.0")
+implementation("org.glavo:MonetFX:0.4.0")
 ```
 
 ## Usage
