@@ -78,7 +78,6 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -88,8 +87,6 @@ public final class MonetFXThemeBuilder extends Application {
 
     private static final Color DEFAULT_COLOR = Color.web("#5C6BC0");
     private static final String STYLESHEET_PATH = MonetFXThemeBuilder.class.getResource("style.css").toExternalForm();
-    private static final EnumSet<ColorStyle> SPEC_2025_STYLES = EnumSet.of(
-            ColorStyle.EXPRESSIVE, ColorStyle.VIBRANT, ColorStyle.TONAL_SPOT, ColorStyle.NEUTRAL);
     private static final String RESET_SVG = "M12 20q-3.35 0-5.675-2.325T4 12Q4 8.65 6.325 6.325T12 4q1.725 0 3.3.7125T18 6.75V4h2v7H13V9h4.2q-.8-1.4-2.1875-2.2T12 6Q9.5 6 7.75 7.75T6 12t1.75 4.25T12 18q1.925 0 3.475-1.1T17.65 14h2.1q-.7 2.65-2.85 4.325T12 20Z";
 
     private static String toWeb(Color color) {
@@ -139,7 +136,7 @@ public final class MonetFXThemeBuilder extends Application {
             backgroundImageProperty.set(null);
         }
 
-        if (observable == colorStyleProperty && !SPEC_2025_STYLES.contains(colorStyleProperty.get())) {
+        if (observable == colorStyleProperty && !colorStyleProperty.get().isSupported(ColorSpecVersion.SPEC_2025)) {
             platformProperty.set(TargetPlatform.PHONE);
             specVersionProperty.set(ColorSpecVersion.SPEC_2021);
         }
@@ -451,7 +448,7 @@ public final class MonetFXThemeBuilder extends Application {
                         platformPane.setRight(comboBox);
 
                         comboBox.disableProperty().bind(Bindings.createObjectBinding(
-                                () -> !SPEC_2025_STYLES.contains(colorStyleProperty.get()),
+                                () -> !colorStyleProperty.get().isSupported(ColorSpecVersion.SPEC_2025),
                                 colorStyleProperty
                         ));
                     }
@@ -480,7 +477,7 @@ public final class MonetFXThemeBuilder extends Application {
                         specVersionPane.setRight(comboBox);
 
                         comboBox.disableProperty().bind(Bindings.createObjectBinding(
-                                () -> platformProperty.get() == TargetPlatform.WATCH || !SPEC_2025_STYLES.contains(colorStyleProperty.get()),
+                                () -> platformProperty.get() == TargetPlatform.WATCH || !colorStyleProperty.get().isSupported(ColorSpecVersion.SPEC_2025),
                                 platformProperty, colorStyleProperty
                         ));
                     }

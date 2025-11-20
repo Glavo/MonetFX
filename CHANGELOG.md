@@ -7,6 +7,15 @@
 ### New Features
 
 - New API `ReadOnlyColorSchemeWrapper`. It just like `ReadOnlyXxxWrapper` classes in JavaFX.
+- New API `ColorStyle#isSupported(ColorSpecVersion)` that returns the support status of a color style under 
+  a specific color specification version.
+
+### Breaking changes
+
+- When using `ColorSchemeBuilder` to build a `ColorScheme`, if the `ColorStyle` only supports the 2021 specification, 
+  the resulting `ColorScheme` will be forced to switch to the 2021 specification and set the target platform to `PHONE`.
+- When using `ColorSchemeBuilder` to build a `ColorScheme`, if the `TargetPlatform` is set to `WATCH`, 
+  the resulting `ColorScheme` will be forced to switch to the 2025 specification and set the brightness to `DARK`.
 
 ### Theme Builder
 

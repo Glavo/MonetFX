@@ -219,18 +219,14 @@ public final class ColorScheme {
             double contrastLevel,
             @NotNull TargetPlatform platform,
             @NotNull ColorSpecVersion specVersion,
-            @Nullable Color primaryColorSeed,
+            @NotNull Color primaryColorSeed,
             @Nullable Color secondaryColorSeed,
             @Nullable Color tertiaryColorSeed,
             @Nullable Color neutralColorSeed,
             @Nullable Color neutralVariantColorSeed,
             @Nullable Color errorColorSeed) {
-        if (primaryColorSeed == null)
-            primaryColorSeed = FALLBACK_COLOR;
         Hct primaryColorHct = Hct.fromFx(primaryColorSeed);
         @Nullable Hct errorColorHct = errorColorSeed != null ? Hct.fromFx(errorColorSeed) : null;
-
-        specVersion = DynamicScheme.maybeFallbackSpecVersion(specVersion, variant);
 
         ColorSpec colorSpec = ColorSpecs.get(specVersion);
         this.scheme = new DynamicScheme(

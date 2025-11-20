@@ -79,6 +79,21 @@ public enum ColorStyle {
         this.displayName = String.join(" ", parts);
     }
 
+    /// Returns whether this style is supported by the given spec version.
+    ///
+    /// @since 0.4.0
+    public boolean isSupported(ColorSpecVersion specVersion) {
+        switch (this) {
+            case EXPRESSIVE:
+            case VIBRANT:
+            case TONAL_SPOT:
+            case NEUTRAL:
+                return specVersion != null;
+            default:
+                return specVersion == ColorSpecVersion.SPEC_2021;
+        }
+    }
+
     @Override
     public String toString() {
         return displayName;

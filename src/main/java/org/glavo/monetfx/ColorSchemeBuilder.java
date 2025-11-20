@@ -177,6 +177,11 @@ public final class ColorSchemeBuilder {
     ///
     /// If not set, [the target platform][TargetPlatform#DEFAULT] will be used.
     ///
+    /// @apiNote If the platform is set to [TargetPlatform#WATCH],
+    /// the scheme will always be in dark mode and use [ColorSpecVersion#SPEC_2025].
+    ///
+    /// If the [color style][#setColorStyle(ColorStyle)] does not support
+    /// [ColorSpecVersion#SPEC_2025], it will ignore the platform and fall back to [TargetPlatform#DEFAULT].
     /// @since 0.2.0
     @Contract(value = "_ -> this")
     public ColorSchemeBuilder setPlatform(@NotNull TargetPlatform platform) {
@@ -200,12 +205,37 @@ public final class ColorSchemeBuilder {
 
     /// Returns a new [ColorScheme] built from the current state of this builder.
     public ColorScheme build() {
+        Color primaryColorSeed = this.primaryColorSeed;
+        if (primaryColorSeed == null) {
+            primaryColorSeed = ColorScheme.FALLBACK_COLOR;
+        }
+
+        boolean darkMode = this.brightness == Brightness.DARK;
+        TargetPlatform platform = this.platform;
+        ColorSpecVersion specVersion = this.specVersion;
+
+        if (!colorStyle.isSupported(ColorSpecVersion.SPEC_2025)) {
+            platform = TargetPlatform.DEFAULT;
+            specVersion = ColorSpecVersion.DEFAULT;
+        }
+
+        if (platform == TargetPlatform.WATCH) {
+            darkMode = true;
+            specVersion = ColorSpecVersion.SPEC_2025;
+        }
+
         return new ColorScheme(
                 colorStyle,
-                brightness == Brightness.DARK,
+                darkMode,
                 contrast.getValue(),
-                this.platform,
+                platform,
                 specVersion,
-                primaryColorSeed, secondaryColorSeed, tertiaryColorSeed, neutralColorSeed, neutralVariantColorSeed, errorColorSeed);
+                primaryColorSeed,
+                secondaryColorSeed,
+                tertiaryColorSeed,
+                neutralColorSeed,
+                neutralVariantColorSeed,
+                errorColorSeed
+        );
     }
 }
