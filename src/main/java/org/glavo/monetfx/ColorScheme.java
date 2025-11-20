@@ -145,7 +145,18 @@ public final class ColorScheme {
         return result;
     }
 
-    static Color extractColor(Image image, Color fallbackColor) {
+    /// Extracts a representative color from the given image.
+    ///
+    /// @since 0.4.0
+    public static Color extractColor(@NotNull Image image) {
+        return extractColor(image, FALLBACK_COLOR);
+    }
+
+
+    /// Extracts a representative color from the given image.
+    ///
+    /// @since 0.4.0
+    public static Color extractColor(@NotNull Image image, @NotNull Color fallbackColor) {
         int[] imageData = imageToScaled(image);
         Map<Integer, Integer> quantizeResult = QuantizerCelebi.quantize(imageData, 128);
 
@@ -158,7 +169,7 @@ public final class ColorScheme {
     ///
     /// @param image the image to extract the primary color seed from
     public static @NotNull ColorScheme fromImage(@NotNull Image image) {
-        return fromSeed(extractColor(image, ColorScheme.FALLBACK_COLOR));
+        return fromSeed(extractColor(image));
     }
 
     /// Creates a [ColorScheme] from the primary color seed.

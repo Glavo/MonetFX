@@ -78,6 +78,6 @@ public final class ExtractColorTest {
     @ParameterizedTest
     @MethodSource("monochromes")
     public void testExtractMonochrome(Color sourceColor, Color targetColor, int width, int height) {
-        assertEquals(targetColor, ColorScheme.extractColor(createMonochromeImage(sourceColor, width, height), ColorScheme.FALLBACK_COLOR));
+        assertEquals(targetColor, ColorScheme.extractColor(createMonochromeImage(sourceColor, width, height)));
     }
 }

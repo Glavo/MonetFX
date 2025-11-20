@@ -76,7 +76,7 @@ public final class ColorSchemeBuilder {
     /// @see <a href="https://m3.material.io/styles/color/dynamic/choosing-a-source">Dynamic color schemes</a>
     @Contract(value = "_ -> this")
     public ColorSchemeBuilder setWallpaper(@NotNull Image image) {
-        this.primaryColorSeed = ColorScheme.extractColor(image, ColorScheme.FALLBACK_COLOR);
+        this.primaryColorSeed = ColorScheme.extractColor(image);
         return this;
     }
 
