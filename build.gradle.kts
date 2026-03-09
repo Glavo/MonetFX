@@ -43,7 +43,7 @@ description = "Material 3 color system for JavaFX"
 dependencies {
     compileOnlyApi("org.jetbrains:annotations:26.1.0")
 
-    testImplementation("com.google.code.gson:gson:2.12.1")
+    testImplementation("com.google.code.gson:gson:2.13.2")
     testImplementation("org.hildan.fxgson:fx-gson:5.0.0")
     testImplementation(platform("org.junit:junit-bom:5.12.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
