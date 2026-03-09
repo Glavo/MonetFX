@@ -13,7 +13,7 @@ and accessible colors to all controls, and can automatically adjust according to
 If you want to learn more about the Material 3 color system and how to use it, 
 please refer to the resources I listed in [this section](#about-the-material-design-3-color-system).
 
-MonetFX requires JavaFX 8~25 (and higher).
+MonetFX requires JavaFX 8~26 (and higher).
 
 This project is currently in beta and may undergo breaking changes in the future.
 
