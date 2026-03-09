@@ -41,7 +41,7 @@ allprojects {
 description = "Material 3 color system for JavaFX"
 
 dependencies {
-    compileOnlyApi("org.jetbrains:annotations:26.0.2")
+    compileOnlyApi("org.jetbrains:annotations:26.1.0")
 
     testImplementation("com.google.code.gson:gson:2.12.1")
     testImplementation("org.hildan.fxgson:fx-gson:5.0.0")
